@@ -1,5 +1,6 @@
 import { EventCard } from "@/components/ui/events/EventCard";
 import { Header1 } from "@/components/ui/header";
+import { Meteors } from "@/components/ui/meteor";
 
 export default function EventsPage() {
   const events = [
@@ -30,7 +31,7 @@ export default function EventsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900 relative overflow-hidden">
       <Header1 />
       <div className="container mx-auto px-4 pt-24">
         <div className="relative">
@@ -45,6 +46,7 @@ export default function EventsPage() {
           ))}
         </div>
       </div>
+      <Meteors number={20} />
     </div>
   );
 } 

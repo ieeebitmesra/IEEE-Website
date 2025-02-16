@@ -1,4 +1,5 @@
 import { Header1 } from "@/components/ui/header";
+import { Meteors } from "@/components/ui/meteor";
 
 interface Workshop {
   number: string;
@@ -68,7 +69,7 @@ export default function WorkshopPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900 relative overflow-hidden">
       <Header1 />
       <div className="pt-24 px-4 md:px-8">
         <h1 className="text-5xl font-bold text-white text-center mb-16">Workshops</h1>
@@ -112,6 +113,7 @@ export default function WorkshopPage() {
           ))}
         </div>
       </div>
+      <Meteors number={20} />
     </div>
   );
 } 
