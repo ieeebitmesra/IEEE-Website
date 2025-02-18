@@ -36,7 +36,7 @@ function Header1() {
 
   return (
     <div className={cn(
-      "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+      "fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full",
       isScrolled ? "py-2" : "py-4"
     )}>
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -55,9 +55,7 @@ function Header1() {
                 className="transition-transform duration-300 hover:scale-110"
                 priority 
               />
-              <span className="font-semibold text-white hidden sm:block">
-                 BIT Mesra
-              </span>
+              
             </Link>
 
             {/* Desktop Navigation */}

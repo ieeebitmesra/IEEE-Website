@@ -90,7 +90,7 @@ export default function EventsPage() {
   ];
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900 relative overflow-hidden">
+    <div ref={containerRef} className="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
       <BackgroundSparkles />
       <Header1 />
       

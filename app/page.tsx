@@ -109,7 +109,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10">
           <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
           <p className="text-white/70 mb-8">Subscribe to our newsletter for the latest events and updates</p>
-          <div className="flex gap-4 max-w-md mx-auto">
+          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input 
               type="email" 
               placeholder="Enter your email"
