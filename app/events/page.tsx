@@ -4,7 +4,7 @@ import { Header1 } from "@/components/ui/header";
 import { Meteors } from "@/components/ui/meteor";
 import { BackgroundSparkles } from "@/components/ui/animations/BackgroundSparkles";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Calendar, Users, Trophy, Code, Target, GitBranch, Cpu, Timer } from "lucide-react";
+import { Calendar, Users, Trophy, Code, Target, GitBranch, Timer , Cpu} from "lucide-react";
 import { useRef } from "react";
 import { Footer } from "@/components/ui/footer";
 

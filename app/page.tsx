@@ -4,8 +4,8 @@ import { Features } from "@/components/ui/landing/Features";
 import { Header1 } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import { Meteors } from "@/components/ui/meteor";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Code, Users, Trophy, Rocket, BookOpen, Globe } from "lucide-react";
+import { motion, useScroll } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 
 export default function Home() {
@@ -14,8 +14,6 @@ export default function Home() {
     target: containerRef,
     offset: ["start start", "end end"]
   });
-
-  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   const achievements = [
     { number: "500+", label: "Active Members" },
