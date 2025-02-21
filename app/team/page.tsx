@@ -320,6 +320,27 @@ export default function TeamPage() {
     },
 
     {
+      name: "Suman Shekhar Bhardwaj",
+      role: "Senior Executive Members ",
+      image: "/team/suman.jpg",
+      linkedin: "https://www.linkedin.com/in/suman-shekhar-bhardwaj-240513237/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+      
+    },
+    {
+      name: "Sumit Agarwal",
+      role: "Senior Executive Members ",
+      image: "/team/sumit.jpg",
+      linkedin: "https://www.linkedin.com/in/sumit-agarwal2002/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+     
+    },
+
+    {
       name: "Aayush Raturi",
       role: "Senior Executive Members ",
       image: "/team/aayush.jpg",
@@ -398,27 +419,8 @@ export default function TeamPage() {
       instagram: "https://instagram.com",
       department: "Executive",
      
-    },
-    {
-      name: "Suman Shekhar Bhardwaj",
-      role: "Senior Executive Members ",
-      image: "/team/suman.jpg",
-      linkedin: "https://www.linkedin.com/in/suman-shekhar-bhardwaj-240513237/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-      
-    },
-    {
-      name: "Sumit Agarwal",
-      role: "Senior Executive Members ",
-      image: "/team/sumit.jpg",
-      linkedin: "https://www.linkedin.com/in/sumit-agarwal2002/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-     
     }
+    
   ];
 
   const stats = [
