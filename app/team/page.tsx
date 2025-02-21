@@ -228,8 +228,8 @@ export default function TeamPage() {
     },
     {
       name: "Nayan Shenoy",
-      role: "Content heads",
-      image: "/team/noimage.jpg",
+      role: "Content head",
+      image: "/team/nayan.jpg",
       linkedin: "https://www.linkedin.com/in/nayan-shenoy-14704a24b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -238,7 +238,7 @@ export default function TeamPage() {
     },
     {
       name: "Harshita Kedia",
-      role: "Content heads",
+      role: "Content head",
       image: "/team/harshita.jpg",
       linkedin: "https://www.linkedin.com/in/harshitakedia?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
@@ -248,7 +248,7 @@ export default function TeamPage() {
     },
     {
       name: "Akshay Gupta",
-      role: "Event Heads",
+      role: "Event Head",
       image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/akshayguptanarsina?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
@@ -258,7 +258,7 @@ export default function TeamPage() {
     },
     {
       name: "Akshat Tambi",
-      role: "Event Heads",
+      role: "Event Head",
       image: "/team/akshat.jpg",
       linkedin: "https://www.linkedin.com/in/1akshat-tambi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
@@ -268,7 +268,7 @@ export default function TeamPage() {
     },
     {
       name: "Arman Sethi",
-      role: "Event Heads",
+      role: "Event Head",
       image: "/team/arman.jpg",
       linkedin: "https://www.linkedin.com/in/armansethi-tech?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
@@ -321,7 +321,7 @@ export default function TeamPage() {
 
     {
       name: "Suman Shekhar Bhardwaj",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/suman.jpg",
       linkedin: "https://www.linkedin.com/in/suman-shekhar-bhardwaj-240513237/",
       github: "https://github.com",
@@ -331,7 +331,7 @@ export default function TeamPage() {
     },
     {
       name: "Sumit Agarwal",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/sumit.jpg",
       linkedin: "https://www.linkedin.com/in/sumit-agarwal2002/",
       github: "https://github.com",
@@ -342,7 +342,7 @@ export default function TeamPage() {
 
     {
       name: "Aayush Raturi",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/aayush.jpg",
       linkedin: "https://www.linkedin.com/in/aayush-raturi-1816a6135/",
       github: "https://github.com",
@@ -352,7 +352,7 @@ export default function TeamPage() {
     },
     {
       name: "Amrit Yashasvi Lal",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/amrit.jpg",
       linkedin: "https://www.linkedin.com/in/amrit-yashasvi-lal-604672232/",
       github: "https://github.com",
@@ -362,7 +362,7 @@ export default function TeamPage() {
     },
     {
       name: "Anish Kumar Singh",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/anish.jpg",
       linkedin: "https://www.linkedin.com/in/anish-kumar-singh-155334222/",
       github: "https://github.com",
@@ -372,7 +372,7 @@ export default function TeamPage() {
     },
     {
       name: "Ayush Kumar",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/ayush.jpg",
       linkedin: "https://www.linkedin.com/in/ayushkumar3070/",
       github: "https://github.com",
@@ -382,7 +382,7 @@ export default function TeamPage() {
     },
     {
       name: "Priyanshu Singhal",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/priyanshu.jpg",
       linkedin: "https://www.linkedin.com/in/priyanshu-singhal1/",
       github: "https://github.com",
@@ -392,7 +392,7 @@ export default function TeamPage() {
     },
     {
       name: "Rajat Singh",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/noimage.jpg",
       linkedin: "https://linkedin.com",
       github: "https://github.com",
@@ -402,7 +402,7 @@ export default function TeamPage() {
     },
     {
       name: "Raj Aryan",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/raj.jpg",
       linkedin: "https://www.linkedin.com/in/thatrajaryan/",
       github: "https://github.com",
@@ -412,7 +412,7 @@ export default function TeamPage() {
     },
     {
       name: "Shivang Airan",
-      role: "Senior Executive Members ",
+      role: "Senior Executive Member",
       image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/shivang007/",
       github: "https://github.com",
