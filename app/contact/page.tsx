@@ -35,6 +35,13 @@ export default function ContactPage() {
     // Simulate form submission
     setTimeout(() => {
       setFormStatus('sent');
+      // Clear form data
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
       setTimeout(() => setFormStatus('idle'), 3000);
     }, 1500);
   };
@@ -109,7 +116,7 @@ export default function ContactPage() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 max-w-5xl mx-auto"
         >
           {contactInfo.map((info, index) => {
             const Icon = info.icon;
@@ -117,7 +124,7 @@ export default function ContactPage() {
               <motion.div
                 key={index}
                 whileHover={{ y: -5 }}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6"
+                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 flex flex-col items-center text-center"
               >
                 <Icon className={`w-8 h-8 ${info.color} mb-4`} />
                 <h3 className="text-white text-lg font-semibold mb-2">{info.title}</h3>

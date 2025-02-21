@@ -48,7 +48,7 @@ function Header1() {
           <div className="flex items-center justify-between px-4 py-2">
             <Link href="/" className="flex items-center gap-2">
               <Image 
-                src="/logo.png" 
+                src="/logo.svg" 
                 alt="IEEE Logo" 
                 width={40} 
                 height={40} 

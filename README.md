@@ -1,4 +1,4 @@
 IEEE - Student Branch BIT Mesra
-oh
+Advancing Technology for Humanity
 
 

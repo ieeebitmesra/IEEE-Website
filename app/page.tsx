@@ -1,5 +1,5 @@
 "use client";
-import { Hero } from "@/components/ui/landing/Hero";
+import Hero from "@/components/ui/landing/Hero";
 import { Features } from "@/components/ui/landing/Features";
 import { Header1 } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";

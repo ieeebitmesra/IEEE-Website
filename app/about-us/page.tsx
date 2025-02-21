@@ -148,10 +148,10 @@ export default function AboutUsPage() {
                 initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 className={`flex items-center gap-8 mb-12 ${
-                  index % 2 === 0 ? 'flex-row-reverse' : ''
-                }`}
+                  index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'
+                } max-w-2xl mx-auto`}
               >
-                <div className="flex-1 text-right">
+                <div className={`flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
                   <div className="text-blue-400 text-xl font-bold mb-2">{milestone.year}</div>
                   <h3 className="text-white text-lg font-semibold mb-1">{milestone.title}</h3>
                   <p className="text-white/60">{milestone.description}</p>
