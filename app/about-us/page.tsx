@@ -187,23 +187,7 @@ export default function AboutUsPage() {
           </div>
         </motion.div>
 
-        {/* Join Us CTA */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10 mb-20"
-        >
-          <h2 className="text-3xl font-bold text-white mb-4">Join Our Community</h2>
-          <p className="text-white/70 mb-8">Be part of something bigger. Join us in our mission to innovate and excel.</p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition flex items-center gap-2 mx-auto"
-          >
-            Become a Member
-            <ArrowRight className="w-5 h-5" />
-          </motion.button>
-        </motion.div>
+        
       </motion.div>
       <Footer />
     </div>

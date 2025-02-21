@@ -126,24 +126,8 @@ export default function Home() {
         </div>
       </motion.div>
 
-      {/* Join Us CTA */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        className="container mx-auto px-4 py-20 text-center"
-      >
-        <h2 className="text-4xl font-bold text-white mb-8">
-          Ready to <span className="text-blue-400">Join Us</span>?
-        </h2>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="px-8 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition flex items-center gap-2 mx-auto"
-        >
-          Become a Member
-          <ArrowRight className="w-5 h-5" />
-        </motion.button>
-      </motion.div>
+      
+      
 
       <Footer />
       <Meteors number={20} />

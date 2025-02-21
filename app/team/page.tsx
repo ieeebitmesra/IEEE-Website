@@ -95,16 +95,6 @@ export default function TeamPage() {
       
     },
     {
-      name: "keshav agarwal",
-      role: "Joint Secretary",
-      image: "/team/keshav.jpg",
-      linkedin: "https://www.linkedin.com/in/keshavagarwal0927?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-      
-    },
-    {
       name: "Akash Kumar Tiwary",
       role: "Joint Secretary",
       image: "/team/Akash Kumar Tiwary .jpg",
@@ -114,6 +104,17 @@ export default function TeamPage() {
       department: "Management",
       
     },
+    {
+      name: "keshav agarwal",
+      role: "Joint Secretary",
+      image: "/team/keshav.jpg",
+      linkedin: "https://www.linkedin.com/in/keshavagarwal0927?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    
     {
       name: "Sukham Singh",
       role: "Joint Secretary",
@@ -563,23 +564,7 @@ export default function TeamPage() {
           ))}
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10 mb-20"
-        >
-          <h2 className="text-3xl font-bold text-white mb-4">Want to Join Our Team?</h2>
-          <p className="text-white/70 mb-8">
-            We're always looking for passionate individuals to join our community
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
-          >
-            Apply Now
-          </motion.button>
-        </motion.div>
+       
       </motion.div>
       <Footer />
     </div>
