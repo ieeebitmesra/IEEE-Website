@@ -137,7 +137,7 @@ export default function TeamPage() {
     {
       name: "Ataullah Ansari",
       role: "Co-Director",
-      image: "/team/ataullah.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/attaullah-ansari-1304aa264?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -158,7 +158,7 @@ export default function TeamPage() {
     {
       name: "Rishabh Raj",
       role: "Joint Treasurer",
-      image: "/team/rishabh.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/rishabh-raj-60060b25a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -179,7 +179,7 @@ export default function TeamPage() {
     {
       name: "Garvit Raj",
       role: "Tech Head",
-      image: "/team/garvit.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/garvitrajbitmesra?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -199,7 +199,7 @@ export default function TeamPage() {
     {
       name: "Soumojjal Sen",
       role: "Tech Head",
-      image: "/team/soumojjal.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/soumojjal-sen-7b8490256?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -209,7 +209,7 @@ export default function TeamPage() {
     {
       name: "shailesh kumar",
       role: "Design heads",
-      image: "/team/shailesh.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://linkedin.com",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -219,7 +219,7 @@ export default function TeamPage() {
     {
       name: "Sakshi Sinha",
       role: "Design heads",
-      image: "/team/sakshi.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/sakshi-sinha-09a377270?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -229,7 +229,7 @@ export default function TeamPage() {
     {
       name: "Nayan Shenoy",
       role: "Content heads",
-      image: "/team/nayan.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/nayan-shenoy-14704a24b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -249,7 +249,7 @@ export default function TeamPage() {
     {
       name: "Akshay Gupta",
       role: "Event Heads",
-      image: "/team/akshay.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/akshayguptanarsina?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -311,7 +311,7 @@ export default function TeamPage() {
     {
       name: "Akshat Gupta",
       role: "Developer",
-      image: "/team/",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/akshat-gupta-9b39992a7/",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -393,7 +393,7 @@ export default function TeamPage() {
     {
       name: "Rajat Singh",
       role: "Senior Executive Members ",
-      image: "/team/rajat.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://linkedin.com",
       github: "https://github.com",
       instagram: "https://instagram.com",
@@ -413,7 +413,7 @@ export default function TeamPage() {
     {
       name: "Shivang Airan",
       role: "Senior Executive Members ",
-      image: "/team/shivang.jpg",
+      image: "/team/noimage.jpg",
       linkedin: "https://www.linkedin.com/in/shivang007/",
       github: "https://github.com",
       instagram: "https://instagram.com",
