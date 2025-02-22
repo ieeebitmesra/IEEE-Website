@@ -7,6 +7,7 @@ import { Meteors } from "@/components/ui/meteor";
 import { motion, useScroll } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
+import { Gallery } from "@/components/ui/landing/Gallery";
 
 export default function Home() {
   const containerRef = useRef(null);
@@ -99,6 +100,9 @@ export default function Home() {
           ))}
         </div>
       </motion.div>
+
+      {/* Gallery Section */}
+      <Gallery />
 
       {/* Newsletter Section */}
       <motion.div 
