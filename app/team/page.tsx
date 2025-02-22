@@ -321,6 +321,17 @@ export default function TeamPage() {
     },
 
     {
+      name: "Shaswat Raj",
+      role: "Developer",
+      image: "/team/shaswat.jpg",
+      linkedin: "https://www.linkedin.com/in/sh20raj/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+
+    {
       name: "Suman Shekhar Bhardwaj",
       role: "Senior Executive Member",
       image: "/team/suman.jpg",
