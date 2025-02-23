@@ -75,7 +75,7 @@ export function Gallery() {
   };
 
   return (
-    <section className="py-20">
+    <section id="gallery" className="py-20"> {/* Added id="gallery" */}
       <motion.h2 
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

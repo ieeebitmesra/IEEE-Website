@@ -77,12 +77,6 @@ function Header1() {
                   ))}
                 </NavigationMenuList>
               </NavigationMenu>
-              <Button 
-                variant="default" 
-                className="ml-4 bg-blue-500 hover:bg-blue-600 rounded-full"
-              >
-                Join Us
-              </Button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -95,7 +89,7 @@ function Header1() {
             </Button>
           </div>
 
-          {/* Mobile Menu */}
+            {/* Mobile Menu */}
           {isOpen && (
             <div className="lg:hidden absolute top-full left-0 right-0">
               <nav className="flex flex-col max-w-7xl mx-auto bg-black/95 backdrop-blur-md border-t border-white/10 mt-2 mx-4 rounded-xl overflow-hidden">
@@ -110,14 +104,6 @@ function Header1() {
                     <MoveRight className="w-4 h-4 opacity-50" />
                   </Link>
                 ))}
-                <div className="p-6">
-                  <Button 
-                    variant="default" 
-                    className="w-full bg-blue-500 hover:bg-blue-600 py-6 font-medium text-lg"
-                  >
-                    Join Us
-                  </Button>
-                </div>
               </nav>
             </div>
           )}

@@ -15,7 +15,7 @@ export function Footer() {
     { name: "Documentation", href: "#" },
     { name: "Blog", href: "#" },
     { name: "Research Papers", href: "#" },
-    { name: "Project Gallery", href: "#" },
+    { name: "Project Gallery", href: "/#gallery" }, // Updated href to point to gallery section
   ];
 
   const contact = [
@@ -25,10 +25,10 @@ export function Footer() {
   ];
 
   const socials = [
-    { icon: Instagram, href: "#" },
-    { icon: Facebook, href: "#" },
-    { icon: Linkedin, href: "#" },
-    { icon: Github, href: "#" },
+    { icon: Instagram, href: "https://www.instagram.com/ieee.bitm/" },
+    { icon: Facebook, href: "https://www.facebook.com/ieeebitmesra/" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/ieee-student-branch-bit-mesra/?originalSubdomain=in" },
+    { icon: Github, href: "https://github.com/ieeebitmesra" },
   ];
 
   return (
@@ -116,7 +116,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/60 text-sm">
-              © 2024 IEEE BIT Mesra. All rights reserved.
+              © 2025 IEEE BIT Mesra. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm text-white/60">
               <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
@@ -128,4 +128,4 @@ export function Footer() {
       </div>
     </footer>
   );
-} 
+}
