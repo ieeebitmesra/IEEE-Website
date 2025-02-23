@@ -112,13 +112,6 @@ export function Gallery() {
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                     draggable={false}
                   />
-                  {/* Removing the following overlay div with text
-                  <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-4 left-4 text-white">
-                      <h3 className="text-lg font-semibold">{image.alt}</h3>
-                    </div>
-                  </div>
-                  */}
                 </div>
               </motion.div>
           ))}

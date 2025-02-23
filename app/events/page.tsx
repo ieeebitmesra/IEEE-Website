@@ -90,14 +90,15 @@ export default function EventsPage() {
   ];
 
   return (
-    <div ref={containerRef} className="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
+    // Update the container div's className
+    <div ref={containerRef} className="relative min-h-screen w-full bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
       <BackgroundSparkles />
       <Header1 />
       
       {/* Hero Section */}
       <motion.div 
         style={{ y }}
-        className="container mx-auto px-4 pt-24"
+        className="container mx-auto px-4 pt-24 pb-20" // Added pb-20 for better spacing
       >
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -285,4 +286,4 @@ export default function EventsPage() {
       <Meteors number={20} />
     </div>
   );
-} 
+}

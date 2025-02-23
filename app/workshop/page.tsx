@@ -108,14 +108,15 @@ export default function WorkshopPage() {
   ];
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900 relative overflow-hidden">
+    // Remove overflow-hidden from the container
+    <div ref={containerRef} className="relative min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
       <BackgroundSparkles />
       <Header1 />
       
       {/* Hero Section */}
       <motion.div 
         style={{ y }}
-        className="pt-24 px-4 md:px-8"
+        className="pt-24 px-4 md:px-8 pb-20" // Added pb-20
       >
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -301,4 +302,4 @@ export default function WorkshopPage() {
       <Meteors number={20} />
     </div>
   );
-} 
+}
