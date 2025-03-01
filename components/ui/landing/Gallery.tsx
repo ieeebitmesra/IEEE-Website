@@ -4,7 +4,8 @@ import { motion, useAnimationControls } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 
-const images = [
+// First set of images for the top carousel
+const topImages = [
   {
     src: "/gallery/image1.jpg",
     alt: "IEEE Event 1",
@@ -27,8 +28,32 @@ const images = [
   }
 ];
 
-// Increase the number of duplicated images for smoother infinite loop
-const duplicatedImages = [...images, ...images, ...images, ...images, ...images];
+// Second set of images for the bottom carousel
+const bottomImages = [
+  {
+    src: "/gallery/image6.jpg",
+    alt: "Technical Workshop",
+  },
+  {
+    src: "/gallery/image7.jpg",
+    alt: "Annual Conference",
+  },
+  {
+    src: "/gallery/image8.jpg",
+    alt: "Team Collaboration",
+  },
+  {
+    src: "/gallery/image9.jpg",
+    alt: "Award Ceremony",
+  },
+  {
+    src: "/gallery/image10.jpg",
+    alt: "Networking Event",
+  }
+];
+
+const duplicatedTopImages = [...topImages, ...topImages, ...topImages, ...topImages, ...topImages];
+const duplicatedBottomImages = [...bottomImages, ...bottomImages, ...bottomImages, ...bottomImages, ...bottomImages];
 
 export function Gallery() {
   const controls1 = useAnimationControls();
@@ -47,11 +72,11 @@ export function Gallery() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const startAnimation = (controls: any, direction: 1 | -1) => {
+  const startAnimation = (controls: any, direction: 1 | -1, imageSet: any[]) => {
     const baseWidth = isMobile ? 160 : 300;
     const gap = isMobile ? 16 : 40;
     const itemWidth = baseWidth + gap;
-    const totalWidth = itemWidth * duplicatedImages.length; // Use duplicatedImages instead of images
+    const totalWidth = itemWidth * imageSet.length;
 
     controls.start({
       x: direction === 1 
@@ -76,10 +101,9 @@ export function Gallery() {
       controls1.stop();
       controls2.stop();
       
-      // Add a small delay before starting animations
       timeoutId = setTimeout(() => {
-        startAnimation(controls1, 1);
-        startAnimation(controls2, -1);
+        startAnimation(controls1, 1, duplicatedTopImages);
+        startAnimation(controls2, -1, duplicatedBottomImages);
       }, 100);
     };
 
@@ -103,11 +127,13 @@ export function Gallery() {
   const CarouselRow = ({ 
     controls, 
     containerRef, 
-    direction 
+    direction,
+    images
   }: { 
     controls: any; 
     containerRef: any; 
     direction: 1 | -1;
+    images: any[];
   }) => (
     <div 
       className="relative h-[160px] md:h-[250px] mask-edges mb-4 md:mb-8" 
@@ -115,7 +141,7 @@ export function Gallery() {
     >
       <motion.div
         className="flex absolute gap-4 md:gap-10"
-        initial={{ x: direction === 1 ? 0 : -duplicatedImages.length * (isMobile ? 176 : 340) }}
+        initial={{ x: direction === 1 ? 0 : -images.length * (isMobile ? 176 : 340) }}
         animate={controls}
         style={{
           touchAction: "none",
@@ -127,7 +153,7 @@ export function Gallery() {
           WebkitPerspective: 1000
         }}
       >
-        {duplicatedImages.map((image, idx) => (
+        {images.map((image, idx) => (
           <motion.div
             key={idx}
             className="relative h-[160px] w-[160px] md:h-[250px] md:w-[300px] flex-shrink-0 rounded-xl overflow-hidden group"
@@ -181,11 +207,13 @@ export function Gallery() {
           controls={controls1} 
           containerRef={containerRef1} 
           direction={1}
+          images={duplicatedTopImages}
         />
         <CarouselRow 
           controls={controls2} 
           containerRef={containerRef2} 
           direction={-1}
+          images={duplicatedBottomImages}
         />
       </div>
 
