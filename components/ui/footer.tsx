@@ -20,7 +20,7 @@ export function Footer() {
 
   const contact = [
     { icon: Phone, info: "+91 1234567890", href: "tel:+911234567890" },
-    { icon: Mail, info: "ieee@bitmesra.ac.in", href: "mailto:ieee@bitmesra.ac.in" },
+    { icon: Mail, info: "bitieee@gmail.com", href: "mailto:bitieee@gmail.com" },
     { icon: MapPin, info: "BIT Mesra, Ranchi, Jharkhand", href: "https://maps.google.com" },
   ];
 
