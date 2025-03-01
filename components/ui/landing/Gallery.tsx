@@ -4,14 +4,13 @@ import { motion, useAnimationControls } from "framer-motion";
 import Image from "next/image";
 import { useRef, useEffect, useState } from "react";
 
-// First set of images for the top carousel
 const topImages = [
   {
     src: "/gallery/image1.jpg",
     alt: "IEEE Event 1",
   },
   {
-    src: "/gallery/image2.jpg",
+    src: "/gallery/image11.jpg",
     alt: "IEEE Workshop",
   },
   {
@@ -28,7 +27,6 @@ const topImages = [
   }
 ];
 
-// Second set of images for the bottom carousel
 const bottomImages = [
   {
     src: "/gallery/image6.jpg",
