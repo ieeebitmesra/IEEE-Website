@@ -8,6 +8,7 @@ import { motion, useScroll } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { Gallery } from "@/components/ui/landing/Gallery";
+import { useState } from "react";
 
 export default function Home() {
   const containerRef = useRef(null);
@@ -40,6 +41,42 @@ export default function Home() {
       description: "Student innovations",
     },
   ];
+
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong!');
+      }
+
+      setStatus('success');
+      setMessage(data.message);
+      setEmail('');
+    } catch (error: any) {
+      setStatus('error');
+      setMessage(error.message);
+    }
+
+    // Reset status after 5 seconds
+    setTimeout(() => {
+      setStatus('idle');
+      setMessage('');
+    }, 5000);
+  };
 
   return (
     <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900 relative overflow-hidden pt-20">
@@ -103,32 +140,43 @@ export default function Home() {
 
       {/* Gallery Section */}
       <Gallery />
-
-      {/* Newsletter Section */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        className="container mx-auto px-4 py-20"
-      >
-        <div className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10">
-          <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
-          <p className="text-white/70 mb-8">Subscribe to our newsletter for the latest events and updates</p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input 
-              type="email" 
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-            >
-              Subscribe
-            </motion.button>
-          </div>
-        </div>
-      </motion.div>
+    
+    {/* Newsletter Section */}
+    <motion.div 
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      className="container mx-auto px-4 py-20"
+    >
+      <div className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10">
+        <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
+        <p className="text-white/70 mb-8">Subscribe to our newsletter for the latest events and updates</p>
+        <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <input 
+            type="email" 
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className={`px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition flex items-center justify-center gap-2 ${
+              status === 'loading' ? 'opacity-70 cursor-wait' : ''
+            }`}
+            disabled={status === 'loading'}
+          >
+            {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+          </motion.button>
+        </form>
+        {message && (
+          <p className={`mt-4 text-sm ${status === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+            {message}
+          </p>
+        )}
+      </div>
+    </motion.div>
 
       
       
