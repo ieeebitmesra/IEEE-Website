@@ -19,6 +19,7 @@ import {
   MessageCircle 
 } from "lucide-react";
 import { useState } from "react";
+import { supabase } from '@/lib/supabase';
 
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
@@ -32,8 +33,23 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('sending');
-    // Simulate form submission
-    setTimeout(() => {
+    
+    try {
+      // Insert form data into Supabase
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([
+          { 
+            name: formData.name,
+            email: formData.email,
+            subject: formData.subject,
+            message: formData.message,
+            created_at: new Date()
+          }
+        ]);
+        
+      if (error) throw error;
+      
       setFormStatus('sent');
       // Clear form data
       setFormData({
@@ -42,8 +58,13 @@ export default function ContactPage() {
         subject: '',
         message: ''
       });
+      
       setTimeout(() => setFormStatus('idle'), 3000);
-    }, 1500);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setFormStatus('error');
+      setTimeout(() => setFormStatus('idle'), 3000);
+    }
   };
 
   const contactInfo = [
@@ -252,4 +273,4 @@ export default function ContactPage() {
       <Footer />
     </div>
   );
-} 
+}

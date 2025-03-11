@@ -29,6 +29,7 @@ function Header1() {
     { title: "Events", href: "/events" },
     { title: "Our Team", href: "/team" },
     { title: "Workshop", href: "/workshop" },
+    { title: "Leaderboard", href: "/leaderboard" }, 
     { title: "About Us", href: "/about-us" },
     { title: "Alumni", href: "/alumni" },
     { title: "Contact Us", href: "/contact" },

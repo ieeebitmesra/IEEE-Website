@@ -7,6 +7,7 @@ export function Footer() {
     { name: "About Us", href: "/about" },
     { name: "Events", href: "/events" },
     { name: "Workshops", href: "/workshops" },
+    { name: "Leaderboard", href: "/leaderboard" }, 
     { name: "Team", href: "/team" },
     { name: "Contact", href: "/contact" },
   ];
@@ -15,7 +16,7 @@ export function Footer() {
     { name: "Documentation", href: "#" },
     { name: "Blog", href: "#" },
     { name: "Research Papers", href: "#" },
-    { name: "Project Gallery", href: "/#gallery" }, // Updated href to point to gallery section
+    { name: "Project Gallery", href: "/#gallery" }, 
   ];
 
   const contact = [
