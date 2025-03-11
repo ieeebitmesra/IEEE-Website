@@ -4,6 +4,7 @@ import { Footer } from "@/components/ui/footer";
 import { Meteors } from "@/components/ui/meteor";
 import { BackgroundSparkles } from "@/components/ui/animations/BackgroundSparkles";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 import { 
   Trophy, 
   Medal, 
@@ -14,7 +15,7 @@ import {
   Github,
   RefreshCw,
   User,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ import { LeaderboardForm } from "@/components/ui/leaderboard/LeaderboardForm";
 import { LeaderboardStats } from "@/components/ui/leaderboard/LeaderboardStats";
 import { TopPerformers } from "@/components/ui/leaderboard/TopPerformers";
 import { supabase } from "@/lib/supabase";
+import { Tabs as UITabs, TabsContent as UITabsContent, TabsList as UITabsList, TabsTrigger as UITabsTrigger } from "@/components/ui/tabs";
 
 export interface Participant {
   id: string;
@@ -58,6 +60,7 @@ export default function LeaderboardPage() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [showForm, setShowForm] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("overall");
 
   // Fetch participants data from Supabase
   useEffect(() => {
@@ -228,47 +231,97 @@ export default function LeaderboardPage() {
   );
 
   // Function to sort participants
-  const sortedParticipants = [...filteredParticipants].sort((a, b) => {
-    let aValue, bValue;
+  const getSortedParticipants = (platform: string = 'overall') => {
+    let sortedList = [...filteredParticipants];
     
-    switch (sortBy) {
-      case "name":
-        aValue = a.name;
-        bValue = b.name;
-        return sortOrder === "asc" 
-          ? aValue.localeCompare(bValue) 
-          : bValue.localeCompare(aValue);
-      case "leetcodeRating":
-        aValue = a.leetcodeRating;
-        bValue = b.leetcodeRating;
-        break;
-      case "leetcodeSolved":
-        aValue = a.leetcodeSolved;
-        bValue = b.leetcodeSolved;
-        break;
-      case "codeforcesRating":
-        aValue = a.codeforcesRating;
-        bValue = b.codeforcesRating;
-        break;
-      case "codeforcesSolved":
-        aValue = a.codeforcesSolved;
-        bValue = b.codeforcesSolved;
-        break;
-      case "codechefRating":
-        aValue = a.codechefRating;
-        bValue = b.codechefRating;
-        break;
-      case "codechefSolved":
-        aValue = a.codechefSolved;
-        bValue = b.codechefSolved;
-        break;
-      default:
-        aValue = a.totalScore;
-        bValue = b.totalScore;
+    if (platform === 'leetcode') {
+      // Sort by LeetCode rating
+      sortedList.sort((a, b) => b.leetcodeRating - a.leetcodeRating);
+      // Add LeetCode-specific rank
+      return sortedList.map((participant, index) => ({
+        ...participant,
+        platformRank: index + 1
+      }));
+    } else if (platform === 'codeforces') {
+      // Sort by CodeForces rating
+      sortedList.sort((a, b) => b.codeforcesRating - a.codeforcesRating);
+      // Add CodeForces-specific rank
+      return sortedList.map((participant, index) => ({
+        ...participant,
+        platformRank: index + 1
+      }));
+    } else if (platform === 'codechef') {
+      // Sort by CodeChef rating
+      sortedList.sort((a, b) => b.codechefRating - a.codechefRating);
+      // Add CodeChef-specific rank
+      return sortedList.map((participant, index) => ({
+        ...participant,
+        platformRank: index + 1
+      }));
+    } else {
+      // Overall sorting based on selected sort criteria
+      let aValue, bValue;
+      
+      return [...filteredParticipants].sort((a, b) => {
+        switch (sortBy) {
+          case "name":
+            aValue = a.name;
+            bValue = b.name;
+            return sortOrder === "asc" 
+              ? aValue.localeCompare(bValue) 
+              : bValue.localeCompare(aValue);
+          case "leetcodeRating":
+            aValue = a.leetcodeRating;
+            bValue = b.leetcodeRating;
+            break;
+          case "leetcodeSolved":
+            aValue = a.leetcodeSolved;
+            bValue = b.leetcodeSolved;
+            break;
+          case "codeforcesRating":
+            aValue = a.codeforcesRating;
+            bValue = b.codeforcesRating;
+            break;
+          case "codeforcesSolved":
+            aValue = a.codeforcesSolved;
+            bValue = b.codeforcesSolved;
+            break;
+          case "codechefRating":
+            aValue = a.codechefRating;
+            bValue = b.codechefRating;
+            break;
+          case "codechefSolved":
+            aValue = a.codechefSolved;
+            bValue = b.codechefSolved;
+            break;
+          default:
+            aValue = a.totalScore;
+            bValue = b.totalScore;
+        }
+        
+        return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+      });
     }
-    
-    return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
-  });
+  };
+
+  // Get platform-specific top performers
+  const getTopPerformers = (platform: string) => {
+    if (platform === 'leetcode') {
+      return [...participants]
+        .sort((a, b) => b.leetcodeRating - a.leetcodeRating)
+        .slice(0, 3);
+    } else if (platform === 'codeforces') {
+      return [...participants]
+        .sort((a, b) => b.codeforcesRating - a.codeforcesRating)
+        .slice(0, 3);
+    } else if (platform === 'codechef') {
+      return [...participants]
+        .sort((a, b) => b.codechefRating - a.codechefRating)
+        .slice(0, 3);
+    } else {
+      return participants.slice(0, 3);
+    }
+  };
 
   // Function to handle refresh
   const handleRefresh = async () => {
@@ -311,28 +364,105 @@ export default function LeaderboardPage() {
   };
 
   // Calculate stats
-  const stats = [
-    { 
-      icon: User, 
-      value: participants.length.toString(), 
-      label: "Participants" 
-    },
-    { 
-      icon: Code, 
-      value: participants.reduce((sum, p) => sum + p.leetcodeSolved + p.codeforcesSolved + p.codechefSolved, 0).toString(), 
-      label: "Problems Solved" 
-    },
-    { 
-      icon: Trophy, 
-      value: Math.max(...participants.map(p => p.totalScore)).toString(), 
-      label: "Highest Score" 
-    },
-    { 
-      icon: Sparkles, 
-      value: Math.max(...participants.map(p => p.leetcodeRating)).toString(), 
-      label: "Top LeetCode Rating" 
+  const getStats = (platform: string = 'overall') => {
+    if (platform === 'leetcode') {
+      return [
+        { 
+          icon: User, 
+          value: participants.filter(p => p.leetcode).length.toString(), 
+          label: "LeetCode Users" 
+        },
+        { 
+          icon: Code, 
+          value: participants.reduce((sum, p) => sum + p.leetcodeSolved, 0).toString(), 
+          label: "Problems Solved" 
+        },
+        { 
+          icon: Trophy, 
+          value: Math.max(...participants.map(p => p.leetcodeRating || 0)).toString(), 
+          label: "Highest Rating" 
+        },
+        { 
+          icon: Sparkles, 
+          value: Math.round(participants.reduce((sum, p) => sum + p.leetcodeSolved, 0) / 
+                 Math.max(participants.filter(p => p.leetcode).length, 1)).toString(), 
+          label: "Avg. Problems" 
+        }
+      ];
+    } else if (platform === 'codeforces') {
+      return [
+        { 
+          icon: User, 
+          value: participants.filter(p => p.codeforces).length.toString(), 
+          label: "CodeForces Users" 
+        },
+        { 
+          icon: Code, 
+          value: participants.reduce((sum, p) => sum + p.codeforcesSolved, 0).toString(), 
+          label: "Problems Solved" 
+        },
+        { 
+          icon: Trophy, 
+          value: Math.max(...participants.map(p => p.codeforcesRating || 0)).toString(), 
+          label: "Highest Rating" 
+        },
+        { 
+          icon: Sparkles, 
+          value: Math.round(participants.reduce((sum, p) => sum + p.codeforcesSolved, 0) / 
+                 Math.max(participants.filter(p => p.codeforces).length, 1)).toString(), 
+          label: "Avg. Problems" 
+        }
+      ];
+    } else if (platform === 'codechef') {
+      return [
+        { 
+          icon: User, 
+          value: participants.filter(p => p.codechef).length.toString(), 
+          label: "CodeChef Users" 
+        },
+        { 
+          icon: Code, 
+          value: participants.reduce((sum, p) => sum + p.codechefSolved, 0).toString(), 
+          label: "Problems Solved" 
+        },
+        { 
+          icon: Trophy, 
+          value: Math.max(...participants.map(p => p.codechefRating || 0)).toString(), 
+          label: "Highest Rating" 
+        },
+        { 
+          icon: Sparkles, 
+          value: Math.round(participants.reduce((sum, p) => sum + p.codechefSolved, 0) / 
+                 Math.max(participants.filter(p => p.codechef).length, 1)).toString(), 
+          label: "Avg. Problems" 
+        }
+      ];
+    } else {
+      // Overall stats
+      return [
+        { 
+          icon: User, 
+          value: participants.length.toString(), 
+          label: "Participants" 
+        },
+        { 
+          icon: Code, 
+          value: participants.reduce((sum, p) => sum + p.leetcodeSolved + p.codeforcesSolved + p.codechefSolved, 0).toString(), 
+          label: "Problems Solved" 
+        },
+        { 
+          icon: Trophy, 
+          value: Math.max(...participants.map(p => p.totalScore)).toString(), 
+          label: "Highest Score" 
+        },
+        { 
+          icon: Sparkles, 
+          value: Math.max(...participants.map(p => p.leetcodeRating)).toString(), 
+          label: "Top LeetCode Rating" 
+        }
+      ];
     }
-  ];
+  };
 
   return (
     <div ref={containerRef} className="relative min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
@@ -366,139 +496,400 @@ export default function LeaderboardPage() {
           </motion.p>
         </motion.div>
 
-        {/* Stats Section */}
-        <LeaderboardStats stats={stats} />
+        {/* Platform Tabs */}
+        <UITabs defaultValue="overall" onValueChange={setActiveTab} className="w-full mb-8">
+          <UITabsList className="grid grid-cols-4 max-w-2xl mx-auto">
+            <UITabsTrigger value="overall" className="data-[state=active]:bg-blue-600">Overall</UITabsTrigger>
+            <UITabsTrigger value="leetcode" className="data-[state=active]:bg-blue-600">LeetCode</UITabsTrigger>
+            <UITabsTrigger value="codeforces" className="data-[state=active]:bg-blue-600">CodeForces</UITabsTrigger>
+            <UITabsTrigger value="codechef" className="data-[state=active]:bg-blue-600">CodeChef</UITabsTrigger>
+          </UITabsList>
 
-        {/* Top Performers */}
-        <TopPerformers participants={participants.slice(0, 3)} />
+          {/* Overall Tab Content */}
+          <UITabsContent value="overall" className="mt-6">
+            {/* Stats Section */}
+            <LeaderboardStats stats={getStats('overall')} />
 
-        {/* Main Content */}
-        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div className="flex items-center gap-4 w-full md:w-auto">
-              <div className="relative flex-1 md:w-64">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search participants..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+            {/* Top Performers */}
+            <TopPerformers participants={getTopPerformers('overall')} />
+
+            {/* Main Content */}
+            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div className="relative flex-1 md:w-64">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+                    <input
+                      type="text"
+                      placeholder="Search participants..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                    className="border-white/10 text-white hover:bg-white/10"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                  </Button>
+                </div>
+                
+                <div className="flex gap-2 w-full md:w-auto">
+                  <Button 
+                    onClick={() => setShowForm(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
+                  >
+                    Join Leaderboard
+                  </Button>
+                </div>
               </div>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                onClick={handleRefresh}
-                disabled={refreshing}
-                className="border-white/10 text-white hover:bg-white/10"
-              >
-                <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-              </Button>
-            </div>
-            
-            <div className="flex gap-2 w-full md:w-auto">
-              <Button 
-                onClick={() => setShowForm(true)}
-                className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
-              >
-                Join Leaderboard
-              </Button>
-            </div>
-          </div>
 
-          {/* Leaderboard Table */}
-          <LeaderboardTable 
-            participants={sortedParticipants} 
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            handleSort={handleSort}
-            isLoading={isLoading}
-          />
-        </div>
+              {/* Leaderboard Table */}
+              <LeaderboardTable 
+                participants={getSortedParticipants('overall')} 
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                handleSort={handleSort}
+                isLoading={isLoading}
+              />
+            </div>
+          </UITabsContent>
 
-        {/* Submission Form Modal */}
-        {showForm && (
-          <LeaderboardForm 
-            onClose={() => setShowForm(false)}
-            onSubmit={async (data) => {
-              try {
-                setIsLoading(true);
-                
-                // Check if Supabase is configured
-                if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-                  console.warn('Supabase credentials not configured. Using mock data.');
-                  // Create a mock participant
-                  const mockParticipant: Participant = {
-                    id: `mock-${Date.now()}`,
-                    name: data.name,
-                    leetcode: data.leetcode,
-                    codeforces: data.codeforces,
-                    codechef: data.codechef,
-                    leetcodeRating: 0,
-                    leetcodeSolved: 0,
-                    codeforcesRating: 0,
-                    codeforcesSolved: 0,
-                    codechefRating: 0,
-                    codechefSolved: 0,
-                    totalScore: 0,
-                    rank: participants.length + 1,
-                    avatar: '/team/noimage.jpg',
-                    lastUpdated: new Date().toISOString()
-                  };
-                  
-                  // Add the mock participant to the state
-                  setParticipants(prev => [...prev, mockParticipant]);
-                  setShowForm(false);
-                  return;
-                }
-                
-                // Add participant to Supabase
-                const { data: newParticipant, error } = await supabase
-                  .from('participants')
-                  .insert([{
-                    name: data.name,
-                    leetcode: data.leetcode,
-                    codeforces: data.codeforces,
-                    codechef: data.codechef,
-                    leetcodeRating: 0,
-                    leetcodeSolved: 0,
-                    codeforcesRating: 0,
-                    codeforcesSolved: 0,
-                    codechefRating: 0,
-                    codechefSolved: 0,
-                    totalScore: 0,
-                    rank: participants.length + 1,
-                    avatar: '/team/noimage.jpg',
-                    lastUpdated: new Date().toISOString()
-                  }])
-                  .select()
-                  .single();
-                  
-                if (error) {
-                  console.error('Error adding participant:', error);
-                  throw error;
-                }
-                
-                // Add the new participant to the state
-                setParticipants(prev => [...prev, newParticipant]);
-                
-                // Close the form
-                setShowForm(false);
-                
-                // Refresh the leaderboard to update rankings
-                handleRefresh();
-              } catch (error) {
-                console.error('Failed to add participant:', error);
-                alert('Failed to add participant. Please try again.');
-              } finally {
-                setIsLoading(false);
-              }
-            }}
-          />
-        )}
+          {/* LeetCode Tab Content */}
+          <UITabsContent value="leetcode" className="mt-6">
+            {/* Stats Section */}
+            <LeaderboardStats stats={getStats('leetcode')} />
+
+            {/* Top Performers */}
+            <TopPerformers participants={getTopPerformers('leetcode')} />
+
+            {/* Main Content */}
+            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div className="relative flex-1 md:w-64">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+                    <input
+                      type="text"
+                      placeholder="Search LeetCode users..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                    className="border-white/10 text-white hover:bg-white/10"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                  </Button>
+                </div>
+              </div>
+
+              {/* LeetCode Leaderboard Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-white">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      <th className="py-3 px-4 text-left">Rank</th>
+                      <th className="py-3 px-4 text-left">Participant</th>
+                      <th className="py-3 px-4 text-left">LeetCode Username</th>
+                      <th className="py-3 px-4 text-left">Rating</th>
+                      <th className="py-3 px-4 text-left">Problems Solved</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getSortedParticipants('leetcode').map((participant, index) => (
+                      <motion.tr
+                        key={participant.id || index}
+                        className={`border-b border-white/10 ${index < 3 ? "bg-gradient-to-r from-blue-500/20 to-transparent" : ""}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                      >
+                        <td className="py-3 px-4">
+                          {index + 1}
+                          {index < 3 && (
+                            <span className="ml-2">
+                              {index === 0 && "🥇"}
+                              {index === 1 && "🥈"}
+                              {index === 2 && "🥉"}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 flex items-center gap-3">
+                          {participant.avatar ? (
+                            <Image 
+                              src={participant.avatar} 
+                              alt={participant.name} 
+                              width={32} 
+                              height={32} 
+                              className="rounded-full"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                              <User className="w-4 h-4 text-blue-400" />
+                            </div>
+                          )}
+                          <span>{participant.name}</span>
+                        </td>
+                        <td className="py-3 px-4">{participant.leetcode}</td>
+                        <td className="py-3 px-4">{participant.leetcodeRating}</td>
+                        <td className="py-3 px-4">{participant.leetcodeSolved}</td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </UITabsContent>
+
+          {/* CodeForces Tab Content */}
+          <UITabsContent value="codeforces" className="mt-6">
+            {/* Stats Section */}
+            <LeaderboardStats stats={getStats('codeforces')} />
+
+            {/* Top Performers */}
+            <TopPerformers participants={getTopPerformers('codeforces')} />
+
+            {/* Main Content */}
+            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div className="relative flex-1 md:w-64">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+                    <input
+                      type="text"
+                      placeholder="Search CodeForces users..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                    className="border-white/10 text-white hover:bg-white/10"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                  </Button>
+                </div>
+              </div>
+
+              {/* CodeForces Leaderboard Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-white">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      <th className="py-3 px-4 text-left">Rank</th>
+                      <th className="py-3 px-4 text-left">Participant</th>
+                      <th className="py-3 px-4 text-left">CodeForces Username</th>
+                      <th className="py-3 px-4 text-left">Rating</th>
+                      <th className="py-3 px-4 text-left">Problems Solved</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getSortedParticipants('codeforces').map((participant, index) => (
+                      <motion.tr
+                        key={participant.id || index}
+                        className={`border-b border-white/10 ${index < 3 ? "bg-gradient-to-r from-blue-500/20 to-transparent" : ""}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                      >
+                        <td className="py-3 px-4">
+                          {index + 1}
+                          {index < 3 && (
+                            <span className="ml-2">
+                              {index === 0 && "🥇"}
+                              {index === 1 && "🥈"}
+                              {index === 2 && "🥉"}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 flex items-center gap-3">
+                          {participant.avatar ? (
+                            <img 
+                              src={participant.avatar} 
+                              alt={participant.name} 
+                              width={32} 
+                              height={32} 
+                              className="rounded-full"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                              <User className="w-4 h-4 text-blue-400" />
+                            </div>
+                          )}
+                          <span>{participant.name}</span>
+                        </td>
+                        <td className="py-3 px-4">{participant.codeforces}</td>
+                        <td className="py-3 px-4">{participant.codeforcesRating}</td>
+                        <td className="py-3 px-4">{participant.codeforcesSolved}</td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </UITabsContent>
+
+          {/* CodeChef Tab Content */}
+          <UITabsContent value="codechef" className="mt-6">
+            {/* Stats Section */}
+            <LeaderboardStats stats={getStats('codechef')} />
+
+            {/* Top Performers */}
+            <TopPerformers participants={getTopPerformers('codechef')} />
+
+            {/* Main Content */}
+            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div className="relative flex-1 md:w-64">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
+                    <input
+                      type="text"
+                      placeholder="Search CodeChef users..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                    className="border-white/10 text-white hover:bg-white/10"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                  </Button>
+                </div>
+              </div>
+
+              {/* CodeChef Leaderboard Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-white">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      <th className="py-3 px-4 text-left">Rank</th>
+                      <th className="py-3 px-4 text-left">Participant</th>
+                      <th className="py-3 px-4 text-left">CodeChef Username</th>
+                      <th className="py-3 px-4 text-left">Rating</th>
+                      <th className="py-3 px-4 text-left">Problems Solved</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getSortedParticipants('codechef').map((participant, index) => (
+                      <motion.tr
+                        key={participant.id || index}
+                        className={`border-b border-white/10 ${index < 3 ? "bg-gradient-to-r from-blue-500/20 to-transparent" : ""}`}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                      >
+                        <td className="py-3 px-4">
+                          {index + 1}
+                          {index < 3 && (
+                            <span className="ml-2">
+                              {index === 0 && "🥇"}
+                              {index === 1 && "🥈"}
+                              {index === 2 && "🥉"}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 flex items-center gap-3">
+                          {participant.avatar ? (
+                            <img 
+                              src={participant.avatar} 
+                              alt={participant.name} 
+                              width={32} 
+                              height={32} 
+                              className="rounded-full"
+                            />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+                              <User className="w-4 h-4 text-blue-400" />
+                            </div>
+                          )}
+                          <span>{participant.name}</span>
+                        </td>
+                        <td className="py-3 px-4">{participant.codechef}</td>
+                        <td className="py-3 px-4">{participant.codechefRating}</td>
+                        <td className="py-3 px-4">{participant.codechefSolved}</td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </UITabsContent>
+        </UITabs>
       </motion.div>
 
+      {/* Leaderboard Form Modal */}
+      {showForm && (
+        <LeaderboardForm 
+          onClose={() => setShowForm(false)} 
+          onSubmit={async (data) => {
+            try {
+              // Check if Supabase is configured
+              if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+                console.warn('Supabase credentials not configured. Cannot submit form.');
+                setShowForm(false);
+                return;
+              }
+              
+              // Calculate total score
+              const totalScore = 
+                (data.leetcodeRating || 0) + 
+                (data.leetcodeSolved || 0) * 2 + 
+                (data.codeforcesRating || 0) + 
+                (data.codeforcesSolved || 0) * 2 + 
+                (data.codechefRating || 0) + 
+                (data.codechefSolved || 0) * 2;
+              
+              // Add participant to Supabase
+              const { error } = await supabase
+                .from('participants')
+                .insert([
+                  { 
+                    ...data,
+                    totalScore,
+                    lastUpdated: new Date().toISOString().split('T')[0]
+                  }
+                ]);
+                
+              if (error) {
+                console.error('Error adding participant:', error);
+                throw error;
+              }
+              
+              // Refresh data
+              handleRefresh();
+              setShowForm(false);
+            } catch (error) {
+              console.error('Failed to add participant:', error);
+              // Show error message to user
+              alert('Failed to add participant. Please try again.');
+            }
+          }}
+        />
+      )}
+
+      {/* Meteors Effect */}
+      <Meteors number={20} />
+      
       <Footer />
     </div>
   );
