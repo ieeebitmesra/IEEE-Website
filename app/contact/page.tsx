@@ -19,6 +19,7 @@ import {
   MessageCircle 
 } from "lucide-react";
 import { useState } from "react";
+import { supabase } from '@/lib/supabase';
 
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
@@ -32,11 +33,38 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('sending');
-    // Simulate form submission
-    setTimeout(() => {
+    
+    try {
+      // Insert form data into Supabase
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert([
+          { 
+            name: formData.name,
+            email: formData.email,
+            subject: formData.subject,
+            message: formData.message,
+            created_at: new Date()
+          }
+        ]);
+        
+      if (error) throw error;
+      
       setFormStatus('sent');
+      // Clear form data
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      
       setTimeout(() => setFormStatus('idle'), 3000);
-    }, 1500);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setFormStatus('error');
+      setTimeout(() => setFormStatus('idle'), 3000);
+    }
   };
 
   const contactInfo = [
@@ -109,7 +137,7 @@ export default function ContactPage() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 max-w-5xl mx-auto"
         >
           {contactInfo.map((info, index) => {
             const Icon = info.icon;
@@ -117,7 +145,7 @@ export default function ContactPage() {
               <motion.div
                 key={index}
                 whileHover={{ y: -5 }}
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6"
+                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 flex flex-col items-center text-center"
               >
                 <Icon className={`w-8 h-8 ${info.color} mb-4`} />
                 <h3 className="text-white text-lg font-semibold mb-2">{info.title}</h3>
@@ -245,4 +273,4 @@ export default function ContactPage() {
       <Footer />
     </div>
   );
-} 
+}

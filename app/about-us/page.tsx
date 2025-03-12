@@ -5,7 +5,7 @@ import { Meteors } from "@/components/ui/meteor";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Code, Users, Trophy, Target, BookOpen, Rocket, Heart } from "lucide-react";
+import { ArrowRight, Code, Users, Heart, Target, Trophy } from "lucide-react";
 
 export default function AboutUsPage() {
   const milestones = [
@@ -148,10 +148,10 @@ export default function AboutUsPage() {
                 initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 className={`flex items-center gap-8 mb-12 ${
-                  index % 2 === 0 ? 'flex-row-reverse' : ''
-                }`}
+                  index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'
+                } max-w-2xl mx-auto`}
               >
-                <div className="flex-1 text-right">
+                <div className={`flex-1 ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
                   <div className="text-blue-400 text-xl font-bold mb-2">{milestone.year}</div>
                   <h3 className="text-white text-lg font-semibold mb-1">{milestone.title}</h3>
                   <p className="text-white/60">{milestone.description}</p>
@@ -187,23 +187,7 @@ export default function AboutUsPage() {
           </div>
         </motion.div>
 
-        {/* Join Us CTA */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10 mb-20"
-        >
-          <h2 className="text-3xl font-bold text-white mb-4">Join Our Community</h2>
-          <p className="text-white/70 mb-8">Be part of something bigger. Join us in our mission to innovate and excel.</p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition flex items-center gap-2 mx-auto"
-          >
-            Become a Member
-            <ArrowRight className="w-5 h-5" />
-          </motion.button>
-        </motion.div>
+        
       </motion.div>
       <Footer />
     </div>

@@ -1,6 +1,6 @@
 "use client";
 import { Header1 } from "@/components/ui/header";
-import { LinkedinIcon, MailIcon, GithubIcon, TwitterIcon, Code2, Users2, Trophy, Rocket } from "lucide-react";
+import { LinkedinIcon, InstagramIcon, GithubIcon, TwitterIcon, Code2, Users2, Trophy, Rocket } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -14,12 +14,8 @@ interface TeamMember {
   image: string;
   linkedin: string;
   github: string;
-  twitter: string;
-  email: string;
+  instagram: string;
   department: string;
-  bio: string;
-  skills: string[];
-  achievements: string[];
 }
 
 export default function TeamPage() {
@@ -27,151 +23,423 @@ export default function TeamPage() {
 
   const departments = [
     "all",
-    "Technical",
     "Management",
+    "Technical",
     "Design",
     "Content",
-    "PR & Marketing"
+    "Events",
+    "Executive",
+    
   ];
 
   const teamMembers: TeamMember[] = [
     {
-      name: "prateek",
-      role: "Technical Head",
-      image: "/team/john.jpg",
-      linkedin: "https://linkedin.com",
+      name: "Prateek Krishna",
+      role: "President",
+      image: "/team/prateek.jpg",
+      linkedin: "https://www.linkedin.com/in/prateekkrishna?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "john@ieee.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+     
+    },
+    {
+      name: "Gajendra Agarwal",
+      role: "Vice President",
+      image: "/team/gajendra.jpg",
+      linkedin: "https://www.linkedin.com/in/gajendra-agarwal-a51aa9228/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "Vaishali Jain",
+      role: "Vice President",
+      image: "/team/vaishali.jpg",
+      linkedin: "https://www.linkedin.com/in/vaishali-jain-571361229/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "Divjot Singh",
+      role: "Director",
+      image: "/team/divjot.jpg",
+      linkedin: "https://www.linkedin.com/in/divjot-singh-4185b8280/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+     
+    },
+    {
+      name: "Shouryaman Singh",
+      role: "General Secretary",
+      image: "/team/shouryaman.jpg",
+      linkedin: "https://www.linkedin.com/in/shouryaman?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "Hritabhash Ray",
+      role: "General Secretary",
+      image: "/team/Hritabhash.jpg",
+      linkedin: "https://www.linkedin.com/in/hritabhash-ray-53563922b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "Akash Kumar Tiwary",
+      role: "Joint Secretary",
+      image: "/team/Akash Kumar Tiwary .jpg",
+      linkedin: "https://www.linkedin.com/in/akashkt10172?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "keshav agarwal",
+      role: "Joint Secretary",
+      image: "/team/keshav.jpg",
+      linkedin: "https://www.linkedin.com/in/keshavagarwal0927?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    
+    {
+      name: "Sukham Singh",
+      role: "Joint Secretary",
+      image: "/team/sukham.jpg",
+      linkedin: "https://www.linkedin.com/in/sukham-singh?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "Adarsh Narayan",
+      role: "Co-Director",
+      image: "/team/adarsh.jpg",
+      linkedin: "https://www.linkedin.com/in/adarsh-narayan-711a24263?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "Ataullah Ansari",
+      role: "Co-Director",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/attaullah-ansari-1304aa264?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "MD. Gufran",
+      role: "Treasurer",
+      image: "/team/gufran.jpg",
+      linkedin: "https://www.linkedin.com/in/mdgufrann?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+      
+    },
+    {
+      name: "Rishabh Raj",
+      role: "Joint Treasurer",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/rishabh-raj-60060b25a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+      
+    },
+    {
+      name: "Nikhil Kumar Singh",
+      role: "Web Master ",
+      image: "/team/nikhil.jpg",
+      linkedin: "https://www.linkedin.com/in/nikhil-singh-64a414160?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
       department: "Technical",
-      bio: "Full-stack developer with a passion for AI and Machine Learning",
-      skills: ["React", "Node.js", "Python", "TensorFlow"],
-      achievements: ["Best Developer Award 2023", "3x Hackathon Winner"]
+      
     },
     {
-      name: "Shauryaman",
-      role: "Design Lead",
-      image: "/team/sarah.jpg",
+      name: "Garvit Raj",
+      role: "Tech Head",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/garvitrajbitmesra?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+    {
+      name: "Abhiraj Sinha",
+      role: "Tech Head",
+      image: "/team/abhiraj.jpg",
+      linkedin: "https://www.linkedin.com/in/abhiraj-sinha-240269249?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+    {
+      name: "Soumojjal Sen",
+      role: "Tech Head",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/soumojjal-sen-7b8490256?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+    {
+      name: "shailesh kumar",
+      role: "Design heads",
+      image: "/team/noimage.jpg",
       linkedin: "https://linkedin.com",
       github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "sarah@ieee.com",
+      instagram: "https://instagram.com",
       department: "Design",
-      bio: "UI/UX enthusiast with expertise in creating intuitive user experiences",
-      skills: ["Figma", "Adobe XD", "Sketch", "Prototyping"],
-      achievements: ["Design Excellence Award", "UI/UX Hackathon Winner"]
+      
     },
     {
-      name: "Raj Patel",
-      role: "Management Head",
+      name: "Sakshi Sinha",
+      role: "Design heads",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/sakshi-sinha-09a377270?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Design",
+     
+    },
+    {
+      name: "Nayan Shenoy",
+      role: "Content head",
+      image: "/team/nayan.jpg",
+      linkedin: "https://www.linkedin.com/in/nayan-shenoy-14704a24b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Content",
+      
+    },
+    {
+      name: "Harshita Kedia",
+      role: "Content head",
+      image: "/team/harshita.jpg",
+      linkedin: "https://www.linkedin.com/in/harshitakedia?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Content",
+      
+    },
+    {
+      name: "Akshay Gupta",
+      role: "Event Head",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/akshayguptanarsina?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Events",
+      
+    },
+    {
+      name: "Akshat Tambi",
+      role: "Event Head",
+      image: "/team/akshat.jpg",
+      linkedin: "https://www.linkedin.com/in/1akshat-tambi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Events",
+      
+    },
+    {
+      name: "Arman Sethi",
+      role: "Event Head",
+      image: "/team/arman.jpg",
+      linkedin: "https://www.linkedin.com/in/armansethi-tech?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Events",
+      
+    },
+    
+    {
+      name: "Saquib Jawed",
+      role: "Developer",
+      image: "/team/saquib.jpg",
+      linkedin: "https://www.linkedin.com/in/mdsaquibjawed/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+
+    {
+      name: "Subhayu Das",
+      role: "Developer",
+      image: "/team/subhayu.jpg",
+      linkedin: "https://www.linkedin.com/in/subhayu-das/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+    {
+      name: "Ankit Singh Sisodia",
+      role: "Developer",
+      image: "/team/ankit.jpg",
+      linkedin: "https://www.linkedin.com/in/ankit-sisodya/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+    {
+      name: "Akshat Gupta",
+      role: "Developer",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/akshat-gupta-9b39992a7/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+
+    {
+      name: "Shaswat Raj",
+      role: "Developer",
+      image: "/team/shaswat.jpg",
+      linkedin: "https://www.linkedin.com/in/sh20raj/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+
+    {
+      name: "Suman Shekhar Bhardwaj",
+      role: "Senior Executive Member",
+      image: "/team/suman.jpg",
+      linkedin: "https://www.linkedin.com/in/suman-shekhar-bhardwaj-240513237/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+      
+    },
+    {
+      name: "Sumit Agarwal",
+      role: "Senior Executive Member",
+      image: "/team/sumit.jpg",
+      linkedin: "https://www.linkedin.com/in/sumit-agarwal2002/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+     
+    },
+
+    {
+      name: "Aayush Raturi",
+      role: "Senior Executive Member",
+      image: "/team/aayush.jpg",
+      linkedin: "https://www.linkedin.com/in/aayush-raturi-1816a6135/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+     
+    },
+    {
+      name: "Amrit Yashasvi Lal",
+      role: "Senior Executive Member",
+      image: "/team/amrit.jpg",
+      linkedin: "https://www.linkedin.com/in/amrit-yashasvi-lal-604672232/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+      
+    },
+    {
+      name: "Anish Kumar Singh",
+      role: "Senior Executive Member",
+      image: "/team/anish.jpg",
+      linkedin: "https://www.linkedin.com/in/anish-kumar-singh-155334222/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+      
+    },
+    {
+      name: "Ayush Kumar",
+      role: "Senior Executive Member",
+      image: "/team/ayush.jpg",
+      linkedin: "https://www.linkedin.com/in/ayushkumar3070/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+     
+    },
+    {
+      name: "Priyanshu Singhal",
+      role: "Senior Executive Member",
+      image: "/team/priyanshu.jpg",
+      linkedin: "https://www.linkedin.com/in/priyanshu-singhal1/",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+      
+    },
+    {
+      name: "Rajat Singh",
+      role: "Senior Executive Member",
+      image: "/team/noimage.jpg",
+      linkedin: "https://linkedin.com",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Executive",
+     
+    },
+    {
+      name: "Raj Aryan",
+      role: "Senior Executive Member",
       image: "/team/raj.jpg",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/thatrajaryan/",
       github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "raj@ieee.com",
-      department: "Management",
-      bio: "Strategic planner with experience in organizing large-scale tech events",
-      skills: ["Event Management", "Leadership", "Team Building", "Strategy"],
-      achievements: ["Best Manager 2023", "Successful TechFest Organization"]
+      instagram: "https://instagram.com",
+      department: "Executive",
+      
     },
     {
-      name: "Priya Sharma",
-      role: "Content Lead",
-      image: "/team/priya.jpg",
-      linkedin: "https://linkedin.com",
+      name: "Shivang Airan",
+      role: "Senior Executive Member",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/shivang007/",
       github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "priya@ieee.com",
-      department: "Content",
-      bio: "Technical writer and content strategist with a flair for storytelling",
-      skills: ["Technical Writing", "SEO", "Content Strategy", "Blogging"],
-      achievements: ["Best Content Award", "1M+ Blog Views"]
-    },
-    {
-      name: "Alex Chen",
-      role: "PR & Marketing Head",
-      image: "/team/alex.jpg",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "alex@ieee.com",
-      department: "PR & Marketing",
-      bio: "Digital marketing specialist focused on community growth",
-      skills: ["Social Media", "Brand Strategy", "Analytics", "Community Building"],
-      achievements: ["200% Community Growth", "Best Marketing Campaign 2023"]
-    },
-    {
-      name: "sukham singh",
-      role: "Technical Core",
-      image: "/team/mike.jpg",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "mike@ieee.com",
-      department: "Technical",
-      bio: "Backend developer specializing in scalable systems",
-      skills: ["Java", "Spring Boot", "AWS", "Microservices"],
-      achievements: ["System Architecture Award", "Tech Blog Contributor"]
-    },
-    {
-      name: "Lisa Wang",
-      role: "Design Core",
-      image: "/team/lisa.jpg",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "lisa@ieee.com",
-      department: "Design",
-      bio: "Motion designer and illustrator creating engaging visual experiences",
-      skills: ["After Effects", "Illustration", "Animation", "3D Modeling"],
-      achievements: ["Best Animation Award", "Featured Designer 2023"]
-    },
-    {
-      name: "Aditya Kumar",
-      role: "Management Core",
-      image: "/team/aditya.jpg",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "aditya@ieee.com",
-      department: "Management",
-      bio: "Project coordinator with expertise in team leadership",
-      skills: ["Project Management", "Agile", "Risk Management", "Budgeting"],
-      achievements: ["Successful Hackathon Organization", "Leadership Award"]
-    },
-    {
-      name: "Emma Davis",
-      role: "Content Creator",
-      image: "/team/emma.jpg",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "emma@ieee.com",
-      department: "Content",
-      bio: "Creative writer with a focus on technical documentation",
-      skills: ["Content Writing", "Documentation", "Editing", "Social Media"],
-      achievements: ["Best Blog Series", "Documentation Excellence Award"]
-    },
-    {
-      name: "Tom Wilson",
-      role: "PR Executive",
-      image: "/team/tom.jpg",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      twitter: "https://twitter.com",
-      email: "tom@ieee.com",
-      department: "PR & Marketing",
-      bio: "Public relations specialist with a background in tech communication",
-      skills: ["Media Relations", "Event Promotion", "Branding", "Networking"],
-      achievements: ["PR Campaign of the Year", "Media Coverage Record"]
+      instagram: "https://instagram.com",
+      department: "Executive",
+     
     }
+    
   ];
 
   const stats = [
-    { icon: Code2, number: "30+", label: "Active Projects" },
-    { icon: Users2, number: "50+", label: "Team Members" },
-    { icon: Trophy, number: "20+", label: "Awards Won" },
-    { icon: Rocket, number: "100+", label: "Events Organized" },
+    { icon: Code2, number: "50+", label: "Active Projects" },
+    { icon: Users2, number: "100+", label: "Team Members" },
+    { icon: Trophy, number: "30+", label: "Awards Won" },
+    { icon: Rocket, number: "150+", label: "Events Organized" },
   ];
 
   const filteredMembers = teamMembers.filter(member => 
@@ -248,7 +516,7 @@ export default function TeamPage() {
         </div>
 
         {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-20">
           {filteredMembers.map((member, index) => (
             <motion.div
               key={index}
@@ -258,7 +526,7 @@ export default function TeamPage() {
               whileHover={{ y: -5 }}
               className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 group"
             >
-              <div className="relative h-64">
+              <div className="relative h-48">
                 <Image
                   src={member.image}
                   alt={member.name}
@@ -267,68 +535,39 @@ export default function TeamPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
-                  <h3 className="text-xl font-bold text-white mb-1">{member.name}</h3>
-                  <p className="text-blue-400">{member.role}</p>
+                  <h3 className="text-lg font-bold text-white mb-1">{member.name}</h3>
+                  <p className="text-blue-400 text-sm">{member.role}</p>
                 </div>
               </div>
               
-              <div className="p-6 space-y-4">
-                <p className="text-white/70 text-sm">{member.bio}</p>
-                
-                <div>
-                  <h4 className="text-sm font-semibold text-white mb-2">Skills:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {member.skills.map((skill, i) => (
-                      <span
-                        key={i}
-                        className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-full text-xs"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-semibold text-white mb-2">Achievements:</h4>
-                  <ul className="text-sm text-white/60 space-y-1">
-                    {member.achievements.map((achievement, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <Trophy className="w-4 h-4 text-blue-400 mt-0.5" />
-                        {achievement}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="flex gap-4 pt-4 border-t border-white/10">
+              <div className="p-4">
+                <div className="flex gap-3 pt-2 justify-center">
                   <motion.a
                     href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.1 }}
                     className="text-white/60 hover:text-white transition"
                   >
-                    <LinkedinIcon className="w-5 h-5" />
+                    <LinkedinIcon className="w-4 h-4" />
                   </motion.a>
                   <motion.a
                     href={member.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.1 }}
                     className="text-white/60 hover:text-white transition"
                   >
-                    <GithubIcon className="w-5 h-5" />
+                    <GithubIcon className="w-4 h-4" />
                   </motion.a>
                   <motion.a
-                    href={member.twitter}
+                    href={member.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.1 }}
                     className="text-white/60 hover:text-white transition"
                   >
-                    <TwitterIcon className="w-5 h-5" />
-                  </motion.a>
-                  <motion.a
-                    href={member.email}
-                    whileHover={{ scale: 1.1 }}
-                    className="text-white/60 hover:text-white transition"
-                  >
-                    <MailIcon className="w-5 h-5" />
+                    <InstagramIcon className="w-4 h-4" />
                   </motion.a>
                 </div>
               </div>
@@ -336,24 +575,7 @@ export default function TeamPage() {
           ))}
         </div>
 
-        {/* Join the Team CTA */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10 mb-20"
-        >
-          <h2 className="text-3xl font-bold text-white mb-4">Want to Join Our Team?</h2>
-          <p className="text-white/70 mb-8">
-            We're always looking for passionate individuals to join our community
-          </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
-          >
-            Apply Now
-          </motion.button>
-        </motion.div>
+       
       </motion.div>
       <Footer />
     </div>
