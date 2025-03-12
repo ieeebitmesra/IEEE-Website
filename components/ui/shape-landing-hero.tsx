@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Circle } from "lucide-react";
- import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 function ElegantShape({
   className,
@@ -163,7 +163,7 @@ function HeroGeometric({
             animate="visible"
           >
             <div className=" flex justify-center items-center">
-              <img src="/logo.png" className=" w-2/3" alt={title2} />
+              <img src="/ieee-logo1.png" className=" w-2/3" alt={title2} />
             </div>
             <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6 md:mb-8 tracking-tight">
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-fuchsia/80">
@@ -190,7 +190,7 @@ function HeroGeometric({
             initial="hidden"
             animate="visible"
           >
-            <p className="text-base sm:text-lg md:text-xl text-blue-400 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
+            <p className="text-base sm:text-lg md:text-xl text-blue-400 mb-24 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
               Advancing Technology for Humanity{" "}
             </p>
           </motion.div>
