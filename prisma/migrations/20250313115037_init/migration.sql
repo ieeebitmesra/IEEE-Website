@@ -1,0 +1,27 @@
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "codeforcesHandle" TEXT NOT NULL,
+    "codeforcesRating" INTEGER NOT NULL,
+    "codeforcesProblemsSolved" INTEGER NOT NULL,
+    "leetcodeHandle" TEXT NOT NULL,
+    "leetcodeRating" INTEGER NOT NULL,
+    "leetcodeProblemsSolved" INTEGER NOT NULL,
+    "codechefHandle" TEXT NOT NULL,
+    "codechefRating" INTEGER NOT NULL,
+    "codechefProblemsSolved" INTEGER NOT NULL
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_codeforcesHandle_key" ON "User"("codeforcesHandle");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_leetcodeHandle_key" ON "User"("leetcodeHandle");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_codechefHandle_key" ON "User"("codechefHandle");

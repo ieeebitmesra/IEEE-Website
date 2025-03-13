@@ -5,13 +5,13 @@ import { Meteors } from "@/components/ui/meteor";
 import { BackgroundSparkles } from "@/components/ui/animations/BackgroundSparkles";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { 
-  Trophy, 
-  Medal, 
-  Code, 
-  Search, 
-  Filter, 
-  ArrowUpDown, 
+import {
+  Trophy,
+  Medal,
+  Code,
+  Search,
+  Filter,
+  ArrowUpDown,
   Github,
   RefreshCw,
   User,
@@ -23,21 +23,26 @@ import { LeaderboardTable } from "@/components/ui/leaderboard/LeaderboardTable";
 import { LeaderboardForm } from "@/components/ui/leaderboard/LeaderboardForm";
 import { LeaderboardStats } from "@/components/ui/leaderboard/LeaderboardStats";
 import { TopPerformers } from "@/components/ui/leaderboard/TopPerformers";
-import { supabase } from "@/lib/supabase";
+// import { supabase } from "@/lib/supabase";
 import { Tabs as UITabs, TabsContent as UITabsContent, TabsList as UITabsList, TabsTrigger as UITabsTrigger } from "@/components/ui/tabs";
+import { updateUsersRating } from "@/actions/updateUserRating";
+import { getUser } from "@/actions/getUser";
+import { User as userType } from "@prisma/client";
+import { prisma } from "@/lib";
+import { get } from "http";
 
 export interface Participant {
   id: string;
   name: string;
   leetcode: string;
-  codeforces: string;
-  codechef: string;
+  codeforcesHandle: string;
+  codechefHandle: string;
   leetcodeRating: number;
-  leetcodeSolved: number;
+  leetcodeProblemsSolved: number;
   codeforcesRating: number;
-  codeforcesSolved: number;
+  codeforcesProblemsSolved: number;
   codechefRating: number;
-  codechefSolved: number;
+  codechefProblemsSolved: number;
   totalScore: number;
   rank: number;
   avatar: string;
@@ -52,8 +57,8 @@ export default function LeaderboardPage() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  
-  const [participants, setParticipants] = useState<Participant[]>([]);
+
+  const [participants, setParticipants] = useState<userType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<string>("totalScore");
@@ -63,154 +68,33 @@ export default function LeaderboardPage() {
   const [activeTab, setActiveTab] = useState<string>("overall");
 
   // Fetch participants data from Supabase
+
+
   useEffect(() => {
     async function fetchParticipants() {
       try {
         setIsLoading(true);
-        
-        // Check if Supabase URL and key are configured
-        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-          console.warn('Supabase credentials not configured. Using mock data.');
-          // Use mock data as fallback
-          const mockData: Participant[] = [
-            {
-              id: "1",
-              name: "Prateek Krishna",
-              leetcode: "prateek_krishna",
-              codeforces: "prateek_cf",
-              codechef: "prateek_cc",
-              leetcodeRating: 2100,
-              leetcodeSolved: 450,
-              codeforcesRating: 1850,
-              codeforcesSolved: 320,
-              codechefRating: 1950,
-              codechefSolved: 280,
-              totalScore: 6950,
-              rank: 1,
-              avatar: "/team/prateek.jpg",
-              lastUpdated: "2023-06-15"
-            },
-            {
-              id: "2",
-              name: "Sukham Singh",
-              leetcode: "sukham_singh",
-              codeforces: "sukham_cf",
-              codechef: "sukham_cc",
-              leetcodeRating: 1950,
-              leetcodeSolved: 420,
-              codeforcesRating: 1800,
-              codeforcesSolved: 300,
-              codechefRating: 1900,
-              codechefSolved: 260,
-              totalScore: 6630,
-              rank: 2,
-              avatar: "/team/sukham.jpg",
-              lastUpdated: "2023-06-14"
-            },
-            {
-              id: "3",
-              name: "Vaishali Jain",
-              leetcode: "vaishali_jain",
-              codeforces: "vaishali_cf",
-              codechef: "vaishali_cc",
-              leetcodeRating: 1900,
-              leetcodeSolved: 400,
-              codeforcesRating: 1750,
-              codeforcesSolved: 280,
-              codechefRating: 1850,
-              codechefSolved: 240,
-              totalScore: 6420,
-              rank: 3,
-              avatar: "/team/vaishali.jpg",
-              lastUpdated: "2023-06-13"
-            }
-          ];
-          setParticipants(mockData);
-          return;
-        }
-        
-        // Fetch data from Supabase
-        const { data, error } = await supabase
-          .from('participants')
-          .select('*')
-          .order('totalScore', { ascending: false });
-          
-        if (error) {
-          console.error('Error fetching participants:', error);
-          throw error;
-        }
-        
-        // Add rank to each participant based on their position
-        const rankedData = data.map((participant, index) => ({
-          ...participant,
+        const users = await getUser();
+
+        console.log("users", users);
+        // Add rank to each user based on position
+        const rankedUsers = users.map((user, index) => ({
+          ...user,
           rank: index + 1
         }));
-        
-        setParticipants(rankedData);
+
+        setParticipants(rankedUsers);
       } catch (error) {
         console.error('Failed to fetch participants:', error);
-        // Use mock data as fallback on error
-        const mockData: Participant[] = [
-          {
-            id: "1",
-            name: "Prateek Krishna",
-            leetcode: "prateek_krishna",
-            codeforces: "prateek_cf",
-            codechef: "prateek_cc",
-            leetcodeRating: 2100,
-            leetcodeSolved: 450,
-            codeforcesRating: 1850,
-            codeforcesSolved: 320,
-            codechefRating: 1950,
-            codechefSolved: 280,
-            totalScore: 6950,
-            rank: 1,
-            avatar: "/team/prateek.jpg",
-            lastUpdated: "2023-06-15"
-          },
-          {
-            id: "2",
-            name: "Sukham Singh",
-            leetcode: "sukham_singh",
-            codeforces: "sukham_cf",
-            codechef: "sukham_cc",
-            leetcodeRating: 1950,
-            leetcodeSolved: 420,
-            codeforcesRating: 1800,
-            codeforcesSolved: 300,
-            codechefRating: 1900,
-            codechefSolved: 260,
-            totalScore: 6630,
-            rank: 2,
-            avatar: "/team/sukham.jpg",
-            lastUpdated: "2023-06-14"
-          },
-          {
-            id: "3",
-            name: "Vaishali Jain",
-            leetcode: "vaishali_jain",
-            codeforces: "vaishali_cf",
-            codechef: "vaishali_cc",
-            leetcodeRating: 1900,
-            leetcodeSolved: 400,
-            codeforcesRating: 1750,
-            codeforcesSolved: 280,
-            codechefRating: 1850,
-            codechefSolved: 240,
-            totalScore: 6420,
-            rank: 3,
-            avatar: "/team/vaishali.jpg",
-            lastUpdated: "2023-06-13"
-          }
-        ];
-        setParticipants(mockData);
       } finally {
         setIsLoading(false);
+
       }
     }
-    
+
     fetchParticipants();
   }, []);
+
 
   // Function to handle sorting
   const handleSort = (column: string) => {
@@ -223,17 +107,17 @@ export default function LeaderboardPage() {
   };
 
   // Function to filter participants based on search query
-  const filteredParticipants = participants.filter(participant => 
+  const filteredParticipants = participants.filter(participant =>
     participant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    participant.leetcode.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    participant.codeforces.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    participant.codechef.toLowerCase().includes(searchQuery.toLowerCase())
+    participant.leetcodeHandle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    participant.codeforcesHandle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    participant.codechefHandle.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Function to sort participants
   const getSortedParticipants = (platform: string = 'overall') => {
     let sortedList = [...filteredParticipants];
-    
+
     if (platform === 'leetcode') {
       // Sort by LeetCode rating
       sortedList.sort((a, b) => b.leetcodeRating - a.leetcodeRating);
@@ -261,44 +145,44 @@ export default function LeaderboardPage() {
     } else {
       // Overall sorting based on selected sort criteria
       let aValue, bValue;
-      
+
       return [...filteredParticipants].sort((a, b) => {
         switch (sortBy) {
           case "name":
             aValue = a.name;
             bValue = b.name;
-            return sortOrder === "asc" 
-              ? aValue.localeCompare(bValue) 
+            return sortOrder === "asc"
+              ? aValue.localeCompare(bValue)
               : bValue.localeCompare(aValue);
           case "leetcodeRating":
             aValue = a.leetcodeRating;
             bValue = b.leetcodeRating;
             break;
-          case "leetcodeSolved":
-            aValue = a.leetcodeSolved;
-            bValue = b.leetcodeSolved;
+          case "leetcodeProblemsSolved":
+            aValue = a.leetcodeProblemsSolved;
+            bValue = b.leetcodeProblemsSolved;
             break;
           case "codeforcesRating":
             aValue = a.codeforcesRating;
             bValue = b.codeforcesRating;
             break;
-          case "codeforcesSolved":
-            aValue = a.codeforcesSolved;
-            bValue = b.codeforcesSolved;
+          case "codeforcesProblemsSolved":
+            aValue = a.codeforcesProblemsSolved;
+            bValue = b.codeforcesProblemsSolved;
             break;
           case "codechefRating":
             aValue = a.codechefRating;
             bValue = b.codechefRating;
             break;
-          case "codechefSolved":
-            aValue = a.codechefSolved;
-            bValue = b.codechefSolved;
+          case "codechefProblemsSolved":
+            aValue = a.codechefProblemsSolved;
+            bValue = b.codechefProblemsSolved;
             break;
           default:
-            aValue = a.totalScore;
-            bValue = b.totalScore;
+            aValue = a.codeforcesProblemsSolved;
+            bValue = b.codechefProblemsSolved;
         }
-        
+
         return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
       });
     }
@@ -327,33 +211,22 @@ export default function LeaderboardPage() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      // Check if Supabase is configured
-      if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-        console.warn('Supabase credentials not configured. Cannot refresh data.');
-        // Just simulate a refresh with the current data
-        setTimeout(() => {
-          setRefreshing(false);
-        }, 1000);
-        return;
-      }
-      
-      // Fetch fresh data from Supabase
-      const { data, error } = await supabase
-        .from('participants')
-        .select('*')
-        .order('totalScore', { ascending: false });
-        
-      if (error) {
-        console.error('Error refreshing participants:', error);
-        throw error;
-      }
-      
+
+      // Just simulate a refresh with the current data
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1000);
+      return;
+
+
+
+      const data = await getUser();
       // Add rank to each participant based on their position
       const rankedData = data.map((participant, index) => ({
         ...participant,
         rank: index + 1
       }));
-      
+
       setParticipants(rankedData);
     } catch (error) {
       console.error('Failed to refresh participants:', error);
@@ -367,98 +240,98 @@ export default function LeaderboardPage() {
   const getStats = (platform: string = 'overall') => {
     if (platform === 'leetcode') {
       return [
-        { 
-          icon: User, 
-          value: participants.filter(p => p.leetcode).length.toString(), 
-          label: "LeetCode Users" 
+        {
+          icon: User,
+          value: participants.filter(p => p.leetcodeHandle).length.toString(),
+          label: "LeetCode Users"
         },
-        { 
-          icon: Code, 
-          value: participants.reduce((sum, p) => sum + p.leetcodeSolved, 0).toString(), 
-          label: "Problems Solved" 
+        {
+          icon: Code,
+          value: participants.reduce((sum, p) => sum + p.leetcodeProblemsSolved, 0).toString(),
+          label: "Problems Solved"
         },
-        { 
-          icon: Trophy, 
-          value: Math.max(...participants.map(p => p.leetcodeRating || 0)).toString(), 
-          label: "Highest Rating" 
+        {
+          icon: Trophy,
+          value: Math.max(...participants.map(p => p.leetcodeRating || 0)).toString(),
+          label: "Highest Rating"
         },
-        { 
-          icon: Sparkles, 
-          value: Math.round(participants.reduce((sum, p) => sum + p.leetcodeSolved, 0) / 
-                 Math.max(participants.filter(p => p.leetcode).length, 1)).toString(), 
-          label: "Avg. Problems" 
+        {
+          icon: Sparkles,
+          value: Math.round(participants.reduce((sum, p) => sum + p.leetcodeProblemsSolved, 0) /
+            Math.max(participants.filter(p => p.leetcodeHandle).length, 1)).toString(),
+          label: "Avg. Problems"
         }
       ];
     } else if (platform === 'codeforces') {
       return [
-        { 
-          icon: User, 
-          value: participants.filter(p => p.codeforces).length.toString(), 
-          label: "CodeForces Users" 
+        {
+          icon: User,
+          value: participants.filter(p => p.codeforcesHandle).length.toString(),
+          label: "CodeForces Users"
         },
-        { 
-          icon: Code, 
-          value: participants.reduce((sum, p) => sum + p.codeforcesSolved, 0).toString(), 
-          label: "Problems Solved" 
+        {
+          icon: Code,
+          value: participants.reduce((sum, p) => sum + p.codeforcesProblemsSolved, 0).toString(),
+          label: "Problems Solved"
         },
-        { 
-          icon: Trophy, 
-          value: Math.max(...participants.map(p => p.codeforcesRating || 0)).toString(), 
-          label: "Highest Rating" 
+        {
+          icon: Trophy,
+          value: Math.max(...participants.map(p => p.codeforcesRating || 0)).toString(),
+          label: "Highest Rating"
         },
-        { 
-          icon: Sparkles, 
-          value: Math.round(participants.reduce((sum, p) => sum + p.codeforcesSolved, 0) / 
-                 Math.max(participants.filter(p => p.codeforces).length, 1)).toString(), 
-          label: "Avg. Problems" 
+        {
+          icon: Sparkles,
+          value: Math.round(participants.reduce((sum, p) => sum + p.codeforcesProblemsSolved, 0) /
+            Math.max(participants.filter(p => p.codeforcesHandle).length, 1)).toString(),
+          label: "Avg. Problems"
         }
       ];
-    } else if (platform === 'codechef') {
+    } else if (platform === 'codechefHandle') {
       return [
-        { 
-          icon: User, 
-          value: participants.filter(p => p.codechef).length.toString(), 
-          label: "CodeChef Users" 
+        {
+          icon: User,
+          value: participants.filter(p => p.codechefProblemsSolved).length.toString(),
+          label: "CodeChef Users"
         },
-        { 
-          icon: Code, 
-          value: participants.reduce((sum, p) => sum + p.codechefSolved, 0).toString(), 
-          label: "Problems Solved" 
+        {
+          icon: Code,
+          value: participants.reduce((sum, p) => sum + p.codechefProblemsSolved, 0).toString(),
+          label: "Problems Solved"
         },
-        { 
-          icon: Trophy, 
-          value: Math.max(...participants.map(p => p.codechefRating || 0)).toString(), 
-          label: "Highest Rating" 
+        {
+          icon: Trophy,
+          value: Math.max(...participants.map(p => p.codechefRating || 0)).toString(),
+          label: "Highest Rating"
         },
-        { 
-          icon: Sparkles, 
-          value: Math.round(participants.reduce((sum, p) => sum + p.codechefSolved, 0) / 
-                 Math.max(participants.filter(p => p.codechef).length, 1)).toString(), 
-          label: "Avg. Problems" 
+        {
+          icon: Sparkles,
+          value: Math.round(participants.reduce((sum, p) => sum + p.codechefProblemsSolved, 0) /
+            Math.max(participants.filter(p => p.codechefHandle).length, 1)).toString(),
+          label: "Avg. Problems"
         }
       ];
     } else {
       // Overall stats
       return [
-        { 
-          icon: User, 
-          value: participants.length.toString(), 
-          label: "Participants" 
+        {
+          icon: User,
+          value: participants.length.toString(),
+          label: "Participants"
         },
-        { 
-          icon: Code, 
-          value: participants.reduce((sum, p) => sum + p.leetcodeSolved + p.codeforcesSolved + p.codechefSolved, 0).toString(), 
-          label: "Problems Solved" 
+        {
+          icon: Code,
+          value: participants.reduce((sum, p) => sum + p.leetcodeProblemsSolved + p.codeforcesProblemsSolved + p.codechefProblemsSolved, 0).toString(),
+          label: "Problems Solved"
         },
-        { 
-          icon: Trophy, 
-          value: Math.max(...participants.map(p => p.totalScore)).toString(), 
-          label: "Highest Score" 
+        {
+          icon: Trophy,
+          value: Math.max(...participants.map(p => p.totalScore)).toString(),
+          label: "Highest Score"
         },
-        { 
-          icon: Sparkles, 
-          value: Math.max(...participants.map(p => p.leetcodeRating)).toString(), 
-          label: "Top LeetCode Rating" 
+        {
+          icon: Sparkles,
+          value: Math.max(...participants.map(p => p.leetcodeRating)).toString(),
+          label: "Top LeetCode Rating"
         }
       ];
     }
@@ -468,25 +341,25 @@ export default function LeaderboardPage() {
     <div ref={containerRef} className="relative min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
       <BackgroundSparkles />
       <Header1 />
-      
+
       {/* Hero Section */}
-      <motion.div 
+      <motion.div
         style={{ y }}
         className="container mx-auto px-4 pt-24 pb-20"
       >
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-4xl mx-auto mb-16"
         >
-          <motion.h1 
+          <motion.h1
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="text-6xl font-bold text-white mb-6"
           >
             Coding <span className="text-blue-400">Leaderboard</span>
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -501,8 +374,8 @@ export default function LeaderboardPage() {
           <UITabsList className="grid grid-cols-4 max-w-2xl mx-auto">
             <UITabsTrigger value="overall" className="data-[state=active]:bg-blue-600">Overall</UITabsTrigger>
             <UITabsTrigger value="leetcode" className="data-[state=active]:bg-blue-600">LeetCode</UITabsTrigger>
-            <UITabsTrigger value="codeforces" className="data-[state=active]:bg-blue-600">CodeForces</UITabsTrigger>
-            <UITabsTrigger value="codechef" className="data-[state=active]:bg-blue-600">CodeChef</UITabsTrigger>
+            <UITabsTrigger value="codeforcesHandle" className="data-[state=active]:bg-blue-600">CodeForces</UITabsTrigger>
+            <UITabsTrigger value="codechefHandle" className="data-[state=active]:bg-blue-600">CodeChef</UITabsTrigger>
           </UITabsList>
 
           {/* Overall Tab Content */}
@@ -527,9 +400,9 @@ export default function LeaderboardPage() {
                       className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
+                  <Button
+                    variant="outline"
+                    size="icon"
                     onClick={handleRefresh}
                     disabled={refreshing}
                     className="border-white/10 text-white hover:bg-white/10"
@@ -537,9 +410,9 @@ export default function LeaderboardPage() {
                     <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
                   </Button>
                 </div>
-                
+
                 <div className="flex gap-2 w-full md:w-auto">
-                  <Button 
+                  <Button
                     onClick={() => setShowForm(true)}
                     className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
                   >
@@ -549,8 +422,8 @@ export default function LeaderboardPage() {
               </div>
 
               {/* Leaderboard Table */}
-              <LeaderboardTable 
-                participants={getSortedParticipants('overall')} 
+              <LeaderboardTable
+                participants={getSortedParticipants('overall')}
                 sortBy={sortBy}
                 sortOrder={sortOrder}
                 handleSort={handleSort}
@@ -581,9 +454,9 @@ export default function LeaderboardPage() {
                       className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
+                  <Button
+                    variant="outline"
+                    size="icon"
                     onClick={handleRefresh}
                     disabled={refreshing}
                     className="border-white/10 text-white hover:bg-white/10"
@@ -626,11 +499,11 @@ export default function LeaderboardPage() {
                         </td>
                         <td className="py-3 px-4 flex items-center gap-3">
                           {participant.avatar ? (
-                            <Image 
-                              src={participant.avatar} 
-                              alt={participant.name} 
-                              width={32} 
-                              height={32} 
+                            <Image
+                              src={participant.avatar}
+                              alt={participant.name}
+                              width={32}
+                              height={32}
                               className="rounded-full"
                             />
                           ) : (
@@ -640,9 +513,9 @@ export default function LeaderboardPage() {
                           )}
                           <span>{participant.name}</span>
                         </td>
-                        <td className="py-3 px-4">{participant.leetcode}</td>
+                        <td className="py-3 px-4">{participant.leetcodeHandle}</td>
                         <td className="py-3 px-4">{participant.leetcodeRating}</td>
-                        <td className="py-3 px-4">{participant.leetcodeSolved}</td>
+                        <td className="py-3 px-4">{participant.leetcodeProblemsSolved}</td>
                       </motion.tr>
                     ))}
                   </tbody>
@@ -652,12 +525,12 @@ export default function LeaderboardPage() {
           </UITabsContent>
 
           {/* CodeForces Tab Content */}
-          <UITabsContent value="codeforces" className="mt-6">
+          <UITabsContent value="codeforcesHandle" className="mt-6">
             {/* Stats Section */}
-            <LeaderboardStats stats={getStats('codeforces')} />
+            <LeaderboardStats stats={getStats('codeforcesHandle')} />
 
             {/* Top Performers */}
-            <TopPerformers participants={getTopPerformers('codeforces')} />
+            <TopPerformers participants={getTopPerformers('codeforcesHandle')} />
 
             {/* Main Content */}
             <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
@@ -673,9 +546,9 @@ export default function LeaderboardPage() {
                       className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
+                  <Button
+                    variant="outline"
+                    size="icon"
                     onClick={handleRefresh}
                     disabled={refreshing}
                     className="border-white/10 text-white hover:bg-white/10"
@@ -698,7 +571,7 @@ export default function LeaderboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {getSortedParticipants('codeforces').map((participant, index) => (
+                    {getSortedParticipants('codeforcesHandle').map((participant, index) => (
                       <motion.tr
                         key={participant.id || index}
                         className={`border-b border-white/10 ${index < 3 ? "bg-gradient-to-r from-blue-500/20 to-transparent" : ""}`}
@@ -718,11 +591,11 @@ export default function LeaderboardPage() {
                         </td>
                         <td className="py-3 px-4 flex items-center gap-3">
                           {participant.avatar ? (
-                            <img 
-                              src={participant.avatar} 
-                              alt={participant.name} 
-                              width={32} 
-                              height={32} 
+                            <img
+                              src={participant.avatar}
+                              alt={participant.name}
+                              width={32}
+                              height={32}
                               className="rounded-full"
                             />
                           ) : (
@@ -732,9 +605,9 @@ export default function LeaderboardPage() {
                           )}
                           <span>{participant.name}</span>
                         </td>
-                        <td className="py-3 px-4">{participant.codeforces}</td>
+                        <td className="py-3 px-4">{participant.codeforcesHandle}</td>
                         <td className="py-3 px-4">{participant.codeforcesRating}</td>
-                        <td className="py-3 px-4">{participant.codeforcesSolved}</td>
+                        <td className="py-3 px-4">{participant.codeforcesProblemsSolved}</td>
                       </motion.tr>
                     ))}
                   </tbody>
@@ -744,12 +617,12 @@ export default function LeaderboardPage() {
           </UITabsContent>
 
           {/* CodeChef Tab Content */}
-          <UITabsContent value="codechef" className="mt-6">
+          <UITabsContent value="codechefHandle" className="mt-6">
             {/* Stats Section */}
-            <LeaderboardStats stats={getStats('codechef')} />
+            <LeaderboardStats stats={getStats('codechefHandle')} />
 
             {/* Top Performers */}
-            <TopPerformers participants={getTopPerformers('codechef')} />
+            <TopPerformers participants={getTopPerformers('codechefHandle')} />
 
             {/* Main Content */}
             <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
@@ -765,9 +638,9 @@ export default function LeaderboardPage() {
                       className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
+                  <Button
+                    variant="outline"
+                    size="icon"
                     onClick={handleRefresh}
                     disabled={refreshing}
                     className="border-white/10 text-white hover:bg-white/10"
@@ -790,7 +663,7 @@ export default function LeaderboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {getSortedParticipants('codechef').map((participant, index) => (
+                    {getSortedParticipants('codechefHandle').map((participant, index) => (
                       <motion.tr
                         key={participant.id || index}
                         className={`border-b border-white/10 ${index < 3 ? "bg-gradient-to-r from-blue-500/20 to-transparent" : ""}`}
@@ -810,11 +683,11 @@ export default function LeaderboardPage() {
                         </td>
                         <td className="py-3 px-4 flex items-center gap-3">
                           {participant.avatar ? (
-                            <img 
-                              src={participant.avatar} 
-                              alt={participant.name} 
-                              width={32} 
-                              height={32} 
+                            <img
+                              src={participant.avatar}
+                              alt={participant.name}
+                              width={32}
+                              height={32}
                               className="rounded-full"
                             />
                           ) : (
@@ -824,9 +697,9 @@ export default function LeaderboardPage() {
                           )}
                           <span>{participant.name}</span>
                         </td>
-                        <td className="py-3 px-4">{participant.codechef}</td>
+                        <td className="py-3 px-4">{participant.codechefHandle}</td>
                         <td className="py-3 px-4">{participant.codechefRating}</td>
-                        <td className="py-3 px-4">{participant.codechefSolved}</td>
+                        <td className="py-3 px-4">{"-"}</td>
                       </motion.tr>
                     ))}
                   </tbody>
@@ -839,42 +712,42 @@ export default function LeaderboardPage() {
 
       {/* Leaderboard Form Modal */}
       {showForm && (
-        <LeaderboardForm 
-          onClose={() => setShowForm(false)} 
+        <LeaderboardForm
+          onClose={() => setShowForm(false)}
           onSubmit={async (data) => {
             try {
               // Check if Supabase is configured
-              if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-                console.warn('Supabase credentials not configured. Cannot submit form.');
-                setShowForm(false);
-                return;
-              }
-              
+              // if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+              //   console.warn('Supabase credentials not configured. Cannot submit form.');
+              //   setShowForm(false);
+              //   return;
+              // }
+
               // Calculate total score
-              const totalScore = 
-                (data.leetcodeRating || 0) + 
-                (data.leetcodeSolved || 0) * 2 + 
-                (data.codeforcesRating || 0) + 
-                (data.codeforcesSolved || 0) * 2 + 
-                (data.codechefRating || 0) + 
-                (data.codechefSolved || 0) * 2;
-              
+              const totalScore =
+                (data.leetcodeRating || 0) +
+                (data.leetcodeProblemsSolved || 0) * 2 +
+                (data.codeforcesRating || 0) +
+                (data.codeforcesProblemsSolved || 0) * 2 +
+                (data.codechefRating || 0) +
+                (data.codechefProblemsSolved || 0) * 2;
+
               // Add participant to Supabase
-              const { error } = await supabase
-                .from('participants')
-                .insert([
-                  { 
-                    ...data,
-                    totalScore,
-                    lastUpdated: new Date().toISOString().split('T')[0]
-                  }
-                ]);
-                
-              if (error) {
-                console.error('Error adding participant:', error);
-                throw error;
-              }
-              
+              // const { error } = await supabase
+              //   .from('participants')
+              //   .insert([
+              //     {
+              //       ...data,
+              //       totalScore,
+              //       lastUpdated: new Date().toISOString().split('T')[0]
+              //     }
+              //   ]);
+
+              // if (error) {
+              //   console.error('Error adding participant:', error);
+              //   throw error;
+              // }
+
               // Refresh data
               handleRefresh();
               setShowForm(false);
@@ -889,7 +762,7 @@ export default function LeaderboardPage() {
 
       {/* Meteors Effect */}
       <Meteors number={20} />
-      
+
       <Footer />
     </div>
   );

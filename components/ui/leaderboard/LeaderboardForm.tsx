@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { createUser } from "@/actions/createUser";
 
 interface LeaderboardFormProps {
   onClose: () => void;
@@ -11,9 +12,10 @@ interface LeaderboardFormProps {
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
   const [formData, setFormData] = useState({
     name: "",
-    leetcode: "",
-    codeforces: "",
-    codechef: "",
+    leetcodeHandle: "",
+    codeforcesHandle: "",
+    codechefHandle: "",
+    email: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -42,7 +44,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
       newErrors.name = "Name is required";
     }
     
-    if (!formData.leetcode.trim() && !formData.codeforces.trim() && !formData.codechef.trim()) {
+    if (!formData.leetcodeHandle.trim() && !formData.codeforcesHandle.trim() && !formData.codechefHandle.trim()) {
       newErrors.platforms = "At least one platform username is required";
     }
     
@@ -74,7 +76,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
         
         <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form action={createUser} className="space-y-4">
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
             <input
@@ -87,13 +89,26 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
             />
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
+
+          <div>
+            <label className="block text-white/80 mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className={`w-full p-2 bg-white/5 border ${errors.name ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              placeholder="Enter your email"
+            />
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+          </div>
           
           <div>
             <label className="block text-white/80 mb-1">LeetCode Username</label>
             <input
               type="text"
-              name="leetcode"
-              value={formData.leetcode}
+              name="leetcodeHandle"
+              value={formData.leetcodeHandle}
               onChange={handleChange}
               className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your LeetCode username"
@@ -104,8 +119,8 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
             <label className="block text-white/80 mb-1">CodeForces Username</label>
             <input
               type="text"
-              name="codeforces"
-              value={formData.codeforces}
+              name="codeforcesHandle"
+              value={formData.codeforcesHandle}
               onChange={handleChange}
               className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your CodeForces username"
@@ -116,8 +131,8 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
             <label className="block text-white/80 mb-1">CodeChef Username</label>
             <input
               type="text"
-              name="codechef"
-              value={formData.codechef}
+              name="codechefHandle"
+              value={formData.codechefHandle}
               onChange={handleChange}
               className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your CodeChef username"

@@ -1,3 +1,4 @@
+
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 import { Participant } from "@/app/leaderboard/page";
@@ -40,6 +41,7 @@ export function LeaderboardTable({
     );
   }
 
+  console.log(participants);
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-white">
@@ -109,7 +111,7 @@ export function LeaderboardTable({
                 {participant.name}
               </td>
               <td className="py-3 px-4">{participant.leetcodeRating || 'N/A'}</td>
-              <td className="py-3 px-4">{participant.leetcodeSolved || 0}</td>
+              <td className="py-3 px-4">{participant.leetcodeProblemsSolved || 0}</td>
               <td className="py-3 px-4">{participant.codeforcesRating || 'N/A'}</td>
               <td className="py-3 px-4">{participant.totalScore || 0}</td>
             </motion.tr>
