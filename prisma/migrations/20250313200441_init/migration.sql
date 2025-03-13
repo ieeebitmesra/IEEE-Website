@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "codeforcesHandle" TEXT NOT NULL,
@@ -11,7 +11,11 @@ CREATE TABLE "User" (
     "leetcodeProblemsSolved" INTEGER NOT NULL,
     "codechefHandle" TEXT NOT NULL,
     "codechefRating" INTEGER NOT NULL,
-    "codechefProblemsSolved" INTEGER NOT NULL
+    "codechefProblemsSolved" INTEGER NOT NULL,
+    "image" TEXT,
+    "totalScore" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

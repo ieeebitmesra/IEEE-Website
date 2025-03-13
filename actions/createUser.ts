@@ -97,5 +97,6 @@ export const createUser = async (formdata: FormData) => {
  }
  finally{
     updateUsersRating();
+    updateUsersRating();
  }
 };
