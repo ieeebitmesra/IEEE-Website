@@ -73,7 +73,6 @@ export default function LeaderboardPage() {
   useEffect(() => {
     async function fetchParticipants() {
       try {
-        updateUsersRating();
         setIsLoading(true);
         const users = await getUser();
 

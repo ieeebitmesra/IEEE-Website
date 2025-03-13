@@ -2,6 +2,8 @@
 import { prisma } from "@/lib";
 import { z } from "zod";
 import { updateUsersRating } from "./updateUserRating";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 // Update schema to include all required fields
 const userSchema = z.object({
@@ -13,13 +15,13 @@ const userSchema = z.object({
 });
 
 export const createUser = async (formdata: FormData) => {
- try {
+  try {
     const name = formdata.get("name") as string;
     const email = formdata.get("email") as string;
     const leetcodeHandle = formdata.get("leetcodeHandle") as string;
     const codeforcesHandle = formdata.get("codeforcesHandle") as string;
     const codechefHandle = formdata.get("codechefHandle") as string;
-  
+
     const user = {
       name,
       email,
@@ -33,7 +35,7 @@ export const createUser = async (formdata: FormData) => {
       const errors = parsedUser.error.flatten();
       throw new Error(errors.formErrors[0]);
     }
-  
+
     const {
       name: userName,
       email: userEmail,
@@ -41,7 +43,7 @@ export const createUser = async (formdata: FormData) => {
       codeforcesHandle: cfHandle,
       codechefHandle: ccHandle,
     } = parsedUser.data;
-  
+
     const userExists = await prisma.user.findFirst({
       where: {
         OR: [
@@ -53,50 +55,48 @@ export const createUser = async (formdata: FormData) => {
         ],
       },
     });
-  
+
     if (userExists) {
-        const newUser = await prisma.user.update({
-            where: { id: userExists.id },
-            data: {
-              name: userName,
-              email: userEmail,
-              leetcodeHandle: lcHandle || "",
-              codeforcesHandle: cfHandle || "",
-              codechefHandle: ccHandle || "",
-              leetcodeRating: 0,
-              leetcodeProblemsSolved: 0,
-              codeforcesRating: 0,
-              codeforcesProblemsSolved: 0,
-              codechefRating: 0,
-              codechefProblemsSolved: 0,
-              totalScore: 0
-            },
-          });
-          return;
+      const newUser = await prisma.user.update({
+        where: { id: userExists.id },
+        data: {
+          name: userName,
+          email: userEmail,
+          leetcodeHandle: lcHandle || "",
+          codeforcesHandle: cfHandle || "",
+          codechefHandle: ccHandle || "",
+          leetcodeRating: 0,
+          leetcodeProblemsSolved: 0,
+          codeforcesRating: 0,
+          codeforcesProblemsSolved: 0,
+          codechefRating: 0,
+          codechefProblemsSolved: 0,
+          totalScore: 0,
+        },
+      });
+    } else {
+      const newUser = await prisma.user.create({
+        data: {
+          name: userName,
+          email: userEmail,
+          leetcodeHandle: lcHandle || "",
+          codeforcesHandle: cfHandle || "",
+          codechefHandle: ccHandle || "",
+          leetcodeRating: 0,
+          leetcodeProblemsSolved: 0,
+          codeforcesRating: 0,
+          codeforcesProblemsSolved: 0,
+          codechefRating: 0,
+          codechefProblemsSolved: 0,
+          totalScore: 0,
+        },
+      });
     }
-  
-    const newUser = await prisma.user.create({
-      data: {
-        name: userName,
-        email: userEmail,
-        leetcodeHandle: lcHandle || "",
-        codeforcesHandle: cfHandle || "",
-        codechefHandle: ccHandle || "",
-        leetcodeRating: 0,
-        leetcodeProblemsSolved: 0,
-        codeforcesRating: 0,
-        codeforcesProblemsSolved: 0,
-        codechefRating: 0,
-        codechefProblemsSolved: 0,
-        totalScore: 0
-      },
-    });
-    
- } catch (error) {
+  } catch (error) {
     console.error("Error creating user:", error);
- }
- finally{
-    updateUsersRating();
-    updateUsersRating();
- }
+  } finally {
+    await updateUsersRating();
+    revalidatePath("/leaderboard");
+    redirect("/leaderboard");
+  }
 };
