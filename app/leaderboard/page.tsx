@@ -34,18 +34,18 @@ import { get } from "http";
 export interface Participant {
   id: string;
   name: string;
-  leetcode: string;
-  codeforcesHandle: string;
-  codechefHandle: string;
-  leetcodeRating: number;
-  leetcodeProblemsSolved: number;
-  codeforcesRating: number;
-  codeforcesProblemsSolved: number;
-  codechefRating: number;
-  codechefProblemsSolved: number;
-  totalScore: number;
-  rank: number;
-  avatar: string;
+  leetcodeHandle?: string;
+  codeforcesHandle?: string;
+  codechefHandle?: string;
+  leetcodeRating?: number;
+  leetcodeProblemsSolved?: number;
+  codeforcesRating?: number;
+  codeforcesProblemsSolved?: number;
+  codechefRating?: number;
+  codechefProblemsSolved?: number;
+  totalScore?: number;
+  rank?: number;
+  avatar?: string;
   lastUpdated: string;
 }
 
