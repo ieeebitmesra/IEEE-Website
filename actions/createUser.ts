@@ -96,6 +96,7 @@ export const createUser = async (formdata: FormData) => {
     console.error("Error creating user:", error);
   } finally {
     await updateUsersRating();
+
     revalidatePath("/leaderboard");
     redirect("/leaderboard");
   }
