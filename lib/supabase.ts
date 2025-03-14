@@ -1,79 +1,93 @@
-// import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
-// const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-// const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const isBrowser = typeof window !== 'undefined';
 
-// export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const createDummyClient = () => {
+  return {
+    auth: {
+      signInWithOAuth: () => Promise.resolve({ data: null, error: null }),
+      signOut: () => Promise.resolve({ error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null })
+    }
+  } as any;
+};
 
-// export async function getParticipants() {
-//   const { data, error } = await supabase
-//     .from('participants')
-//     .select('*')
-//     .order('totalScore', { ascending: false });
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
-//   if (error) {
-//     console.error('Error fetching participants:', error);
-//     return [];
-//   }
+export const getSupabase = () => {
+  if (!isBrowser) {
+    console.warn('Using dummy Supabase client for SSR/build');
+    return createDummyClient();
+  }
 
-//   return data;
-// }
+  if (supabaseInstance) return supabaseInstance;
+  
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Supabase credentials missing');
+    return createDummyClient();
+  }
+  
+  supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
+  return supabaseInstance;
+};
 
-// export async function addParticipant(participant: {
-//   name: string;
-//   leetcode: string;
-//   codeforces: string;
-//   codechef: string;
-// }) {
-//   const { data, error } = await supabase
-//     .from('participants')
-//     .insert([{
-//       ...participant,
-//       leetcodeRating: 0,
-//       leetcodeSolved: 0,
-//       codeforcesRating: 0,
-//       codeforcesSolved: 0,
-//       codechefRating: 0,
-//       codechefSolved: 0,
-//       totalScore: 0,
-//       rank: 0,
-//       avatar: '/team/noimage.jpg',
-//       lastUpdated: new Date().toISOString()
-//     }])
-//     .select()
-//     .single();
+// Export for backward compatibility
+export const supabase = getSupabase();
 
-//   if (error) {
-//     console.error('Error adding participant:', error);
-//     throw error;
-//   }
+// Update auth functions to use getSupabase()
+export async function signInWithGoogle() {
+  const client = getSupabase();
+  if (!client) {
+    throw new Error('Supabase client not initialized');
+  }
+  
+  const { data, error } = await client.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+  
+  if (error) throw error;
+  return data;
+}
 
-//   return data;
-// }
+export async function signInWithGithub() {
+  const client = getSupabase();
+  if (!client) {
+    throw new Error('Supabase client not initialized');
+  }
+  
+  const { data, error } = await client.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+  
+  if (error) throw error;
+  return data;
+}
 
-// export async function updateParticipantStats(id: string, stats: {
-//   leetcodeRating?: number;
-//   leetcodeSolved?: number;
-//   codeforcesRating?: number;
-//   codeforcesSolved?: number;
-//   codechefRating?: number;
-//   codechefSolved?: number;
-//   totalScore?: number;
-// }) {
-//   const { data, error } = await supabase
-//     .from('participants')
-//     .update({
-//       ...stats,
-//       lastUpdated: new Date().toISOString()
-//     })
-//     .eq('id', id)
-//     .select()
-//     .single();
+export async function signOut() {
+  const client = getSupabase();
+  if (!client) {
+    throw new Error('Supabase client not initialized');
+  }
+  
+  const { error } = await client.auth.signOut();
+  if (error) throw error;
+}
 
-//   if (error) {
-//     console.error('Error updating participant stats:', error);
-//     throw error;
-//   }
-
-//   return data;
-// }
+export async function getCurrentUser() {
+  const client = getSupabase();
+  if (!client) {
+    throw new Error('Supabase client not initialized');
+  }
+  
+  const { data: { user } } = await client.auth.getUser();
+  return user;
+}

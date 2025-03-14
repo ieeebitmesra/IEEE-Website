@@ -19,7 +19,6 @@ import {
   MessageCircle 
 } from "lucide-react";
 import { useState } from "react";
-import { supabase } from '@/lib/supabase';
 
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
@@ -35,20 +34,20 @@ export default function ContactPage() {
     setFormStatus('sending');
     
     try {
-      // Insert form data into Supabase
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert([
-          { 
-            name: formData.name,
-            email: formData.email,
-            subject: formData.subject,
-            message: formData.message,
-            created_at: new Date()
-          }
-        ]);
-        
-      if (error) throw error;
+      // Send form data to our API route
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
       
       setFormStatus('sent');
       // Clear form data
@@ -177,6 +176,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  required
                 />
               </motion.div>
               <motion.div whileHover={{ y: -2 }}>
@@ -186,6 +186,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  required
                 />
               </motion.div>
               <motion.div whileHover={{ y: -2 }}>
@@ -195,6 +196,7 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={(e) => setFormData({...formData, subject: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  required
                 />
               </motion.div>
               <motion.div whileHover={{ y: -2 }}>
@@ -204,6 +206,7 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  required
                 />
               </motion.div>
               <motion.button
@@ -213,11 +216,14 @@ export default function ContactPage() {
                   formStatus === 'sending' ? 'opacity-70 cursor-wait' : ''
                 }`}
                 disabled={formStatus === 'sending'}
+                type="submit"
               >
                 {formStatus === 'sending' ? (
                   'Sending...'
                 ) : formStatus === 'sent' ? (
                   'Message Sent!'
+                ) : formStatus === 'error' ? (
+                  'Error! Try Again'
                 ) : (
                   <>
                     Send Message
