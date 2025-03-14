@@ -1,8 +1,9 @@
+
+import { updateAllUsersRating } from "@/actions/updateAllUserRating";
 import { NextResponse } from "next/server";
-import { updateUsersRating } from "@/actions/updateUserRating";
 
 export async function GET() {
-  await updateUsersRating();
+  await updateAllUsersRating();
   console.log("crone job executed");
   return NextResponse.json({ ok: true, message: "Users rating updated" });
 }
