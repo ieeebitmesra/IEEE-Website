@@ -31,27 +31,28 @@ import { User as userType } from "@prisma/client";
 import { prisma } from "@/lib";
 import { get } from "http";
 import { useAuth } from "@/contexts/AuthContext";
-import { toast } from "sonner";
 
 export interface Participant {
   id: string;
   name: string;
-  leetcode: string;
-  codeforcesHandle: string;
-  codechefHandle: string;
-  leetcodeRating: number;
-  leetcodeProblemsSolved: number;
-  codeforcesRating: number;
-  codeforcesProblemsSolved: number;
-  codechefRating: number;
-  codechefProblemsSolved: number;
-  totalScore: number;
-  rank: number;
-  avatar: string;
+  leetcodeHandle?: string;
+  codeforcesHandle?: string;
+  codechefHandle?: string;
+  leetcodeRating?: number;
+  leetcodeProblemsSolved?: number;
+  codeforcesRating?: number;
+  codeforcesProblemsSolved?: number;
+  codechefRating?: number;
+  codechefProblemsSolved?: number;
+  totalScore?: number;
+  rank?: number;
+  avatar?: string;
   lastUpdated: string;
 }
 
 export default function LeaderboardPage() {
+  // Add this near other state declarations
+  const { user } = useAuth();
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -59,7 +60,6 @@ export default function LeaderboardPage() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const { user, isLoading: authLoading } = useAuth();
 
   const [participants, setParticipants] = useState<userType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -71,6 +71,7 @@ export default function LeaderboardPage() {
   const [activeTab, setActiveTab] = useState<string>("overall");
 
   // Fetch participants data from Supabase
+
 
   useEffect(() => {
     async function fetchParticipants() {
@@ -90,11 +91,13 @@ export default function LeaderboardPage() {
         console.error('Failed to fetch participants:', error);
       } finally {
         setIsLoading(false);
+
       }
     }
 
     fetchParticipants();
   }, []);
+
 
   // Function to handle sorting
   const handleSort = (column: string) => {
@@ -211,11 +214,14 @@ export default function LeaderboardPage() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
+
       // Just simulate a refresh with the current data
       setTimeout(() => {
         setRefreshing(false);
       }, 1000);
       return;
+
+
 
       const data = await getUser();
       // Add rank to each participant based on their position
@@ -231,22 +237,6 @@ export default function LeaderboardPage() {
     } finally {
       setRefreshing(false);
     }
-  };
-
-  // Handle join leaderboard button click
-  const handleJoinLeaderboard = () => {
-    if (!user) {
-      toast.error("Please sign in to join the leaderboard");
-      return;
-    }
-    
-    // Check if user already exists in the leaderboard
-    const existingUser = participants.find(p => p.email === user.email);
-    if (existingUser) {
-      toast.info("You are already on the leaderboard! You can update your information.");
-    }
-    
-    setShowForm(true);
   };
 
   // Calculate stats
@@ -425,12 +415,14 @@ export default function LeaderboardPage() {
                 </div>
 
                 <div className="flex gap-2 w-full md:w-auto">
-                  <Button
-                    onClick={handleJoinLeaderboard}
-                    className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
-                  >
-                    Join Leaderboard
-                  </Button>
+                  {user && (
+                    <Button
+                      onClick={() => setShowForm(true)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
+                    >
+                      Join Leaderboard
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -729,47 +721,46 @@ export default function LeaderboardPage() {
           onClose={() => setShowForm(false)}
           onSubmit={async (data) => {
             try {
-              // Ensure user is authenticated
-              if (!user || !user.email) {
-                toast.error("You must be signed in to join the leaderboard");
-                setShowForm(false);
-                return;
-              }
-
-              // Pre-fill user data from authentication
-              const userData = {
-                ...data,
-                email: user.email,
-                name: data.name || user.user_metadata?.name || user.email.split('@')[0],
-                userId: user.id
-              };
+              // Check if Supabase is configured
+              // if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+              //   console.warn('Supabase credentials not configured. Cannot submit form.');
+              //   setShowForm(false);
+              //   return;
+              // }
 
               // Calculate total score
               const totalScore =
-                (userData.leetcodeRating || 0) +
-                (userData.leetcodeProblemsSolved || 0) * 2 +
-                (userData.codeforcesRating || 0) +
-                (userData.codeforcesProblemsSolved || 0) * 2 +
-                (userData.codechefRating || 0) +
-                (userData.codechefProblemsSolved || 0) * 2;
+                (data.leetcodeRating || 0) +
+                (data.leetcodeProblemsSolved || 0) * 2 +
+                (data.codeforcesRating || 0) +
+                (data.codeforcesProblemsSolved || 0) * 2 +
+                (data.codechefRating || 0) +
+                (data.codechefProblemsSolved || 0) * 2;
 
-              // Add participant to database
-              // Here you would call your createUser or updateUser server action
-              // For now, we'll just simulate success
-              
-              toast.success("Successfully joined the leaderboard!");
-              
+              // Add participant to Supabase
+              // const { error } = await supabase
+              //   .from('participants')
+              //   .insert([
+              //     {
+              //       ...data,
+              //       totalScore,
+              //       lastUpdated: new Date().toISOString().split('T')[0]
+              //     }
+              //   ]);
+
+              // if (error) {
+              //   console.error('Error adding participant:', error);
+              //   throw error;
+              // }
+
               // Refresh data
               handleRefresh();
               setShowForm(false);
             } catch (error) {
               console.error('Failed to add participant:', error);
-              toast.error('Failed to add participant. Please try again.');
+              // Show error message to user
+              alert('Failed to add participant. Please try again.');
             }
-          }}
-          userData={{
-            name: user?.user_metadata?.name || user?.email?.split('@')[0] || '',
-            email: user?.email || '',
           }}
         />
       )}
