@@ -61,9 +61,9 @@ export const createUser = async (formdata: FormData) => {
         data: {
           name: userName,
           email: userEmail,
-          leetcodeHandle: lcHandle || "",
-          codeforcesHandle: cfHandle || "",
-          codechefHandle: ccHandle || "",
+          leetcodeHandle: lcHandle || userExists.leetcodeHandle || "",
+          codeforcesHandle: cfHandle || userExists.codeforcesHandle || "",
+          codechefHandle: ccHandle || userExists.codechefHandle || "",
           leetcodeRating: 0,
           leetcodeProblemsSolved: 0,
           codeforcesRating: 0,
@@ -104,7 +104,6 @@ export const createUser = async (formdata: FormData) => {
     await updateThisUserRating({ userId: updatedUser.id });
 
     revalidatePath("/leaderboard");
-
   } catch (error) {
     console.error("Error creating user:", error);
   }
