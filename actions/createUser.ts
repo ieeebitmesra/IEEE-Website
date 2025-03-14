@@ -1,9 +1,8 @@
 "use server";
 import { prisma } from "@/lib";
 import { z } from "zod";
-import { updateUsersRating } from "./updateUserRating";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { updateThisUserRating } from "./updateThisUserRating";
 
 // Update schema to include all required fields
 const userSchema = z.object({
@@ -92,12 +91,21 @@ export const createUser = async (formdata: FormData) => {
         },
       });
     }
-  } catch (error) {
-    console.error("Error creating user:", error);
-  } finally {
-    await updateUsersRating();
+    // await updateUsersRating();
+    const updatedUser = await prisma.user.findFirst({
+      where: {
+        email: formdata.get("email") as string,
+      },
+    });
+    if (!updatedUser) {
+      console.error("User not found");
+      return;
+    }
+    await updateThisUserRating({ userId: updatedUser.id });
 
     revalidatePath("/leaderboard");
-    redirect("/leaderboard");
+
+  } catch (error) {
+    console.error("Error creating user:", error);
   }
 };
