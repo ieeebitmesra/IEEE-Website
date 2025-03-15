@@ -23,7 +23,7 @@ import { LeaderboardTable } from "@/components/ui/leaderboard/LeaderboardTable";
 import { LeaderboardForm } from "@/components/ui/leaderboard/LeaderboardForm";
 import { LeaderboardStats } from "@/components/ui/leaderboard/LeaderboardStats";
 import { TopPerformers } from "@/components/ui/leaderboard/TopPerformers";
-// import { supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import { Tabs as UITabs, TabsContent as UITabsContent, TabsList as UITabsList, TabsTrigger as UITabsTrigger } from "@/components/ui/tabs";
 import { updateUsersRating } from "@/actions/updateUserRating";
 import { getUser } from "@/actions/getUser";
@@ -113,8 +113,9 @@ export default function LeaderboardPage() {
       }
     }
 
+    // Always fetch participants regardless of auth state
     fetchParticipants();
-  }, []);
+  }, []); // Remove user dependency if it's not needed for fetching
 
 
   // Function to handle sorting
