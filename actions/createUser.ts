@@ -1,10 +1,8 @@
 "use server";
 import { prisma } from "@/lib";
 import { z } from "zod";
-import { updateUsersRating } from "./updateUserRating";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { updateThisUserRating } from "./updateUserRating";
+import { updateThisUserRating } from "./updateThisUserRating";
 
 // Update schema to include all required fields
 const userSchema = z.object({
@@ -16,8 +14,6 @@ const userSchema = z.object({
 });
 
 export const createUser = async (formdata: FormData) => {
-  let success = false;
-  
   try {
     const name = formdata.get("name") as string;
     const email = formdata.get("email") as string;
@@ -65,9 +61,9 @@ export const createUser = async (formdata: FormData) => {
         data: {
           name: userName,
           email: userEmail,
-          leetcodeHandle: lcHandle || "",
-          codeforcesHandle: cfHandle || "",
-          codechefHandle: ccHandle || "",
+          leetcodeHandle: lcHandle || userExists.leetcodeHandle || "",
+          codeforcesHandle: cfHandle || userExists.codeforcesHandle || "",
+          codechefHandle: ccHandle || userExists.codechefHandle || "",
           leetcodeRating: 0,
           leetcodeProblemsSolved: 0,
           codeforcesRating: 0,
@@ -95,8 +91,6 @@ export const createUser = async (formdata: FormData) => {
         },
       });
     }
-    
-    // If we get here, the operation was successful
     // await updateUsersRating();
     const updatedUser = await prisma.user.findFirst({
       where: {
@@ -110,28 +104,7 @@ export const createUser = async (formdata: FormData) => {
     await updateThisUserRating({ userId: updatedUser.id });
 
     revalidatePath("/leaderboard");
-    
   } catch (error) {
     console.error("Error creating user:", error);
-    // Don't redirect on error - let the user try again
-  } finally {
-    // Only update ratings and redirect if the operation was successful
-    if (success) {
-      const updatedUser = await prisma.user.findFirst({
-        where: {
-          email: formdata.get("email") as string,
-        },
-      });
-      
-      if (!updatedUser) {
-        console.error("User not found");
-        await updateUsersRating();
-      } else {
-        await updateThisUserRating({ userId: updatedUser.id });
-      }
-
-      revalidatePath("/leaderboard");
-      redirect("/leaderboard");
-    }
   }
 };
