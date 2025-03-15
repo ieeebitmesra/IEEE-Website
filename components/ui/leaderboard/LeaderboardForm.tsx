@@ -6,7 +6,7 @@ import { createUser } from "@/actions/createUser";
 
 interface LeaderboardFormProps {
   onClose: () => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any) => Promise<void>;
 }
 
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
@@ -19,6 +19,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,6 +45,12 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
       newErrors.name = "Name is required";
     }
     
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+    }
+    
     if (!formData.leetcodeHandle.trim() && !formData.codeforcesHandle.trim() && !formData.codechefHandle.trim()) {
       newErrors.platforms = "At least one platform username is required";
     }
@@ -52,11 +59,20 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm()) {
-      onSubmit(formData);
+      setIsSubmitting(true);
+      try {
+        await onSubmit(formData);
+        onClose();
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        setErrors({ submit: "Failed to submit. Please try again." });
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -76,7 +92,8 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
         
         <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
         
-        <form action={createUser} className="space-y-4">
+        {/* Changed from action={createUser} to onSubmit={handleSubmit} */}
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
             <input
@@ -97,10 +114,10 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full p-2 bg-white/5 border ${errors.name ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              className={`w-full p-2 bg-white/5 border ${errors.email ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               placeholder="Enter your email"
             />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
           
           <div>
@@ -140,21 +157,23 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           </div>
           
           {errors.platforms && <p className="text-red-500 text-sm">{errors.platforms}</p>}
+          {errors.submit && <p className="text-red-500 text-sm">{errors.submit}</p>}
           
           <div className="flex justify-end gap-3 mt-6">
-            <Button 
-              type="button" 
+            <Button
+              type="button"
               onClick={onClose}
               variant="outline"
               className="border-white/10 text-white hover:bg-white/10"
             >
               Cancel
             </Button>
-            <Button 
+            <Button
               type="submit"
+              disabled={isSubmitting}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
-              Submit
+              {isSubmitting ? "Submitting..." : "Join Leaderboard"}
             </Button>
           </div>
         </form>

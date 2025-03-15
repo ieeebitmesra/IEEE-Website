@@ -23,9 +23,8 @@ import { LeaderboardTable } from "@/components/ui/leaderboard/LeaderboardTable";
 import { LeaderboardForm } from "@/components/ui/leaderboard/LeaderboardForm";
 import { LeaderboardStats } from "@/components/ui/leaderboard/LeaderboardStats";
 import { TopPerformers } from "@/components/ui/leaderboard/TopPerformers";
-import { supabase } from "@/lib/supabase";
 import { Tabs as UITabs, TabsContent as UITabsContent, TabsList as UITabsList, TabsTrigger as UITabsTrigger } from "@/components/ui/tabs";
-import { updateUsersRating } from "@/actions/updateUserRating";
+import { updateAllUsersRating as updateUsersRating } from "@/actions/updateAllUserRating";
 import { getUser } from "@/actions/getUser";
 import { User as userType } from "@prisma/client";
 import { prisma } from "@/lib";
@@ -78,9 +77,10 @@ export default function LeaderboardPage() {
         setIsLoading(true);
         const users = await getUser();
 
-        // Calculate total score for each user
-        const usersWithScore = users.map(user => {
-          const totalScore = 
+        // Map database users to Participant interface
+        const mappedUsers = users.map(user => {
+          // Use the totalScore from the database if available, otherwise calculate it
+          const calculatedScore = 
             (user.leetcodeRating || 0) +
             (user.leetcodeProblemsSolved || 0) * 2 +
             (user.codeforcesRating || 0) +
@@ -88,14 +88,28 @@ export default function LeaderboardPage() {
             (user.codechefRating || 0) +
             (user.codechefProblemsSolved || 0) * 2;
           
+          const totalScore = user.totalScore || calculatedScore;
+          
           return {
-            ...user,
-            totalScore
+            id: user.id,
+            name: user.name,
+            leetcodeHandle: user.leetcodeHandle,
+            codeforcesHandle: user.codeforcesHandle,
+            codechefHandle: user.codechefHandle,
+            leetcodeRating: user.leetcodeRating,
+            leetcodeProblemsSolved: user.leetcodeProblemsSolved,
+            codeforcesRating: user.codeforcesRating,
+            codeforcesProblemsSolved: user.codeforcesProblemsSolved,
+            codechefRating: user.codechefRating,
+            codechefProblemsSolved: user.codechefProblemsSolved,
+            totalScore: totalScore,
+            avatar: user.image,
+            lastUpdated: new Date().toISOString()
           };
         });
 
         // Sort users by total score in descending order
-        const sortedUsers = [...usersWithScore].sort((a, b) => 
+        const sortedUsers = [...mappedUsers].sort((a, b) => 
           (b.totalScore || 0) - (a.totalScore || 0)
         );
 
@@ -240,23 +254,55 @@ export default function LeaderboardPage() {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
+      // Update all users' ratings
+      await updateUsersRating();
+      
+      // Fetch updated user data
+      const users = await getUser();
+      
+      // Map database users to Participant interface
+      const mappedUsers = users.map(user => {
+        // Use the totalScore from the database if available, otherwise calculate it
+        const calculatedScore = 
+          (user.leetcodeRating || 0) +
+          (user.leetcodeProblemsSolved || 0) * 2 +
+          (user.codeforcesRating || 0) +
+          (user.codeforcesProblemsSolved || 0) * 2 +
+          (user.codechefRating || 0) +
+          (user.codechefProblemsSolved || 0) * 2;
+        
+        const totalScore = user.totalScore || calculatedScore;
+        
+        return {
+          id: user.id,
+          name: user.name,
+          leetcodeHandle: user.leetcodeHandle,
+          codeforcesHandle: user.codeforcesHandle,
+          codechefHandle: user.codechefHandle,
+          leetcodeRating: user.leetcodeRating,
+          leetcodeProblemsSolved: user.leetcodeProblemsSolved,
+          codeforcesRating: user.codeforcesRating,
+          codeforcesProblemsSolved: user.codeforcesProblemsSolved,
+          codechefRating: user.codechefRating,
+          codechefProblemsSolved: user.codechefProblemsSolved,
+          totalScore: totalScore,
+          avatar: user.image,
+          lastUpdated: new Date().toISOString()
+        };
+      });
 
-      // Just simulate a refresh with the current data
-      setTimeout(() => {
-        setRefreshing(false);
-      }, 1000);
-      return;
+      // Sort users by total score in descending order
+      const sortedUsers = [...mappedUsers].sort((a, b) => 
+        (b.totalScore || 0) - (a.totalScore || 0)
+      );
 
-
-
-      const data = await getUser();
-      // Add rank to each participant based on their position
-      const rankedData = data.map((participant, index) => ({
-        ...participant,
+      // Add rank to each user based on sorted position
+      const rankedUsers = sortedUsers.map((user, index) => ({
+        ...user,
         rank: index + 1
       }));
 
-      setParticipants(rankedData);
+      setParticipants(rankedUsers);
     } catch (error) {
       console.error('Failed to refresh participants:', error);
       // Don't change the current data on error
