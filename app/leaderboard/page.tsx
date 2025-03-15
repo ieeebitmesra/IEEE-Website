@@ -1,34 +1,36 @@
 "use client";
-import { BackgroundSparkles } from "@/components/ui/animations/BackgroundSparkles";
-import { Button } from "@/components/ui/button";
-import { Footer } from "@/components/ui/footer";
 import { Header1 } from "@/components/ui/header";
+import { Footer } from "@/components/ui/footer";
+import { Meteors } from "@/components/ui/meteor";
+import { BackgroundSparkles } from "@/components/ui/animations/BackgroundSparkles";
+import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
+import {
+  Trophy,
+  Medal,
+  Code,
+  Search,
+  Filter,
+  ArrowUpDown,
+  Github,
+  RefreshCw,
+  User,
+  Sparkles,
+} from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { LeaderboardTable } from "@/components/ui/leaderboard/LeaderboardTable";
 import { LeaderboardForm } from "@/components/ui/leaderboard/LeaderboardForm";
 import { LeaderboardStats } from "@/components/ui/leaderboard/LeaderboardStats";
-import { LeaderboardTable } from "@/components/ui/leaderboard/LeaderboardTable";
 import { TopPerformers } from "@/components/ui/leaderboard/TopPerformers";
-import { Meteors } from "@/components/ui/meteor";
-import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  Code,
-  RefreshCw,
-  Search,
-  Sparkles,
-  Trophy,
-  User
-} from "lucide-react";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 // import { supabase } from "@/lib/supabase";
-import { getUser } from "@/actions/getUser";
 import { Tabs as UITabs, TabsContent as UITabsContent, TabsList as UITabsList, TabsTrigger as UITabsTrigger } from "@/components/ui/tabs";
+import { updateUsersRating } from "@/actions/updateUserRating";
+import { getUser } from "@/actions/getUser";
 import { User as userType } from "@prisma/client";
-<<<<<<< HEAD
 import { prisma } from "@/lib";
 import { get } from "http";
 import { useAuth } from "@/contexts/AuthContext";
-=======
->>>>>>> da8875d618becff8d0a60a7b3bd4a8107f951a9b
 
 export interface Participant {
   id: string;
