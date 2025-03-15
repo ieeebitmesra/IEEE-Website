@@ -605,7 +605,7 @@ export default function LeaderboardPage() {
                   size="icon"
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="border-white/10 text-white hover:bg-white/10"
+                  className="border-white/10 text-black hover:bg-white/10"
                 >
                   <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
                 </Button>
