@@ -68,8 +68,6 @@ export default function LeaderboardPage() {
   const [showForm, setShowForm] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("overall");
-  const [isEditing, setIsEditing] = useState(false); // Add this state for tracking edit mode
-  const [currentUserData, setCurrentUserData] = useState<userType | null>(null); // Store current user data
 
   // Fetch participants data from Supabase
 
@@ -120,14 +118,6 @@ export default function LeaderboardPage() {
         }));
 
         setParticipants(rankedUsers);
-        
-        // Check if current user exists in the leaderboard
-        if (user) {
-          const currentUser = users.find(u => u.email === user.email);
-          if (currentUser) {
-            setCurrentUserData(currentUser);
-          }
-        }
       } catch (error) {
         console.error('Failed to fetch participants:', error);
       } finally {
@@ -137,8 +127,9 @@ export default function LeaderboardPage() {
 
     // Always fetch participants regardless of auth state
     fetchParticipants();
-  }, [user]); // Add user to dependency array to refetch when user changes
-  
+  }, []); // Fetch participants on component mount
+
+
   // Function to handle sorting
   const handleSort = (column: string) => {
     if (sortBy === column) {
