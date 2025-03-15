@@ -1,44 +1,78 @@
 import { createClient } from '@supabase/supabase-js';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-// Create a Supabase client for server-side operations
-export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-// Get the current user
-export const getCurrentUser = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session?.user || null;
-};
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  db: {
+    schema: 'public'
+  }
+});
 
-// Sign out the current user
-export const signOut = async () => {
-  return await supabase.auth.signOut();
-};
-
-// Sign in with Google (client-side)
+// Enhanced Google authentication function
 export const signInWithGoogle = async () => {
-  const supabaseClient = createClientComponentClient();
-  return await supabaseClient.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
-      queryParams: {
-        prompt: 'select_account',
+  console.log("Starting Google sign-in process");
+  try {
+    // Define the exact redirect URL
+    const redirectUrl = `${window.location.origin}/auth/callback`;
+    console.log("Redirect URL:", redirectUrl);
+    
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: redirectUrl,
+        // Make sure this matches what's configured in Supabase dashboard
+        skipBrowserRedirect: false,
       },
-    },
-  });
+    });
+    
+    console.log("Sign-in response:", { data, error });
+    
+    if (error) {
+      console.error("Google sign-in error:", error);
+      throw error;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Exception during Google sign-in:", error);
+    throw error;
+  }
 };
 
-// Sign in with GitHub (client-side)
 export const signInWithGithub = async () => {
-  const supabaseClient = createClientComponentClient();
-  return await supabaseClient.auth.signInWithOAuth({
-    provider: 'github',
-    options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
-    },
-  });
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    
+    if (error) {
+      console.error("GitHub sign-in error:", error);
+      throw error;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Exception during GitHub sign-in:", error);
+    throw error;
+  }
+};
+
+export const signOut = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    throw error;
+  }
+};
+
+export const getCurrentUser = async () => {
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
 };

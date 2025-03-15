@@ -21,25 +21,20 @@ export async function GET(request: Request) {
       const cookieStore = cookies();
       const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
       
-      // Exchange the code for a session with more detailed error handling
-      const { data, error: sessionError } = await supabase.auth.exchangeCodeForSession(code);
+      // Exchange the code for a session
+      const { error: sessionError } = await supabase.auth.exchangeCodeForSession(code);
       
       if (sessionError) {
-        console.error("Session exchange error details:", sessionError);
-        return NextResponse.redirect(`${requestUrl.origin}/signin?error=auth_session_error&details=${encodeURIComponent(sessionError.message)}`);
-      }
-      
-      if (!data.session) {
-        console.error("No session created");
-        return NextResponse.redirect(`${requestUrl.origin}/signin?error=no_session_created`);
+        console.error("Session exchange error:", sessionError);
+        return NextResponse.redirect(`${requestUrl.origin}/signin?error=auth_session_error`);
       }
       
       console.log("Authentication successful");
       // Redirect to profile page on success
       return NextResponse.redirect(`${requestUrl.origin}/profile`);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Exception in auth callback:", error);
-      return NextResponse.redirect(`${requestUrl.origin}/signin?error=auth_exception&message=${encodeURIComponent(error.message || 'Unknown error')}`);
+      return NextResponse.redirect(`${requestUrl.origin}/signin?error=auth_exception`);
     }
   }
 
