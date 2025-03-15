@@ -4,6 +4,7 @@ import { z } from "zod";
 import { updateUsersRating } from "./updateUserRating";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { updateThisUserRating } from "./updateUserRating"; // Add this import
 
 // Update schema to include all required fields
 const userSchema = z.object({
@@ -95,7 +96,19 @@ export const createUser = async (formdata: FormData) => {
   } catch (error) {
     console.error("Error creating user:", error);
   } finally {
-    await updateUsersRating();
+    const updatedUser = await prisma.user.findFirst({
+      where: {
+        email: formdata.get("email") as string,
+      },
+    });
+    
+    if (!updatedUser) {
+      console.error("User not found");
+      await updateUsersRating();
+    } else {
+      await updateThisUserRating({ userId: updatedUser.id });
+    }
+
     revalidatePath("/leaderboard");
     redirect("/leaderboard");
   }
