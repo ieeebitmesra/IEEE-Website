@@ -96,11 +96,26 @@ export const createUser = async (formdata: FormData) => {
       });
     }
     
-    success = true;
+    // If we get here, the operation was successful
+    // await updateUsersRating();
+    const updatedUser = await prisma.user.findFirst({
+      where: {
+        email: formdata.get("email") as string,
+      },
+    });
+    if (!updatedUser) {
+      console.error("User not found");
+      return;
+    }
+    await updateThisUserRating({ userId: updatedUser.id });
+
+    revalidatePath("/leaderboard");
     
   } catch (error) {
     console.error("Error creating user:", error);
+    // Don't redirect on error - let the user try again
   } finally {
+    // Only update ratings and redirect if the operation was successful
     if (success) {
       const updatedUser = await prisma.user.findFirst({
         where: {
