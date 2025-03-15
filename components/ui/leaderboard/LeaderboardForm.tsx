@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/actions/createUser";
+import { redirect } from "next/navigation";
 
 interface LeaderboardFormProps {
   onClose: () => void;
@@ -10,6 +11,7 @@ interface LeaderboardFormProps {
 }
 
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
+
   const [formData, setFormData] = useState({
     name: "",
     leetcodeHandle: "",
@@ -17,7 +19,14 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     codechefHandle: "",
     email: "",
   });
-
+  const handleFormAction = async (formData: FormData) => {
+    try {
+      await createUser(formData);
+     window.location.reload();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,8 +84,13 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
         </button>
         
         <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
+<<<<<<< HEAD
         
         <form action={createUser} className="space-y-4">
+=======
+
+        <form action={handleFormAction} className="space-y-4">
+>>>>>>> da8875d618becff8d0a60a7b3bd4a8107f951a9b
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
             <input
