@@ -7,15 +7,28 @@ import { createUser } from "@/actions/createUser";
 interface LeaderboardFormProps {
   onClose: () => void;
   onSubmit: (data: any) => Promise<void>;
+  initialData?: {
+    name?: string;
+    leetcodeHandle?: string;
+    codeforcesHandle?: string;
+    codechefHandle?: string;
+    email?: string;
+  };
+  isUpdate?: boolean;
 }
 
-export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
+export function LeaderboardForm({ 
+  onClose, 
+  onSubmit, 
+  initialData = {}, 
+  isUpdate = false 
+}: LeaderboardFormProps) {
   const [formData, setFormData] = useState({
-    name: "",
-    leetcodeHandle: "",
-    codeforcesHandle: "",
-    codechefHandle: "",
-    email: "",
+    name: initialData.name || "",
+    leetcodeHandle: initialData.leetcodeHandle || "",
+    codeforcesHandle: initialData.codeforcesHandle || "",
+    codechefHandle: initialData.codechefHandle || "",
+    email: initialData.email || "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -70,13 +83,15 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
         setSubmitSuccess(true);
         
         // Reset form after successful submission
-        setFormData({
-          name: "",
-          leetcodeHandle: "",
-          codeforcesHandle: "",
-          codechefHandle: "",
-          email: "",
-        });
+        if (!isUpdate) {
+          setFormData({
+            name: "",
+            leetcodeHandle: "",
+            codeforcesHandle: "",
+            codechefHandle: "",
+            email: "",
+          });
+        }
         
         // Close the form after a short delay to show success message
         setTimeout(() => {
@@ -105,9 +120,10 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           <X className="h-5 w-5" />
         </button>
         
-        <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">
+          {isUpdate ? "Update Your Profiles" : "Join the Leaderboard"}
+        </h2>
         
-        {/* Changed from action={createUser} to onSubmit={handleSubmit} */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
@@ -176,7 +192,9 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           
           {submitSuccess ? (
             <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 text-center mt-6">
-              <p className="text-green-400 font-medium">Successfully joined the leaderboard!</p>
+              <p className="text-green-400 font-medium">
+                {isUpdate ? "Successfully updated your profiles!" : "Successfully joined the leaderboard!"}
+              </p>
               <p className="text-white/70 text-sm mt-1">Your profile will be updated shortly.</p>
             </div>
           ) : (
@@ -194,7 +212,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                 disabled={isSubmitting}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isSubmitting ? "Submitting..." : "Join Leaderboard"}
+                {isSubmitting ? "Submitting..." : isUpdate ? "Update Profiles" : "Join Leaderboard"}
               </Button>
             </div>
           )}
@@ -202,4 +220,44 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
       </motion.div>
     </div>
   );
+}
+
+// Utility function to open the leaderboard form from anywhere in the application
+export function openLeaderboardForm(
+  onSubmit: (data: any) => Promise<void>,
+  initialData = {},
+  isUpdate = false
+) {
+  // Create a container for the form
+  const formContainer = document.createElement('div');
+  formContainer.id = 'leaderboard-form-container';
+  document.body.appendChild(formContainer);
+
+  // Function to close and clean up
+  const handleClose = () => {
+    if (formContainer && formContainer.parentNode) {
+      formContainer.parentNode.removeChild(formContainer);
+    }
+  };
+
+  // Import React DOM client and render the form
+  const renderForm = async () => {
+    const { createRoot } = await import('react-dom/client');
+    const root = createRoot(formContainer);
+    
+    root.render(
+      <LeaderboardForm 
+        onClose={handleClose} 
+        onSubmit={onSubmit}
+        initialData={initialData}
+        isUpdate={isUpdate}
+      />
+    );
+  };
+
+  // Render the form
+  renderForm().catch(console.error);
+
+  // Return the close function in case it needs to be called programmatically
+  return handleClose;
 }
