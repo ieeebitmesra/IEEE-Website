@@ -82,7 +82,7 @@ export function LeaderboardForm({
         await onSubmit(formData);
         setSubmitSuccess(true);
         
-        // Reset form after successful submission
+        // Reset form after successful submission if not updating
         if (!isUpdate) {
           setFormData({
             name: "",
@@ -93,10 +93,11 @@ export function LeaderboardForm({
           });
         }
         
-        // Close the form after a short delay to show success message
+        // Show success message but don't automatically close the form
+        // This allows users to make additional changes if needed
         setTimeout(() => {
-          onClose();
-        }, 1500);
+          setSubmitSuccess(false); // Just hide the success message after a delay
+        }, 3000);
       } catch (error) {
         console.error("Error submitting form:", error);
         setErrors({ submit: "Failed to submit. Please try again." });
@@ -191,13 +192,14 @@ export function LeaderboardForm({
           {errors.submit && <p className="text-red-500 text-sm">{errors.submit}</p>}
           
           {submitSuccess ? (
-            <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 text-center mt-6">
+            <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 text-center mt-6 mb-4">
               <p className="text-green-400 font-medium">
                 {isUpdate ? "Successfully updated your profiles!" : "Successfully joined the leaderboard!"}
               </p>
               <p className="text-white/70 text-sm mt-1">Your profile will be updated shortly.</p>
             </div>
           ) : (
+
             <div className="flex justify-end gap-3 mt-6">
               <Button
                 type="button"
