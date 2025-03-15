@@ -1,21 +1,34 @@
 "use client";
-
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Menu, MoveRight, X } from "lucide-react";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function Header1() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setOpen] = useState(false);
+  const { user, isLoading, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,6 +60,7 @@ function Header1() {
           "backdrop-blur-md"
         )}>
           <div className="flex items-center justify-between px-4 py-2">
+            {/* Logo section */}
             <Link href="/" className="flex items-center gap-2">
               <Image 
                 src="/logo.png" 
@@ -59,19 +73,14 @@ function Header1() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden md:flex items-center space-x-1">
               <NavigationMenu>
-                <NavigationMenuList className="flex gap-1">
+                <NavigationMenuList>
                   {navigationItems.map((item) => (
                     <NavigationMenuItem key={item.title}>
                       <Link href={item.href} legacyBehavior passHref>
-                        <NavigationMenuLink>
-                          <Button 
-                            variant="ghost" 
-                            className="text-white/70 hover:text-white hover:bg-white/10 rounded-full px-4"
-                          >
-                            {item.title}
-                          </Button>
+                        <NavigationMenuLink className="px-4 py-2 text-sm text-white/80 hover:text-white transition-colors">
+                          {item.title}
                         </NavigationMenuLink>
                       </Link>
                     </NavigationMenuItem>
@@ -80,33 +89,147 @@ function Header1() {
               </NavigationMenu>
             </div>
 
+            {/* Auth Buttons or User Profile */}
+            <div className="hidden md:flex items-center gap-4">
+              {isLoading ? (
+                <div className="w-8 h-8 rounded-full bg-white/10 animate-pulse"></div>
+              ) : user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                      <Avatar className="h-9 w-9 border border-white/20">
+                        <AvatarImage src={user.user_metadata?.avatar_url || ""} alt={user.email || ""} />
+                        <AvatarFallback className="bg-blue-600 text-white">
+                          {user.email ? user.email.charAt(0).toUpperCase() : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{user.user_metadata?.full_name || user.email}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => logout()}>
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    className="text-white hover:bg-white/10"
+                    asChild
+                  >
+                    <Link href="/signin">Sign In</Link>
+                  </Button>
+                  <Button
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    asChild
+                  >
+                    <Link href="/signup">Sign Up</Link>
+                  </Button>
+                </>
+              )}
+            </div>
+
             {/* Mobile Menu Button */}
-            <Button 
-              variant="ghost" 
+            <button
+              className="md:hidden text-white p-2 rounded-lg hover:bg-white/10"
               onClick={() => setOpen(!isOpen)}
-              className="lg:hidden text-white/70 hover:text-white hover:bg-white/10"
             >
-              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
+              {isOpen ? <X /> : <Menu />}
+            </button>
           </div>
 
-            {/* Mobile Menu */}
+          {/* Mobile Navigation */}
           {isOpen && (
-            <div className="lg:hidden absolute top-full left-0 right-0">
-              <nav className="flex flex-col max-w-7xl mx-auto bg-black/95 backdrop-blur-md border-t border-white/10 mt-2 mx-4 rounded-xl overflow-hidden">
-                {navigationItems.map((item) => (
-                  <Link 
-                    key={item.title}
-                    href={item.href}
-                    className="flex items-center justify-between px-6 py-4 border-b border-white/10 text-white/90 hover:bg-white/5 transition-all duration-200"
-                    onClick={() => setOpen(false)}
-                  >
-                    <span className="font-medium text-lg">{item.title}</span>
-                    <MoveRight className="w-4 h-4 opacity-50" />
-                  </Link>
-                ))}
-              </nav>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="md:hidden px-4 py-4 space-y-4"
+            >
+              {navigationItems.map((item) => (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className="block px-4 py-2 text-white/80 hover:text-white transition-colors"
+                  onClick={() => setOpen(false)}
+                >
+                  {item.title}
+                </Link>
+              ))}
+              <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-3 px-4 py-2">
+                      <Avatar className="h-9 w-9 border border-white/20">
+                        <AvatarImage src={user.user_metadata?.avatar_url || ""} alt={user.email || ""} />
+                        <AvatarFallback className="bg-blue-600 text-white">
+                          {user.email ? user.email.charAt(0).toUpperCase() : "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-medium text-white">{user.user_metadata?.full_name || user.email}</p>
+                        <p className="text-xs text-white/60">{user.email}</p>
+                      </div>
+                    </div>
+                    <Link 
+                      href="/profile" 
+                      className="block px-4 py-2 text-white/80 hover:text-white"
+                      onClick={() => setOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <Link 
+                      href="/dashboard" 
+                      className="block px-4 py-2 text-white/80 hover:text-white"
+                      onClick={() => setOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Button
+                      variant="ghost"
+                      className="text-white hover:bg-white/10 w-full justify-start"
+                      onClick={() => {
+                        logout();
+                        setOpen(false);
+                      }}
+                    >
+                      Log out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="ghost"
+                      className="text-white hover:bg-white/10 w-full"
+                      asChild
+                    >
+                      <Link href="/signin">Sign In</Link>
+                    </Button>
+                    <Button
+                      className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+                      asChild
+                    >
+                      <Link href="/signup">Sign Up</Link>
+                    </Button>
+                  </>
+                )}
+              </div>
+            </motion.div>
           )}
         </div>
       </div>

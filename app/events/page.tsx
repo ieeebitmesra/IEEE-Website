@@ -4,9 +4,11 @@ import { Header1 } from "@/components/ui/header";
 import { Meteors } from "@/components/ui/meteor";
 import { BackgroundSparkles } from "@/components/ui/animations/BackgroundSparkles";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Calendar, Users, Trophy, Code, Target, GitBranch, Timer , Cpu} from "lucide-react";
-import { useRef } from "react";
+import { Calendar, Users, Trophy, Code, Target, GitBranch, Timer, Cpu } from "lucide-react";
+import { useRef, useState } from "react";
 import { Footer } from "@/components/ui/footer";
+import { EventProposalForm } from "@/components/ui/events/EventProposalForm";
+import { toast } from "sonner";
 
 interface Event {
   title: string;
@@ -31,6 +33,7 @@ export default function EventsPage() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const [showProposalForm, setShowProposalForm] = useState(false);
 
   const events: Event[] = [
     {
@@ -88,6 +91,39 @@ export default function EventsPage() {
     { icon: Users, label: "Workshops" },
     { icon: Target, label: "Meetups" },
   ];
+
+  const handleSubmitProposal = async (data: any) => {
+    try {
+      // Show submitting toast
+      const loadingToast = toast.loading("Submitting your proposal...");
+      
+      // Send the proposal data to our API endpoint
+      const response = await fetch('/api/event-proposal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      // Dismiss the loading toast
+      toast.dismiss(loadingToast);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit proposal');
+      }
+
+      // Close the form
+      setShowProposalForm(false);
+      
+      // Show success message
+      toast.success("Your event proposal has been submitted successfully! We'll get back to you soon.");
+    } catch (error: any) {
+      console.error('Error submitting proposal:', error);
+      toast.error(error.message || 'Failed to submit proposal. Please try again later.');
+    }
+  };
 
   return (
     // Update the container div's className
@@ -274,6 +310,7 @@ export default function EventsPage() {
           <h2 className="text-3xl font-bold text-white mb-4">Want to Host an Event?</h2>
           <p className="text-white/70 mb-8">Have an idea for a technical event? Let's make it happen!</p>
           <motion.button
+            onClick={() => setShowProposalForm(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="px-8 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
@@ -282,8 +319,17 @@ export default function EventsPage() {
           </motion.button>
         </motion.div>
       </motion.div>
+      
+      {/* Event Proposal Form Modal */}
+      {showProposalForm && (
+        <EventProposalForm 
+          onClose={() => setShowProposalForm(false)} 
+          onSubmit={handleSubmitProposal} 
+        />
+      )}
+      
       <Footer />
       <Meteors number={20} />
     </div>
   );
-}
+} // Remove the semicolon here

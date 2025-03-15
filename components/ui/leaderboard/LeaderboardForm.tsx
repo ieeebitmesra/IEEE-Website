@@ -1,9 +1,8 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/actions/createUser";
-import { redirect } from "next/navigation";
 
 interface LeaderboardFormProps {
   onClose: () => void;
@@ -11,7 +10,6 @@ interface LeaderboardFormProps {
 }
 
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
-
   const [formData, setFormData] = useState({
     name: "",
     leetcodeHandle: "",
@@ -19,14 +17,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     codechefHandle: "",
     email: "",
   });
-  const handleFormAction = async (formData: FormData) => {
-    try {
-      await createUser(formData);
-     window.location.reload();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +26,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
       ...prev,
       [name]: value
     }));
-
+    
     // Clear error when user types
     if (errors[name]) {
       setErrors(prev => {
@@ -48,22 +39,22 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
+    
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
     }
-
+    
     if (!formData.leetcodeHandle.trim() && !formData.codeforcesHandle.trim() && !formData.codechefHandle.trim()) {
       newErrors.platforms = "At least one platform username is required";
     }
-
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (validateForm()) {
       onSubmit(formData);
     }
@@ -71,21 +62,21 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
 
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <motion.div
+      <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-xl p-6 w-full max-w-md relative"
       >
-        <button
+        <button 
           onClick={onClose}
           className="absolute top-4 right-4 text-white/60 hover:text-white"
         >
           <X className="h-5 w-5" />
         </button>
-
+        
         <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
-
-        <form action={handleFormAction} className="space-y-4">
+        
+        <form action={createUser} className="space-y-4">
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
             <input
@@ -111,7 +102,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
             />
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
-
+          
           <div>
             <label className="block text-white/80 mb-1">LeetCode Username</label>
             <input
@@ -123,7 +114,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               placeholder="Your LeetCode username"
             />
           </div>
-
+          
           <div>
             <label className="block text-white/80 mb-1">CodeForces Username</label>
             <input
@@ -135,7 +126,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               placeholder="Your CodeForces username"
             />
           </div>
-
+          
           <div>
             <label className="block text-white/80 mb-1">CodeChef Username</label>
             <input
@@ -147,19 +138,19 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               placeholder="Your CodeChef username"
             />
           </div>
-
+          
           {errors.platforms && <p className="text-red-500 text-sm">{errors.platforms}</p>}
-
+          
           <div className="flex justify-end gap-3 mt-6">
-            <Button
-              type="button"
+            <Button 
+              type="button" 
               onClick={onClose}
               variant="outline"
               className="border-white/10 text-white hover:bg-white/10"
             >
               Cancel
             </Button>
-            <Button
+            <Button 
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >

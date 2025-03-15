@@ -1,28 +1,36 @@
 "use client";
-import { BackgroundSparkles } from "@/components/ui/animations/BackgroundSparkles";
-import { Button } from "@/components/ui/button";
-import { Footer } from "@/components/ui/footer";
 import { Header1 } from "@/components/ui/header";
+import { Footer } from "@/components/ui/footer";
+import { Meteors } from "@/components/ui/meteor";
+import { BackgroundSparkles } from "@/components/ui/animations/BackgroundSparkles";
+import { motion, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
+import {
+  Trophy,
+  Medal,
+  Code,
+  Search,
+  Filter,
+  ArrowUpDown,
+  Github,
+  RefreshCw,
+  User,
+  Sparkles,
+} from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { LeaderboardTable } from "@/components/ui/leaderboard/LeaderboardTable";
 import { LeaderboardForm } from "@/components/ui/leaderboard/LeaderboardForm";
 import { LeaderboardStats } from "@/components/ui/leaderboard/LeaderboardStats";
-import { LeaderboardTable } from "@/components/ui/leaderboard/LeaderboardTable";
 import { TopPerformers } from "@/components/ui/leaderboard/TopPerformers";
-import { Meteors } from "@/components/ui/meteor";
-import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  Code,
-  RefreshCw,
-  Search,
-  Sparkles,
-  Trophy,
-  User
-} from "lucide-react";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 // import { supabase } from "@/lib/supabase";
-import { getUser } from "@/actions/getUser";
 import { Tabs as UITabs, TabsContent as UITabsContent, TabsList as UITabsList, TabsTrigger as UITabsTrigger } from "@/components/ui/tabs";
+import { updateUsersRating } from "@/actions/updateUserRating";
+import { getUser } from "@/actions/getUser";
 import { User as userType } from "@prisma/client";
+import { prisma } from "@/lib";
+import { get } from "http";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface Participant {
   id: string;
@@ -43,6 +51,8 @@ export interface Participant {
 }
 
 export default function LeaderboardPage() {
+  // Add this near other state declarations
+  const { user } = useAuth();
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -405,12 +415,14 @@ export default function LeaderboardPage() {
                 </div>
 
                 <div className="flex gap-2 w-full md:w-auto">
-                  <Button
-                    onClick={() => setShowForm(true)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
-                  >
-                    Join Leaderboard
-                  </Button>
+                  {user && (
+                    <Button
+                      onClick={() => setShowForm(true)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
+                    >
+                      Join Leaderboard
+                    </Button>
+                  )}
                 </div>
               </div>
 
