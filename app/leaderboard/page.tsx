@@ -26,6 +26,7 @@ import { TopPerformers } from "@/components/ui/leaderboard/TopPerformers";
 import { Tabs as UITabs, TabsContent as UITabsContent, TabsList as UITabsList, TabsTrigger as UITabsTrigger } from "@/components/ui/tabs";
 import { updateAllUsersRating as updateUsersRating } from "@/actions/updateAllUserRating";
 import { getUser } from "@/actions/getUser";
+import { createUser } from "@/actions/createUser";
 import { User as userType } from "@prisma/client";
 import { prisma } from "@/lib";
 import { get } from "http";
@@ -923,40 +924,21 @@ export default function LeaderboardPage() {
           onClose={() => setShowForm(false)}
           onSubmit={async (data) => {
             try {
-              // Check if Supabase is configured
-              // if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-              //   console.warn('Supabase credentials not configured. Cannot submit form.');
-              //   setShowForm(false);
-              //   return;
-              // }
-
-              // Calculate total score
-              const totalScore =
-                (data.leetcodeRating || 0) +
-                (data.leetcodeProblemsSolved || 0) * 2 +
-                (data.codeforcesRating || 0) +
-                (data.codeforcesProblemsSolved || 0) * 2 +
-                (data.codechefRating || 0) +
-                (data.codechefProblemsSolved || 0) * 2;
-
-              // Add participant to Supabase
-              // const { error } = await supabase
-              //   .from('participants')
-              //   .insert([
-              //     {
-              //       ...data,
-              //       totalScore,
-              //       lastUpdated: new Date().toISOString().split('T')[0]
-              //     }
-              //   ]);
-
-              // if (error) {
-              //   console.error('Error adding participant:', error);
-              //   throw error;
-              // }
-
-              // Refresh data
-              handleRefresh();
+              // Use the createUser server action directly
+              const result = await createUser({
+                name: data.name,
+                email: data.email,
+                leetcodeHandle: data.leetcodeHandle || "none",
+                codeforcesHandle: data.codeforcesHandle || "none",
+                codechefHandle: data.codechefHandle || "none"
+              });
+              
+              if (!result.success) {
+                throw new Error(result.error || "Failed to create user");
+              }
+              
+              // Refresh data to show the new entry
+              await handleRefresh();
               setShowForm(false);
             } catch (error) {
               console.error('Failed to add participant:', error);
