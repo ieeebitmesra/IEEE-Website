@@ -2,19 +2,21 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { getCurrentUser, signOut } from '@/lib/supabase';
+import { getCurrentUser, signOut, supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   logout: () => Promise<void>;
+  isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   logout: async () => {},
+  isAuthenticated: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -25,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    // Initial user fetch
     const fetchUser = async () => {
       try {
         const currentUser = await getCurrentUser();
@@ -38,6 +41,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     fetchUser();
+
+    // Set up auth state change listener
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.email);
+        if (session?.user) {
+          setUser(session.user);
+        } else if (event === 'SIGNED_OUT') {
+          setUser(null);
+        }
+        setIsLoading(false);
+      }
+    );
+
+    // Cleanup listener on unmount
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
   }, []);
 
   const logout = async () => {
@@ -51,7 +72,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, logout }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      isLoading, 
+      logout,
+      isAuthenticated: !!user
+    }}>
       {children}
     </AuthContext.Provider>
   );
