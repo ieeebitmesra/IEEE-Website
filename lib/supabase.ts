@@ -1,93 +1,53 @@
 import { createClient } from '@supabase/supabase-js';
 
-const isBrowser = typeof window !== 'undefined';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-const createDummyClient = () => {
-  return {
-    auth: {
-      signInWithOAuth: () => Promise.resolve({ data: null, error: null }),
-      signOut: () => Promise.resolve({ error: null }),
-      getUser: () => Promise.resolve({ data: { user: null }, error: null })
-    }
-  } as any;
-};
-
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
-
-export const getSupabase = () => {
-  if (!isBrowser) {
-    console.warn('Using dummy Supabase client for SSR/build');
-    return createDummyClient();
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  db: {
+    schema: 'public'
   }
+});
 
-  if (supabaseInstance) return supabaseInstance;
-  
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('Supabase credentials missing');
-    return createDummyClient();
-  }
-  
-  supabaseInstance = createClient(supabaseUrl, supabaseAnonKey);
-  return supabaseInstance;
-};
-
-// Export for backward compatibility
-export const supabase = getSupabase();
-
-// Update auth functions to use getSupabase()
-export async function signInWithGoogle() {
-  const client = getSupabase();
-  if (!client) {
-    throw new Error('Supabase client not initialized');
-  }
-  
-  const { data, error } = await client.auth.signInWithOAuth({
+// Authentication functions
+export const signInWithGoogle = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: `${window.location.origin}/auth/callback`,
     },
   });
   
-  if (error) throw error;
-  return data;
-}
-
-export async function signInWithGithub() {
-  const client = getSupabase();
-  if (!client) {
-    throw new Error('Supabase client not initialized');
+  if (error) {
+    throw error;
   }
-  
-  const { data, error } = await client.auth.signInWithOAuth({
+};
+
+export const signInWithGithub = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
     provider: 'github',
     options: {
       redirectTo: `${window.location.origin}/auth/callback`,
     },
   });
   
-  if (error) throw error;
-  return data;
-}
-
-export async function signOut() {
-  const client = getSupabase();
-  if (!client) {
-    throw new Error('Supabase client not initialized');
+  if (error) {
+    throw error;
   }
-  
-  const { error } = await client.auth.signOut();
-  if (error) throw error;
-}
+};
 
-export async function getCurrentUser() {
-  const client = getSupabase();
-  if (!client) {
-    throw new Error('Supabase client not initialized');
+export const signOut = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    throw error;
   }
-  
-  const { data: { user } } = await client.auth.getUser();
+};
+
+export const getCurrentUser = async () => {
+  const { data: { user } } = await supabase.auth.getUser();
   return user;
-}
+};
