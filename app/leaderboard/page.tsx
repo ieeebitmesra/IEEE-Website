@@ -80,29 +80,26 @@ export default function LeaderboardPage() {
 
         // Map database users to Participant interface
         const mappedUsers = users.map(user => {
-          // Use the totalScore from the database if available, otherwise calculate it
+          // Calculate score only from platforms where the user has provided handles
           const calculatedScore = 
-            (user.leetcodeRating || 0) +
-            (user.leetcodeProblemsSolved || 0) * 2 +
-            (user.codeforcesRating || 0) +
-            (user.codeforcesProblemsSolved || 0) * 2 +
-            (user.codechefRating || 0) +
-            (user.codechefProblemsSolved || 0) * 2;
+            (user.leetcodeHandle && user.leetcodeHandle !== "none" ? (user.leetcodeRating || 0) + (user.leetcodeProblemsSolved || 0) * 2 : 0) +
+            (user.codeforcesHandle && user.codeforcesHandle !== "none" ? (user.codeforcesRating || 0) + (user.codeforcesProblemsSolved || 0) * 2 : 0) +
+            (user.codechefHandle && user.codechefHandle !== "none" ? (user.codechefRating || 0) + (user.codechefProblemsSolved || 0) * 2 : 0);
           
           const totalScore = user.totalScore || calculatedScore;
           
           return {
             id: user.id,
             name: user.name,
-            leetcodeHandle: user.leetcodeHandle,
-            codeforcesHandle: user.codeforcesHandle,
-            codechefHandle: user.codechefHandle,
-            leetcodeRating: user.leetcodeRating,
-            leetcodeProblemsSolved: user.leetcodeProblemsSolved,
-            codeforcesRating: user.codeforcesRating,
-            codeforcesProblemsSolved: user.codeforcesProblemsSolved,
-            codechefRating: user.codechefRating,
-            codechefProblemsSolved: user.codechefProblemsSolved,
+            leetcodeHandle: user.leetcodeHandle !== "none" ? user.leetcodeHandle : undefined,
+            codeforcesHandle: user.codeforcesHandle !== "none" ? user.codeforcesHandle : undefined,
+            codechefHandle: user.codechefHandle !== "none" ? user.codechefHandle : undefined,
+            leetcodeRating: user.leetcodeHandle !== "none" ? user.leetcodeRating : undefined,
+            leetcodeProblemsSolved: user.leetcodeHandle !== "none" ? user.leetcodeProblemsSolved : undefined,
+            codeforcesRating: user.codeforcesHandle !== "none" ? user.codeforcesRating : undefined,
+            codeforcesProblemsSolved: user.codeforcesHandle !== "none" ? user.codeforcesProblemsSolved : undefined,
+            codechefRating: user.codechefHandle !== "none" ? user.codechefRating : undefined,
+            codechefProblemsSolved: user.codechefHandle !== "none" ? user.codechefProblemsSolved : undefined,
             totalScore: totalScore,
             avatar: user.image,
             lastUpdated: new Date().toISOString()
@@ -130,7 +127,7 @@ export default function LeaderboardPage() {
 
     // Always fetch participants regardless of auth state
     fetchParticipants();
-  }, []); // Remove user dependency if it's not needed for fetching
+  }, []); // Fetch participants on component mount
 
 
   // Function to handle sorting
@@ -261,31 +258,27 @@ export default function LeaderboardPage() {
       // Fetch updated user data
       const users = await getUser();
       
-      // Map database users to Participant interface
       const mappedUsers = users.map(user => {
-        // Use the totalScore from the database if available, otherwise calculate it
+        // Calculate score only from platforms where the user has provided handles
         const calculatedScore = 
-          (user.leetcodeRating || 0) +
-          (user.leetcodeProblemsSolved || 0) * 2 +
-          (user.codeforcesRating || 0) +
-          (user.codeforcesProblemsSolved || 0) * 2 +
-          (user.codechefRating || 0) +
-          (user.codechefProblemsSolved || 0) * 2;
+          (user.leetcodeHandle && user.leetcodeHandle !== "none" ? (user.leetcodeRating || 0) + (user.leetcodeProblemsSolved || 0) * 2 : 0) +
+          (user.codeforcesHandle && user.codeforcesHandle !== "none" ? (user.codeforcesRating || 0) + (user.codeforcesProblemsSolved || 0) * 2 : 0) +
+          (user.codechefHandle && user.codechefHandle !== "none" ? (user.codechefRating || 0) + (user.codechefProblemsSolved || 0) * 2 : 0);
         
         const totalScore = user.totalScore || calculatedScore;
         
         return {
           id: user.id,
           name: user.name,
-          leetcodeHandle: user.leetcodeHandle,
-          codeforcesHandle: user.codeforcesHandle,
-          codechefHandle: user.codechefHandle,
-          leetcodeRating: user.leetcodeRating,
-          leetcodeProblemsSolved: user.leetcodeProblemsSolved,
-          codeforcesRating: user.codeforcesRating,
-          codeforcesProblemsSolved: user.codeforcesProblemsSolved,
-          codechefRating: user.codechefRating,
-          codechefProblemsSolved: user.codechefProblemsSolved,
+          leetcodeHandle: user.leetcodeHandle !== "none" ? user.leetcodeHandle : undefined,
+          codeforcesHandle: user.codeforcesHandle !== "none" ? user.codeforcesHandle : undefined,
+          codechefHandle: user.codechefHandle !== "none" ? user.codechefHandle : undefined,
+          leetcodeRating: user.leetcodeHandle !== "none" ? user.leetcodeRating : undefined,
+          leetcodeProblemsSolved: user.leetcodeHandle !== "none" ? user.leetcodeProblemsSolved : undefined,
+          codeforcesRating: user.codeforcesHandle !== "none" ? user.codeforcesRating : undefined,
+          codeforcesProblemsSolved: user.codeforcesHandle !== "none" ? user.codeforcesProblemsSolved : undefined,
+          codechefRating: user.codechefHandle !== "none" ? user.codechefRating : undefined,
+          codechefProblemsSolved: user.codechefHandle !== "none" ? user.codechefProblemsSolved : undefined,
           totalScore: totalScore,
           avatar: user.image,
           lastUpdated: new Date().toISOString()
