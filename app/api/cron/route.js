@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { updateUsersRating } from "@/actions/updateUserRating";
+import { updateAllUsersRating } from "@/actions/updateAllUserRating";
 
 export async function GET() {
-  await updateUsersRating();
+  await updateAllUsersRating();
   return NextResponse.json({ ok: true, message: "Users rating updated" });
 }
