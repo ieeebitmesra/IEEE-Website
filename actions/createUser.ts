@@ -4,7 +4,7 @@ import { z } from "zod";
 import { updateUsersRating } from "./updateUserRating";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { updateThisUserRating } from "./updateUserRating"; // Add this import
+import { updateThisUserRating } from "./updateUserRating";
 
 // Update schema to include all required fields
 const userSchema = z.object({
@@ -16,6 +16,8 @@ const userSchema = z.object({
 });
 
 export const createUser = async (formdata: FormData) => {
+  let success = false;
+  
   try {
     const name = formdata.get("name") as string;
     const email = formdata.get("email") as string;
@@ -93,23 +95,28 @@ export const createUser = async (formdata: FormData) => {
         },
       });
     }
+    
+    success = true;
+    
   } catch (error) {
     console.error("Error creating user:", error);
   } finally {
-    const updatedUser = await prisma.user.findFirst({
-      where: {
-        email: formdata.get("email") as string,
-      },
-    });
-    
-    if (!updatedUser) {
-      console.error("User not found");
-      await updateUsersRating();
-    } else {
-      await updateThisUserRating({ userId: updatedUser.id });
-    }
+    if (success) {
+      const updatedUser = await prisma.user.findFirst({
+        where: {
+          email: formdata.get("email") as string,
+        },
+      });
+      
+      if (!updatedUser) {
+        console.error("User not found");
+        await updateUsersRating();
+      } else {
+        await updateThisUserRating({ userId: updatedUser.id });
+      }
 
-    revalidatePath("/leaderboard");
-    redirect("/leaderboard");
+      revalidatePath("/leaderboard");
+      redirect("/leaderboard");
+    }
   }
 };
