@@ -570,16 +570,16 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Platform Tabs */}
-      <UITabs defaultValue="overall" onValueChange={setActiveTab} className="w-full mb-8">
+      <UITabs defaultValue="overall" onValueChange={setActiveTab} className="w-full mb-8 px-4 md:px-0">
         <UITabsList className="grid grid-cols-4 max-w-2xl mx-auto">
-          <UITabsTrigger value="overall" className="data-[state=active]:bg-blue-600">Overall</UITabsTrigger>
-          <UITabsTrigger value="leetcode" className="data-[state=active]:bg-blue-600">LeetCode</UITabsTrigger>
-          <UITabsTrigger value="codeforces" className="data-[state=active]:bg-blue-600">CodeForces</UITabsTrigger>
-          <UITabsTrigger value="codechef" className="data-[state=active]:bg-blue-600">CodeChef</UITabsTrigger>
+          <UITabsTrigger value="overall" className="data-[state=active]:bg-blue-600 text-xs md:text-sm">Overall</UITabsTrigger>
+          <UITabsTrigger value="leetcode" className="data-[state=active]:bg-blue-600 text-xs md:text-sm">LeetCode</UITabsTrigger>
+          <UITabsTrigger value="codeforces" className="data-[state=active]:bg-blue-600 text-xs md:text-sm">CodeForces</UITabsTrigger>
+          <UITabsTrigger value="codechef" className="data-[state=active]:bg-blue-600 text-xs md:text-sm">CodeChef</UITabsTrigger>
         </UITabsList>
 
         {/* Overall Tab Content */}
-        <UITabsContent value="overall" className="mt-6">
+        <UITabsContent value="overall" className="mt-6 px-2 md:px-0">
           {/* Stats Section */}
           <LeaderboardStats stats={getStats('overall')} />
 
@@ -587,7 +587,7 @@ export default function LeaderboardPage() {
           <TopPerformers participants={getTopPerformers('overall')} />
 
           {/* Main Content */}
-          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-3 md:p-6 mt-16">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
               <div className="flex items-center gap-4 w-full md:w-auto">
                 <div className="relative flex-1 md:w-64">
@@ -605,7 +605,7 @@ export default function LeaderboardPage() {
                   size="icon"
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="border-white/10 text-black hover:bg-white/10"
+                  className="border-white/10 text-white hover:bg-white/10"
                 >
                   <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
                 </Button>
@@ -624,18 +624,20 @@ export default function LeaderboardPage() {
             </div>
 
             {/* Leaderboard Table */}
-            <LeaderboardTable
-              participants={getSortedParticipants('overall')}
-              sortBy={sortBy}
-              sortOrder={sortOrder}
-              handleSort={handleSort}
-              isLoading={isLoading}
-            />
+            <div className="overflow-x-auto -mx-3 md:mx-0">
+              <LeaderboardTable
+                participants={getSortedParticipants('overall')}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                handleSort={handleSort}
+                isLoading={isLoading}
+              />
+            </div>
           </div>
         </UITabsContent>
 
         {/* LeetCode Tab Content */}
-        <UITabsContent value="leetcode" className="mt-6">
+        <UITabsContent value="leetcode" className="mt-6 px-2 md:px-0">
           {/* Stats Section */}
           <LeaderboardStats stats={getStats('leetcode')} />
 
@@ -643,7 +645,7 @@ export default function LeaderboardPage() {
           <TopPerformers participants={getTopPerformers('leetcode')} />
 
           {/* Main Content */}
-          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-3 md:p-6 mt-16">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
               <div className="flex items-center gap-4 w-full md:w-auto">
                 <div className="relative flex-1 md:w-64">
@@ -669,15 +671,15 @@ export default function LeaderboardPage() {
             </div>
 
             {/* LeetCode Leaderboard Table */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-3 md:mx-0">
               <table className="w-full text-white">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="py-3 px-4 text-left">Rank</th>
-                    <th className="py-3 px-4 text-left">Participant</th>
-                    <th className="py-3 px-4 text-left">LeetCode Username</th>
-                    <th className="py-3 px-4 text-left">Rating</th>
-                    <th className="py-3 px-4 text-left">Problems Solved</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Rank</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Participant</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Username</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Rating</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Problems</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -689,17 +691,17 @@ export default function LeaderboardPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-2 md:px-4">
                         {index + 1}
                         {index < 3 && (
-                          <span className="ml-2">
+                          <span className="ml-1 md:ml-2">
                             {index === 0 && "🥇"}
                             {index === 1 && "🥈"}
                             {index === 2 && "🥉"}
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-4 flex items-center gap-3">
+                      <td className="py-3 px-2 md:px-4 flex items-center gap-2 md:gap-3">
                         {participant.avatar ? (
                           <Image
                             src={participant.avatar}
@@ -715,9 +717,9 @@ export default function LeaderboardPage() {
                         )}
                         <span>{participant.name}</span>
                       </td>
-                      <td className="py-3 px-4">{participant.leetcodeHandle}</td>
-                      <td className="py-3 px-4">{participant.leetcodeRating}</td>
-                      <td className="py-3 px-4">{participant.leetcodeProblemsSolved}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.leetcodeHandle}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.leetcodeRating}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.leetcodeProblemsSolved}</td>
                     </motion.tr>
                   ))}
                 </tbody>
@@ -727,7 +729,7 @@ export default function LeaderboardPage() {
         </UITabsContent>
 
         {/* CodeForces Tab Content */}
-        <UITabsContent value="codeforces" className="mt-6">
+        <UITabsContent value="codeforces" className="mt-6 px-2 md:px-0">
           {/* Stats Section */}
           <LeaderboardStats stats={getStats('codeforces')} />
 
@@ -735,7 +737,7 @@ export default function LeaderboardPage() {
           <TopPerformers participants={getTopPerformers('codeforces')} />
 
           {/* Main Content */}
-          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-3 md:p-6 mt-16">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
               <div className="flex items-center gap-4 w-full md:w-auto">
                 <div className="relative flex-1 md:w-64">
@@ -761,15 +763,15 @@ export default function LeaderboardPage() {
             </div>
 
             {/* CodeForces Leaderboard Table */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-3 md:mx-0">
               <table className="w-full text-white">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="py-3 px-4 text-left">Rank</th>
-                    <th className="py-3 px-4 text-left">Participant</th>
-                    <th className="py-3 px-4 text-left">CodeForces Username</th>
-                    <th className="py-3 px-4 text-left">Rating</th>
-                    <th className="py-3 px-4 text-left">Problems Solved</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Rank</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Participant</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Username</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Rating</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Problems</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -781,17 +783,17 @@ export default function LeaderboardPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-2 md:px-4">
                         {index + 1}
                         {index < 3 && (
-                          <span className="ml-2">
+                          <span className="ml-1 md:ml-2">
                             {index === 0 && "🥇"}
                             {index === 1 && "🥈"}
                             {index === 2 && "🥉"}
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-4 flex items-center gap-3">
+                      <td className="py-3 px-2 md:px-4 flex items-center gap-2 md:gap-3">
                         {participant.avatar ? (
                           <img
                             src={participant.avatar}
@@ -807,9 +809,9 @@ export default function LeaderboardPage() {
                         )}
                         <span>{participant.name}</span>
                       </td>
-                      <td className="py-3 px-4">{participant.codeforcesHandle}</td>
-                      <td className="py-3 px-4">{participant.codeforcesRating}</td>
-                      <td className="py-3 px-4">{participant.codeforcesProblemsSolved}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.codeforcesHandle}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.codeforcesRating}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.codeforcesProblemsSolved}</td>
                     </motion.tr>
                   ))}
                 </tbody>
@@ -819,7 +821,7 @@ export default function LeaderboardPage() {
         </UITabsContent>
 
         {/* CodeChef Tab Content */}
-        <UITabsContent value="codechef" className="mt-6">
+        <UITabsContent value="codechef" className="mt-6 px-2 md:px-0">
           {/* Stats Section */}
           <LeaderboardStats stats={getStats('codechef')} />
 
@@ -827,10 +829,10 @@ export default function LeaderboardPage() {
           <TopPerformers participants={getTopPerformers('codechef')} />
 
           {/* Main Content */}
-          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 mt-16">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-3 md:p-6 mt-16">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-              <div className="flex items-center gap-4 w-full md:w-auto">
-                <div className="relative flex-1 md:w-64">
+              <div className="flex flex-col md:flex-row items-center gap-4 w-full">
+                <div className="relative flex-1 w-full md:w-64">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/40 w-4 h-4" />
                   <input
                     type="text"
@@ -853,15 +855,15 @@ export default function LeaderboardPage() {
             </div>
 
             {/* CodeChef Leaderboard Table */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto -mx-3 md:mx-0">
               <table className="w-full text-white">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="py-3 px-4 text-left">Rank</th>
-                    <th className="py-3 px-4 text-left">Participant</th>
-                    <th className="py-3 px-4 text-left">CodeChef Username</th>
-                    <th className="py-3 px-4 text-left">Rating</th>
-                    <th className="py-3 px-4 text-left">Problems Solved</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Rank</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Participant</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Username</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Rating</th>
+                    <th className="py-3 px-2 md:px-4 text-left">Problems</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -873,17 +875,17 @@ export default function LeaderboardPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-2 md:px-4">
                         {index + 1}
                         {index < 3 && (
-                          <span className="ml-2">
+                          <span className="ml-1 md:ml-2">
                             {index === 0 && "🥇"}
                             {index === 1 && "🥈"}
                             {index === 2 && "🥉"}
                           </span>
                         )}
                       </td>
-                      <td className="py-3 px-4 flex items-center gap-3">
+                      <td className="py-3 px-2 md:px-4 flex items-center gap-2 md:gap-3">
                         {participant.avatar ? (
                           <img
                             src={participant.avatar}
@@ -899,9 +901,9 @@ export default function LeaderboardPage() {
                         )}
                         <span>{participant.name}</span>
                       </td>
-                      <td className="py-3 px-4">{participant.codechefHandle}</td>
-                      <td className="py-3 px-4">{participant.codechefRating}</td>
-                      <td className="py-3 px-4">{"-"}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.codechefHandle}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.codechefRating}</td>
+                      <td className="py-3 px-2 md:px-4">{"-"}</td>
                     </motion.tr>
                   ))}
                 </tbody>
