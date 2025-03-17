@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/auth-context";
 
 interface LeaderboardFormProps {
   onClose: () => void;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit?: (data: any) => Promise<void>;
 }
 
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
@@ -79,7 +79,13 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        await onSubmit(formData);
+        // Use the createUser function directly if onSubmit is not provided
+        if (onSubmit) {
+          await onSubmit(formData);
+        } else {
+          await createUser(formData);
+        }
+        
         setSubmitSuccess(true);
         
         // Reset form after successful submission
