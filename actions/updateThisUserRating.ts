@@ -24,13 +24,22 @@ export async function updateThisUserRating(userId: string) {
     // Fetch LeetCode data if handle exists
     if (user.leetcodeHandle && user.leetcodeHandle !== "none") {
       try {
-        const leetcodeResponse = await axios.get(
+        // Fetch problems solved from the original API
+        const leetcodeStatsResponse = await axios.get(
           `https://leetcode-stats-api.herokuapp.com/${user.leetcodeHandle}`
         );
         
-        if (leetcodeResponse.data && leetcodeResponse.data.status === "success") {
-          leetcodeRating = leetcodeResponse.data.rating || 0;
-          leetcodeProblemsSolved = leetcodeResponse.data.totalSolved || 0;
+        if (leetcodeStatsResponse.data && leetcodeStatsResponse.data.status === "success") {
+          leetcodeProblemsSolved = leetcodeStatsResponse.data.totalSolved || 0;
+        }
+        
+        // Fetch rating from the new API
+        const leetcodeRatingResponse = await axios.get(
+          `https://alfa-leetcode-api-x0kj.onrender.com/userContestRankingInfo/${user.leetcodeHandle}`
+        );
+        
+        if (leetcodeRatingResponse.data) {
+          leetcodeRating = leetcodeRatingResponse.data.rating || 0;
         }
       } catch (error) {
         console.error(`Error fetching LeetCode data for ${user.leetcodeHandle}:`, error);
