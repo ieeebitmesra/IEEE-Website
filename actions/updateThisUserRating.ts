@@ -29,7 +29,7 @@ export async function updateThisUserRating(userId: string) {
         );
         
         if (leetcodeResponse.data && leetcodeResponse.data.status === "success") {
-          leetcodeRating = leetcodeResponse.data.totalSolved || 0;
+          leetcodeRating = leetcodeResponse.data.rating || leetcodeResponse.data.ranking || 0;
           leetcodeProblemsSolved = leetcodeResponse.data.totalSolved || 0;
         }
       } catch (error) {
