@@ -52,20 +52,11 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm()) {
-      try {
-        const result = await createUser(formData);
-        if (result.success) {
-          onSubmit(result.user);
-        } else {
-          console.error("Error creating user:", result.error);
-        }
-      } catch (error) {
-        console.error("Error submitting form:", error);
-      }
+      onSubmit(formData);
     }
   };
 
@@ -85,7 +76,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
         
         <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form action={createUser} className="space-y-4">
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
             <input
