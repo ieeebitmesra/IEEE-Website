@@ -21,15 +21,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     email: user?.email || "", // Initialize with user's email
   });
 
-  // Set the email from the authenticated user when component mounts
-  useEffect(() => {
-    if (user?.email) {
-      setFormData(prev => ({
-        ...prev,
-        email: user.email
-      }));
-    }
-  }, [user]);
+  
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,9 +29,6 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
-    // Ignore changes to email field since it should be fixed to the authenticated user's email
-    if (name === 'email') return;
     
     setFormData(prev => ({
       ...prev,
