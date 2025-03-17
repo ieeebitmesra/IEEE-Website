@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/actions/createUser";
+import { useAuth } from "@/contexts/auth-context";
 
 interface LeaderboardFormProps {
   onClose: () => void;
@@ -10,6 +11,8 @@ interface LeaderboardFormProps {
 }
 
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
+  const { user } = useAuth(); // Get the authenticated user
+  
   const [formData, setFormData] = useState({
     name: "",
     leetcodeHandle: "",
@@ -17,6 +20,16 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     codechefHandle: "",
     email: "",
   });
+
+  // Set the email from the authenticated user when component mounts
+  useEffect(() => {
+    if (user && user.email) {
+      setFormData(prev => ({
+        ...prev,
+        email: user.email
+      }));
+    }
+  }, [user]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,7 +88,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           leetcodeHandle: "",
           codeforcesHandle: "",
           codechefHandle: "",
-          email: "",
+          email: user?.email || "", // Keep the email
         });
         
         // Close the form after a short delay to show success message
@@ -107,7 +120,6 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
         
         <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
         
-        {/* Changed from action={createUser} to onSubmit={handleSubmit} */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
@@ -128,11 +140,10 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              className={`w-full p-2 bg-white/5 border ${errors.email ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter your email"
+              readOnly
+              className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white/70 focus:outline-none cursor-not-allowed"
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+            <p className="text-white/50 text-xs mt-1">Using your signed-in email</p>
           </div>
           
           <div>
