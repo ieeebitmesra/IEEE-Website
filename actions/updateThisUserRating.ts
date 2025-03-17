@@ -29,7 +29,7 @@ export async function updateThisUserRating(userId: string) {
         );
         
         if (leetcodeResponse.data && leetcodeResponse.data.status === "success") {
-          leetcodeRating = leetcodeResponse.data.rating || leetcodeResponse.data.ranking || 0;
+          leetcodeRating = leetcodeResponse.data.rating || 0;
           leetcodeProblemsSolved = leetcodeResponse.data.totalSolved || 0;
         }
       } catch (error) {
@@ -77,7 +77,7 @@ export async function updateThisUserRating(userId: string) {
       try {
         // Note: CodeChef doesn't have a public API, so we'd need to scrape or use a third-party service
         // This is a placeholder - in a real implementation, you'd need to find a way to get this data
-        codechefRating = 1500; // Default rating
+        codechefRating = 0; // Default rating
         codechefProblemsSolved = 0;
       } catch (error) {
         console.error(`Error fetching CodeChef data for ${user.codechefHandle}:`, error);
