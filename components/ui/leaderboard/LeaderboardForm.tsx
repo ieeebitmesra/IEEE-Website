@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/actions/createUser";
-import { useAuth } from "@/contexts/auth-context";
 
 interface LeaderboardFormProps {
   onClose: () => void;
@@ -11,23 +10,18 @@ interface LeaderboardFormProps {
 }
 
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
-  const { user } = useAuth(); // Get the authenticated user
-  
   const [formData, setFormData] = useState({
     name: "",
     leetcodeHandle: "",
     codeforcesHandle: "",
     codechefHandle: "",
-    email: user?.email || "", // Initialize with user's email
+    email: "",
   });
-
-  
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -111,10 +105,11 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               type="email"
               name="email"
               value={formData.email}
-              readOnly
-              className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white/70 focus:outline-none cursor-not-allowed"
+              onChange={handleChange}
+              className={`w-full p-2 bg-white/5 border ${errors.name ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              placeholder="Enter your email"
             />
-            <p className="text-white/50 text-xs mt-1">Using your signed-in email</p>
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
           
           <div>
