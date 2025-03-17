@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/actions/createUser";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/auth-context";
 
 interface LeaderboardFormProps {
   onClose: () => void;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: any) => void;
 }
 
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
@@ -18,10 +18,18 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     leetcodeHandle: "",
     codeforcesHandle: "",
     codechefHandle: "",
-    email: "",
+    email: user?.email || "", // Initialize with user's email
   });
 
-  
+  // Set the email from the authenticated user when component mounts
+  useEffect(() => {
+    if (user?.email) {
+      setFormData(prev => ({
+        ...prev,
+        email: user.email
+      }));
+    }
+  }, [user]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,12 +61,6 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
     }
     
     if (!formData.leetcodeHandle.trim() && !formData.codeforcesHandle.trim() && !formData.codechefHandle.trim()) {
@@ -116,7 +118,6 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
         
         <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
         
-        {/* Changed from action={createUser} to onSubmit={handleSubmit} */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
@@ -202,7 +203,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                 disabled={isSubmitting}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isSubmitting ? "Submitting..." : "Join Leaderboard"}
+                {isSubmitting ? 'Submitting...' : 'Submit'}
               </Button>
             </div>
           )}
