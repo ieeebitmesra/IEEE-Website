@@ -34,7 +34,7 @@ export async function createUser(formData: {
 
     // Fetch ratings for the new user
     if (user) {
-      await updateThisUserRating(user.id);
+      await updateThisUserRating({ userId: user.id });
     }
 
     return { success: true, user };
