@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
-import { supabase } from '@/lib/supabase';
 
 export function DeleteAccount() {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -48,23 +47,23 @@ export function DeleteAccount() {
       // Show success message
       toast.success("Your account has been deleted successfully");
       
-      // Immediately log the user out without any delay
-      try {
-        // Log the user out automatically
-        await supabase.auth.signOut();
-        
-        // Clear any local storage data
-        localStorage.removeItem("userId");
-        // Redirect to the login page
-        router.push("/login");
-
-        window.location.reload();
-      } catch (logoutError) {
-        console.error("Error logging out:", logoutError);
-        toast.error("Failed to log out. Please try again.");
-      }
-
+      // Clear any local storage data
+      localStorage.removeItem("userId");
       
+      // Use a small timeout to ensure the toast is visible before redirecting
+      setTimeout(async () => {
+        try {
+          // Use the logout function from AuthContext instead of direct Supabase call
+          await logout();
+          
+          // Redirect to the signin page with a query parameter to show a message
+          window.location.href = "/signin?accountDeleted=true";
+        } catch (logoutError) {
+          console.error("Error logging out:", logoutError);
+          // Even if logout fails, redirect to signin page
+          window.location.href = "/signin?accountDeleted=true";
+        }
+      }, 1500); // Increased timeout to ensure toast is visible
       
     } catch (error) {
       console.error("Error deleting account:", error);

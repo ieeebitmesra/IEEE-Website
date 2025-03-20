@@ -2,11 +2,11 @@
 import { Header1 } from "@/components/ui/header";
 import { Meteors } from "@/components/ui/meteor";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { signInWithGoogle, signInWithGithub } from "@/lib/supabase";
 import Image from "next/image";
@@ -14,6 +14,15 @@ import Image from "next/image";
 export default function SignInPage() {
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  useEffect(() => {
+    // Check if user was redirected after account deletion
+    const accountDeleted = searchParams.get('accountDeleted');
+    if (accountDeleted === 'true') {
+      toast.success("Your account has been successfully deleted. We're sorry to see you go!");
+    }
+  }, [searchParams]);
 
   const handleGoogleSignIn = async () => {
     try {
