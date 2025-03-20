@@ -48,11 +48,11 @@ export function DeleteAccount() {
         localStorage.removeItem("userId");
         
         // Force a complete page refresh to clear all state
-        window.location.href = "/?accountDeleted=true";
+        window.location.reload();
       } catch (logoutError) {
         console.error("Error during logout:", logoutError);
         // Force refresh even if logout fails
-        window.location.href = "/";
+        window.location.reload()
       }
       
     } catch (error) {
