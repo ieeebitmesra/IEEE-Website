@@ -27,8 +27,18 @@ export function DeleteAccount() {
         return;
       }
       
-      // Call the server action to delete the user
-      await deleteUser(userId);
+      // Call API route to delete both Supabase auth and Prisma user
+      const response = await fetch('/api/user', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete user');
+      }
       
       // Log the user out
       await logout();
