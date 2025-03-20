@@ -15,7 +15,10 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
-  logout: async () => {},
+  logout: async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) console.error('Logout error:', error);
+},
   isAuthenticated: false,
 });
 
