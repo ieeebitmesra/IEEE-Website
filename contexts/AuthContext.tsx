@@ -74,23 +74,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      // Sign out from Supabase
       await signOut();
-      
-      // Clear user state
       setUser(null);
-      
-      // Clear any localStorage data
       localStorage.removeItem("userId");
-      
-      // Force a complete refresh of the application state
       router.push('/');
-      
-      // Return a resolved promise to indicate successful logout
-      return Promise.resolve();
     } catch (error) {
       console.error('Error signing out:', error);
-      return Promise.reject(error);
     }
   };
 

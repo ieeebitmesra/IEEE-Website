@@ -56,14 +56,13 @@ export function DeleteAccount() {
           // Use the logout function from AuthContext instead of direct Supabase call
           await logout();
           
-          // Redirect to the signin page with a query parameter to show a message
-          window.location.href = "/signin?accountDeleted=true";
+          window.location.href = "/signin";
         } catch (logoutError) {
           console.error("Error logging out:", logoutError);
           // Even if logout fails, redirect to signin page
-          window.location.href = "/signin?accountDeleted=true";
+          window.location.href = "/signin";
         }
-      }, 1500); // Increased timeout to ensure toast is visible
+      }, 1000);
       
     } catch (error) {
       console.error("Error deleting account:", error);
