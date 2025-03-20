@@ -9,6 +9,9 @@ import { ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { Gallery } from "@/components/ui/landing/Gallery";
 import { useState } from "react";
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
 export default function Home() {
   const containerRef = useRef(null);

@@ -36,17 +36,30 @@ export function DeleteAccount() {
         throw new Error(errorData.error || 'Failed to delete user');
       }
       
-      // Log the user out
-      await logout();
-      
+      // Show success message before logout to ensure user sees it
       toast.success("Your account has been deleted successfully");
       
-      // Redirect to home page
-      router.push("/");
+      // Short delay to ensure toast is visible before redirect
+      setTimeout(async () => {
+        try {
+          // Log the user out
+          await logout();
+          
+          // Clear any local storage data
+          localStorage.removeItem("userId");
+          
+          // Redirect to home page with a message parameter
+          router.push("/?accountDeleted=true");
+        } catch (logoutError) {
+          console.error("Error during logout:", logoutError);
+          // Force redirect even if logout fails
+          router.push("/");
+        }
+      }, 1500);
+      
     } catch (error) {
       console.error("Error deleting account:", error);
       toast.error(error instanceof Error ? error.message : "Failed to delete your account. Please try again.");
-    } finally {
       setIsDeleting(false);
       setShowConfirmation(false);
     }
