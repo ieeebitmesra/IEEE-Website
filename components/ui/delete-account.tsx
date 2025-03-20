@@ -60,6 +60,7 @@ export function DeleteAccount() {
     } catch (error) {
       console.error("Error deleting account:", error);
       toast.error(error instanceof Error ? error.message : "Failed to delete your account. Please try again.");
+    } finally {
       setIsDeleting(false);
       setShowConfirmation(false);
     }

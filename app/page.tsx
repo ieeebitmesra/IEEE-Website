@@ -19,6 +19,15 @@ export default function Home() {
     target: containerRef,
     offset: ["start start", "end end"]
   });
+  
+  const searchParams = useSearchParams();
+  
+  useEffect(() => {
+    // Check for account deleted parameter
+    if (searchParams.get('accountDeleted') === 'true') {
+      toast.success('Your account has been successfully deleted');
+    }
+  }, [searchParams]);
 
   const achievements = [
     { number: "500+", label: "Active Members" },
