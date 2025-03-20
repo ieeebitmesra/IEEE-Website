@@ -12,14 +12,10 @@ import { useState } from "react";
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
+import { Suspense } from 'react';
 
-export default function Home() {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"]
-  });
-  
+// Create a client component that uses useSearchParams
+function AccountDeletedCheck() {
   const searchParams = useSearchParams();
   
   useEffect(() => {
@@ -28,6 +24,16 @@ export default function Home() {
       toast.success('Your account has been successfully deleted');
     }
   }, [searchParams]);
+  
+  return null; // This component doesn't render anything
+}
+
+export default function Home() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
   const achievements = [
     { number: "500+", label: "Active Members" },
@@ -93,6 +99,9 @@ export default function Home() {
   return (
     <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900 relative overflow-hidden pt-20">
       <Header1 />
+      <Suspense fallback={null}>
+        <AccountDeletedCheck />
+      </Suspense>
       <Hero />
 
       {/* Achievement Counters */}
