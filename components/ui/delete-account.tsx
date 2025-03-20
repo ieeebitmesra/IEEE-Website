@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { deleteUser } from "@/actions/deleteUser";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,17 +11,13 @@ export function DeleteAccount() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const router = useRouter();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleDeleteAccount = async () => {
     try {
       setIsDeleting(true);
       
-      // Get the user ID from local storage or context
-      // This assumes you store the user ID somewhere accessible
-      const userId = localStorage.getItem("userId");
-      
-      if (!userId) {
+      if (!user?.id) {
         toast.error("User ID not found. Please sign in again.");
         return;
       }
@@ -33,11 +28,12 @@ export function DeleteAccount() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId })
+        body: JSON.stringify({ userId: user.id })
       });
 
       if (!response.ok) {
-        throw new Error('Failed to delete user');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete user');
       }
       
       // Log the user out
@@ -49,7 +45,7 @@ export function DeleteAccount() {
       router.push("/");
     } catch (error) {
       console.error("Error deleting account:", error);
-      toast.error("Failed to delete your account. Please try again.");
+      toast.error(error instanceof Error ? error.message : "Failed to delete your account. Please try again.");
     } finally {
       setIsDeleting(false);
       setShowConfirmation(false);
