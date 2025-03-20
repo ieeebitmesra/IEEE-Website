@@ -42,7 +42,7 @@ export function DeleteAccount() {
       // Short delay to ensure toast is visible before redirect
       setTimeout(async () => {
         try {
-          // Log the user out
+          // Log the user out automatically
           await logout();
           
           // Clear any local storage data
@@ -55,7 +55,7 @@ export function DeleteAccount() {
           // Force redirect even if logout fails
           router.push("/");
         }
-      }, 1500);
+      }, 500); // Reduced timeout for faster logout
       
     } catch (error) {
       console.error("Error deleting account:", error);
