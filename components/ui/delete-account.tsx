@@ -47,12 +47,12 @@ export function DeleteAccount() {
         // Clear any local storage data
         localStorage.removeItem("userId");
         
-        // Redirect to home page with a message parameter
-        router.push("/?accountDeleted=true");
+        // Force a complete page refresh to clear all state
+        window.location.href = "/?accountDeleted=true";
       } catch (logoutError) {
         console.error("Error during logout:", logoutError);
-        // Force redirect even if logout fails
-        router.push("/");
+        // Force refresh even if logout fails
+        window.location.href = "/";
       }
       
     } catch (error) {
