@@ -6,15 +6,23 @@ import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { Input } from "@/components/ui/input";
 
 export function DeleteAccount() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
   const router = useRouter();
   const { user, logout } = useAuth();
 
   const handleDeleteAccount = async () => {
     try {
+      // Validate confirmation text
+      if (confirmText !== "DELETE") {
+        toast.error("Please type DELETE to confirm account deletion");
+        return;
+      }
+
       setIsDeleting(true);
       
       if (!user?.id) {
@@ -47,12 +55,17 @@ export function DeleteAccount() {
         // Clear any local storage data
         localStorage.removeItem("userId");
         
-        // Force a complete page refresh to clear all state
-        window.location.reload();
+        // Add a delay before redirecting to ensure toast is visible
+        setTimeout(() => {
+          // Force a complete page refresh to clear all state
+          window.location.href = "/?accountDeleted=true";
+        }, 1500); // 1.5 second delay
       } catch (logoutError) {
         console.error("Error during logout:", logoutError);
-        // Force refresh even if logout fails
-        window.location.reload()
+        // Force refresh even if logout fails, but with delay
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
       }
       
     } catch (error) {
@@ -81,9 +94,27 @@ export function DeleteAccount() {
           <p className="text-white/70 mb-6">
             Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.
           </p>
+          
+          <div className="mb-6">
+            <label className="block text-white/80 mb-2 text-sm">
+              Type <span className="font-bold">DELETE</span> to confirm:
+            </label>
+            <Input
+              type="text"
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              placeholder="DELETE"
+              className="bg-black/30 border-white/20 text-white"
+              disabled={isDeleting}
+            />
+          </div>
+          
           <div className="flex gap-4">
             <Button
-              onClick={() => setShowConfirmation(false)}
+              onClick={() => {
+                setShowConfirmation(false);
+                setConfirmText("");
+              }}
               variant="outline"
               className="flex-1"
               disabled={isDeleting}
@@ -94,7 +125,7 @@ export function DeleteAccount() {
               onClick={handleDeleteAccount}
               variant="destructive"
               className="flex-1 bg-red-600 hover:bg-red-700"
-              disabled={isDeleting}
+              disabled={isDeleting || confirmText !== "DELETE"}
             >
               {isDeleting ? "Deleting..." : "Yes, Delete My Account"}
             </Button>
