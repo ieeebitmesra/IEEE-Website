@@ -306,6 +306,7 @@ export default function LeaderboardPage() {
   };
 
   // Calculate stats
+  // Fix the getStats function for codechef platform
   const getStats = (platform: string = 'overall') => {
     if (platform === 'leetcode') {
       const leetcodeUsers = participants.filter(p => p.leetcodeHandle);
@@ -353,47 +354,55 @@ export default function LeaderboardPage() {
       return [
         {
           icon: User,
-          value: participants.filter(p => p.codeforcesHandle).length.toString(),
+          value: codeforcesUsers.length.toString(),
           label: "CodeForces Users"
         },
         {
           icon: Code,
-          value: participants.reduce((sum, p) => sum + p.codeforcesProblemsSolved, 0).toString(),
+          value: totalProblems.toString(),
           label: "Problems Solved"
         },
         {
           icon: Trophy,
-          value: Math.max(...participants.map(p => p.codeforcesRating || 0)).toString(),
+          value: highestRating.toString(),
           label: "Highest Rating"
         },
         {
           icon: Sparkles,
-          value: Math.round(participants.reduce((sum, p) => sum + p.codeforcesProblemsSolved, 0) /
-            Math.max(participants.filter(p => p.codeforcesHandle).length, 1)).toString(),
+          value: avgProblems.toString(),
           label: "Avg. Problems"
         }
       ];
-    } else if (platform === 'codechefHandle') {
+    } else if (platform === 'codechef') {
+      // Fix: Changed from 'codechefHandle' to 'codechef'
+      const codechefUsers = participants.filter(p => p.codechefHandle);
+      const highestRating = codechefUsers.length > 0 
+        ? Math.max(...codechefUsers.map(p => p.codechefRating || 0)) 
+        : 0;
+      const totalProblems = codechefUsers.reduce((sum, p) => sum + (p.codechefProblemsSolved || 0), 0);
+      const avgProblems = codechefUsers.length > 0 
+        ? Math.round(totalProblems / codechefUsers.length) 
+        : 0;
+      
       return [
         {
           icon: User,
-          value: participants.filter(p => p.codechefProblemsSolved).length.toString(),
+          value: codechefUsers.length.toString(),
           label: "CodeChef Users"
         },
         {
           icon: Code,
-          value: participants.reduce((sum, p) => sum + p.codechefProblemsSolved, 0).toString(),
+          value: totalProblems.toString(),
           label: "Problems Solved"
         },
         {
           icon: Trophy,
-          value: Math.max(...participants.map(p => p.codechefRating || 0)).toString(),
+          value: highestRating.toString(),
           label: "Highest Rating"
         },
         {
           icon: Sparkles,
-          value: Math.round(participants.reduce((sum, p) => sum + p.codechefProblemsSolved, 0) /
-            Math.max(participants.filter(p => p.codechefHandle).length, 1)).toString(),
+          value: avgProblems.toString(),
           label: "Avg. Problems"
         }
       ];
@@ -407,22 +416,26 @@ export default function LeaderboardPage() {
         },
         {
           icon: Code,
-          value: participants.reduce((sum, p) => sum + p.leetcodeProblemsSolved + p.codeforcesProblemsSolved + p.codechefProblemsSolved, 0).toString(),
+          value: participants.reduce((sum, p) => 
+            sum + (p.leetcodeProblemsSolved || 0) + (p.codeforcesProblemsSolved || 0) + (p.codechefProblemsSolved || 0), 0).toString(),
           label: "Problems Solved"
         },
         {
           icon: Trophy,
-          value: Math.max(...participants.map(p => p.totalScore)).toString(),
+          value: participants.length > 0 ? 
+            Math.max(...participants.map(p => p.totalScore || 0)).toString() : "0",
           label: "Highest Score"
         },
         {
           icon: Sparkles,
-          value: Math.max(...participants.map(p => p.leetcodeRating)).toString(),
+          value: participants.filter(p => p.leetcodeRating).length > 0 ?
+            Math.max(...participants.filter(p => p.leetcodeRating).map(p => p.leetcodeRating || 0)).toString() : "0",
           label: "Top LeetCode Rating"
         }
       ];
     }
   };
+
 
   return (
     <div ref={containerRef} className="relative min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900">
@@ -867,7 +880,9 @@ export default function LeaderboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {getSortedParticipants('codechef').map((participant, index) => (
+                  {getSortedParticipants('codechef')
+                    .filter(participant => participant.codechefHandle) // Only show participants with CodeChef handles
+                    .map((participant, index) => (
                     <motion.tr
                       key={participant.id || index}
                       className={`border-b border-white/10 ${index < 3 ? "bg-gradient-to-r from-blue-500/20 to-transparent" : ""}`}
@@ -901,9 +916,9 @@ export default function LeaderboardPage() {
                         )}
                         <span>{participant.name}</span>
                       </td>
-                      <td className="py-3 px-2 md:px-4">{participant.codechefHandle}</td>
-                      <td className="py-3 px-2 md:px-4">{participant.codechefRating}</td>
-                      <td className="py-3 px-2 md:px-4">{"-"}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.codechefHandle || "-"}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.codechefRating || "-"}</td>
+                      <td className="py-3 px-2 md:px-4">{participant.codechefProblemsSolved || "-"}</td>
                     </motion.tr>
                   ))}
                 </tbody>
