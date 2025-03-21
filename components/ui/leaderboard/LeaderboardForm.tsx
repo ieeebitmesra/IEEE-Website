@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, AlertCircle } from "lucide-react";
+import { X, AlertCircle, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/actions/createUser";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LeaderboardFormProps {
   onClose: () => void;
@@ -10,6 +11,7 @@ interface LeaderboardFormProps {
 }
 
 export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     leetcodeHandle: "",
@@ -21,6 +23,16 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Auto-fill email from logged in user
+  useEffect(() => {
+    if (user && user.email) {
+      setFormData(prev => ({
+        ...prev,
+        email: user.email
+      }));
+    }
+  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -75,7 +87,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           leetcodeHandle: "",
           codeforcesHandle: "",
           codechefHandle: "",
-          email: "",
+          email: user?.email || "",
         });
         
         // Close the form after a short delay to show success message
@@ -115,7 +127,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               <p className="text-blue-300 font-medium">Important Information</p>
               <ul className="text-white/80 text-sm mt-1 list-disc pl-4 space-y-1">
                 <li>Please enter <span className="text-blue-300 font-medium">all your platform usernames</span> at once to avoid any errors.</li>
-                <li>Use the <span className="text-blue-300 font-medium">same email address</span> that you registered with.</li>
+                <li>Your email is automatically filled with your registered account email.</li>
                 <li>Your profile will be updated with your competitive programming stats.</li>
               </ul>
             </div>
@@ -139,15 +151,17 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
 
           <div>
             <label className="block text-white/80 mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={`w-full p-2 bg-white/5 border ${errors.email ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter your email"
-            />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+            <div className="relative">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                readOnly
+                className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white/70 focus:outline-none cursor-not-allowed pl-9"
+              />
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/50" />
+            </div>
+            <p className="text-white/50 text-xs mt-1">Email is automatically set to your account email</p>
           </div>
           
           <div>
