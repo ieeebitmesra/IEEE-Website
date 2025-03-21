@@ -20,9 +20,11 @@ export function Footer() {
   ];
 
   const contact = [
-    { icon: Phone, info: "+91 1234567890", href: "tel:+911234567890" },
+    { icon: Phone, info: "+91 9123388359", href: "tel:+919123388359" },
     { icon: Mail, info: "bitieee@gmail.com", href: "mailto:bitieee@gmail.com" },
     { icon: MapPin, info: "BIT Mesra, Ranchi, Jharkhand", href: "https://maps.google.com" },
+    // Added WhatsApp contact for technical support
+    { icon: Phone, info: "WhatsApp for Tech Support", href: "https://wa.me/919123388359" },
   ];
 
   const socials = [
