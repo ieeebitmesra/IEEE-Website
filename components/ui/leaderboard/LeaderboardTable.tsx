@@ -142,7 +142,7 @@ export function LeaderboardTable({
   // Render table rows based on platform
   const renderTableRows = () => {
     return participants.map((participant, index) => {
-      const rankToShow = participant.platformRank || participant.rank || index + 1;
+      const rankToShow = participant.rank || index + 1;
       
       return (
         <motion.tr

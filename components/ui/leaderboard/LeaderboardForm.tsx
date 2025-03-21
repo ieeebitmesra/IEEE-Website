@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { X, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/actions/createUser";
 
@@ -105,9 +105,24 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           <X className="h-5 w-5" />
         </button>
         
-        <h2 className="text-2xl font-bold text-white mb-6">Join the Leaderboard</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">Join the Leaderboard</h2>
         
-        {/* Changed from action={createUser} to onSubmit={handleSubmit} */}
+        {/* Important notice for users */}
+        <div className="bg-blue-500/20 border border-blue-500/40 rounded-lg p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-blue-300 font-medium">Important Information</p>
+              <ul className="text-white/80 text-sm mt-1 list-disc pl-4 space-y-1">
+                <li>Please enter <span className="text-blue-300 font-medium">all your platform usernames</span> at once to avoid any errors.</li>
+                <li>Use the <span className="text-blue-300 font-medium">same email address</span> that you registered with.</li>
+                <li>Your profile will be updated with your competitive programming stats.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        {/* Form content */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-white/80 mb-1">Your Name</label>
