@@ -5,14 +5,17 @@ import { Header1 } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import { Meteors } from "@/components/ui/meteor";
 import { motion, useScroll } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { useRef } from "react";
+import { ArrowRight, Calendar, Users, Award, BookOpen, ExternalLink, Code, Cpu, Zap } from "lucide-react";
+import { useRef, useState } from "react";
 import { Gallery } from "@/components/ui/landing/Gallery";
-import { useState } from "react";
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { Suspense } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ElegantShape } from "@/components/ui/shape-landing-hero";
 
 // Create a client component that uses useSearchParams
 function AccountDeletedCheck() {
@@ -27,6 +30,182 @@ function AccountDeletedCheck() {
   
   return null; // This component doesn't render anything
 }
+
+
+// Timeline component
+const TimelineEvent = ({ date, title, description, isLeft = true }: { date: string; title: string; description: string; isLeft?: boolean }) => (
+  <motion.div 
+    initial={{ opacity: 0, x: isLeft ? -20 : 20 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    className={`flex w-full ${isLeft ? 'justify-start' : 'justify-end'}`}
+  >
+    <div className={`w-5/6 md:w-2/5 ${isLeft ? 'text-right pr-8' : 'text-left pl-8'} relative`}>
+      <div className={`absolute top-0 ${isLeft ? '-right-4' : '-left-4'} w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center z-10`}>
+        <Calendar className="w-4 h-4 text-white" />
+      </div>
+      <div className={`absolute top-0 ${isLeft ? 'right-0' : 'left-0'} h-full w-px bg-gradient-to-b from-blue-500 to-purple-500`}></div>
+      <h3 className="text-xl font-bold text-white mb-1">{title}</h3>
+      <p className="text-blue-400 mb-1">{date}</p>
+      <p className="text-white/70">{description}</p>
+    </div>
+  </motion.div>
+);
+
+// What We Do Card
+const WhatWeDoCard = ({ icon: Icon, title, description }: { icon: any; title: string; description: string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/10 flex flex-col items-center text-center"
+  >
+    <div className="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+      <motion.div
+        animate={{ 
+          rotate: [0, 10, 0, -10, 0],
+          scale: [1, 1.1, 1, 1.1, 1]
+        }}
+        transition={{ duration: 5, repeat: Infinity }}
+      >
+        <Icon className="w-8 h-8 text-blue-400" />
+      </motion.div>
+    </div>
+    <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+    <p className="text-white/70">{description}</p>
+  </motion.div>
+);
+
+// Animated Partner Logo (SVG)
+const PartnerLogo = ({ name, color }: { name: string; color: string }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    whileInView={{ opacity: 1 }}
+    whileHover={{ y: -5 }}
+    className="w-32 h-32 bg-white/10 backdrop-blur-sm rounded-lg p-4 flex flex-col items-center justify-center"
+  >
+    <motion.div
+      animate={{ 
+        y: [0, -5, 0, 5, 0],
+        opacity: [0.7, 1, 0.7]
+      }}
+      transition={{ duration: 3, repeat: Infinity }}
+      className={`text-${color}-400 mb-2`}
+    >
+      {name === "Microsoft" && <Cpu className="w-10 h-10" />}
+      {name === "Google" && <Code className="w-10 h-10" />}
+      {name === "Amazon" && <Zap className="w-10 h-10" />}
+      {name === "IBM" && <Award className="w-10 h-10" />}
+      {name === "Intel" && <Cpu className="w-10 h-10" />}
+    </motion.div>
+    <p className="text-white/80 text-sm font-medium">{name}</p>
+  </motion.div>
+);
+
+// Highlight Card with animated background
+const HighlightCard = ({ title, date, description }: { title: string; date: string; description: string }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    whileHover={{ y: -10, transition: { duration: 0.2 } }}
+    className="relative bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 p-6 group"
+  >
+    <motion.div 
+      className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      animate={{ 
+        background: [
+          "linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1))",
+          "linear-gradient(to right, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1))",
+          "linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1))"
+        ]
+      }}
+      transition={{ duration: 3, repeat: Infinity }}
+    />
+    <div className="relative z-10">
+      <div className="text-blue-400 font-medium mb-2">{date}</div>
+      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+      <p className="text-white/60 mb-4">{description}</p>
+      <Link href="/events" className="text-blue-400 flex items-center text-sm font-medium hover:text-blue-300 transition-colors">
+        Learn more <ArrowRight className="ml-1 h-4 w-4" />
+      </Link>
+    </div>
+  </motion.div>
+);
+
+// Hackathon Winner Card
+const HackathonWinnerCard = ({ 
+  rank, 
+  teamName, 
+  projectName, 
+  description, 
+  members, 
+  image, 
+  techStack,
+  demoLink
+}: { 
+  rank: number; 
+  teamName: string; 
+  projectName: string; 
+  description: string; 
+  members: string[]; 
+  image: string;
+  techStack: string[];
+  demoLink?: string;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    whileHover={{ y: -10, transition: { duration: 0.2 } }}
+    className="relative bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 group"
+  >
+    <div className="absolute top-0 right-0 bg-gradient-to-l from-blue-500 to-purple-500 text-white px-4 py-1 rounded-bl-lg font-bold z-10">
+      {rank === 1 ? "🏆 1st Place" : rank === 2 ? "🥈 2nd Place" : "🥉 3rd Place"}
+    </div>
+    
+    <div className="relative h-48 overflow-hidden">
+      <Image 
+        src={image} 
+        alt={projectName}
+        fill
+        className="object-cover transition-transform duration-500 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+    </div>
+    
+    <div className="p-6 relative">
+      <h3 className="text-xl font-bold text-white mb-1">{projectName}</h3>
+      <p className="text-blue-400 text-sm mb-2">Team {teamName}</p>
+      <p className="text-white/70 mb-4 line-clamp-2">{description}</p>
+      
+      <div className="mb-4">
+        <p className="text-white/80 text-sm mb-2">Tech Stack:</p>
+        <div className="flex flex-wrap gap-2">
+          {techStack.map((tech, i) => (
+            <span key={i} className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+      
+      <div className="mb-4">
+        <p className="text-white/80 text-sm mb-2">Team Members:</p>
+        <div className="flex flex-wrap gap-1">
+          {members.map((member, i) => (
+            <span key={i} className="text-xs text-white/70">
+              {member}{i < members.length - 1 ? ", " : ""}
+            </span>
+          ))}
+        </div>
+      </div>
+      
+      {demoLink && (
+        <Link href={demoLink} className="text-blue-400 flex items-center text-sm font-medium hover:text-blue-300 transition-colors" target="_blank">
+          View Project <ExternalLink className="ml-1 h-3 w-3" />
+        </Link>
+      )}
+    </div>
+  </motion.div>
+);
 
 export default function Home() {
   const containerRef = useRef(null);
@@ -59,6 +238,51 @@ export default function Home() {
       description: "Student innovations",
     },
   ];
+
+  
+
+  const timelineEvents = [
+    {
+      date: "March 15-16, 2024",
+      title: "Hackathon 2024",
+      description: "48-hour coding challenge with amazing prizes"
+    },
+    {
+      date: "March 22, 2024",
+      title: "Tech Talk: AI Revolution",
+      description: "Guest lecture by industry experts on AI advancements"
+    },
+    {
+      date: "April 1, 2024",
+      title: "Project Showcase",
+      description: "Exhibition of innovative student projects"
+    },
+    {
+      date: "April 15, 2024",
+      title: "Workshop: Cloud Computing",
+      description: "Hands-on workshop on AWS and Azure"
+    }
+  ];
+
+  const whatWeDo = [
+    {
+      icon: Award,
+      title: "Technical Competitions",
+      description: "Participate in coding contests, hackathons, and technical quizzes to showcase your skills."
+    },
+    {
+      icon: Users,
+      title: "Networking Events",
+      description: "Connect with industry professionals, alumni, and fellow students to build your network."
+    },
+    {
+      icon: BookOpen,
+      title: "Workshops & Training",
+      description: "Learn cutting-edge technologies through hands-on workshops and training sessions."
+    }
+  ];
+
+ 
 
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -104,106 +328,280 @@ export default function Home() {
       </Suspense>
       <Hero />
 
-      {/* Achievement Counters */}
+      {/* Achievement Counters with improved design */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        className="container mx-auto px-4 py-20 grid grid-cols-2 md:grid-cols-4 gap-8"
+        className="container mx-auto px-4 py-20"
       >
-        {achievements.map((achievement, index) => (
-          <motion.div
-            key={index}
-            initial={{ scale: 0.9, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ delay: index * 0.1 }}
-            className="text-center"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold text-white mb-2"
-            >
-              {achievement.number}
-            </motion.div>
-            <div className="text-white/60">{achievement.label}</div>
-          </motion.div>
-        ))}
+        <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {achievements.map((achievement, index) => (
+              <motion.div
+                key={index}
+                initial={{ scale: 0.9, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className="text-center"
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  className="text-5xl font-bold text-white mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400"
+                >
+                  {achievement.number}
+                </motion.div>
+                <div className="text-white/80 font-medium">{achievement.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </motion.div>
 
-      <Features />
-
-      {/* Upcoming Highlights */}
+      {/* What We Do Section */}
       <motion.div 
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         className="container mx-auto px-4 py-20"
       >
-        <h2 className="text-4xl font-bold text-white text-center mb-12">
-          Upcoming <span className="text-blue-400">Highlights</span>
+        <h2 className="text-4xl font-bold text-center mb-4">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">What We Do</span>
         </h2>
+        <p className="text-white/70 text-center max-w-2xl mx-auto mb-12">
+          IEEE BIT Mesra is dedicated to fostering technical excellence and innovation among students
+        </p>
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {upcomingHighlights.map((highlight, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10"
-            >
-              <h3 className="text-xl font-bold text-white mb-2">{highlight.title}</h3>
-              <div className="text-blue-400 mb-2">{highlight.date}</div>
-              <p className="text-white/60">{highlight.description}</p>
-            </motion.div>
+          {whatWeDo.map((item, index) => (
+            <WhatWeDoCard 
+              key={index} 
+              icon={item.icon} 
+              title={item.title} 
+              description={item.description} 
+            />
           ))}
         </div>
       </motion.div>
 
-      {/* Gallery Section */}
-      <Gallery />
-    
-    {/* Newsletter Section */}
-    <motion.div 
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      className="container mx-auto px-4 py-20"
-    >
-      <div className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10">
-        <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
-        <p className="text-white/70 mb-8">Subscribe to our newsletter for the latest events and updates</p>
-        <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-          <input 
-            type="email" 
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition flex items-center justify-center gap-2 ${
-              status === 'loading' ? 'opacity-70 cursor-wait' : ''
-            }`}
-            disabled={status === 'loading'}
-          >
-            {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
-          </motion.button>
-        </form>
-        {message && (
-          <p className={`mt-4 text-sm ${status === 'success' ? 'text-green-400' : 'text-red-400'}`}>
-            {message}
-          </p>
-        )}
-      </div>
-    </motion.div>
+      <Features />
 
+      {/* Upcoming Highlights with animated backgrounds instead of images */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        className="container mx-auto px-4 py-20"
+      >
+        <h2 className="text-4xl font-bold text-center mb-4">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Upcoming Highlights</span>
+        </h2>
+        <p className="text-white/70 text-center max-w-2xl mx-auto mb-12">
+          Don't miss out on our exciting upcoming events and activities
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {upcomingHighlights.map((highlight, index) => (
+            <HighlightCard 
+              key={index}
+              title={highlight.title}
+              date={highlight.date}
+              description={highlight.description}
+            />
+          ))}
+        </div>
+        <div className="text-center mt-10">
+          <Button asChild className="bg-blue-500 hover:bg-blue-600">
+            <Link href="/events" className="flex items-center gap-2">
+              View All Events <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* Timeline Section */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        className="container mx-auto px-4 py-20"
+      >
+        <h2 className="text-4xl font-bold text-center mb-4">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Event Timeline</span>
+        </h2>
+        <p className="text-white/70 text-center max-w-2xl mx-auto mb-16">
+          Mark your calendar for these upcoming IEEE BIT Mesra events
+        </p>
+        
+        <div className="relative space-y-12">
+          {timelineEvents.map((event, index) => (
+            <TimelineEvent 
+              key={index}
+              date={event.date}
+              title={event.title}
+              description={event.description}
+              isLeft={index % 2 === 0}
+            />
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Gallery Section with improved design */}
+      <Gallery />
       
       
+      
+     
+    
+      {/* Hackathon Winners Section */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        className="container mx-auto px-4 py-20"
+      >
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-blue-600/20 blur-3xl opacity-30 -z-10 rounded-full"></div>
+          <h2 className="text-4xl font-bold text-center mb-4">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Hackathon Champions</span>
+          </h2>
+          <p className="text-white/70 text-center max-w-2xl mx-auto mb-12">
+            Celebrating the innovative projects and brilliant minds from our recent hackathons
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {hackathonWinners.map((winner, index) => (
+              <HackathonWinnerCard 
+                key={index}
+                rank={winner.rank}
+                teamName={winner.teamName}
+                projectName={winner.projectName}
+                description={winner.description}
+                members={winner.members}
+                image={winner.image}
+                techStack={winner.techStack}
+                demoLink={winner.demoLink}
+              />
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+              <Link href="/events" className="flex items-center gap-2">
+                View All Hackathon Projects <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Newsletter Section with improved design */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        className="container mx-auto px-4 py-20"
+      >
+        <div className="max-w-4xl mx-auto relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 blur-xl rounded-2xl"></div>
+          <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-12 border border-white/10">
+            <ElegantShape 
+              className="absolute -top-10 -right-10 opacity-50 z-0" 
+              width={200} 
+              height={200} 
+              rotate={15} 
+              gradient="from-blue-500/10"
+            />
+            <div className="relative z-10">
+              <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
+              <p className="text-white/70 mb-8">Subscribe to our newsletter for the latest events and updates</p>
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input 
+                  type="email" 
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition flex items-center justify-center gap-2 ${
+                    status === 'loading' ? 'opacity-70 cursor-wait' : ''
+                  }`}
+                  disabled={status === 'loading'}
+                >
+                  {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+                </motion.button>
+              </form>
+              {message && (
+                <p className={`mt-4 text-sm ${status === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                  {message}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Call to Action */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        className="container mx-auto px-4 py-20"
+      >
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold text-white mb-6">Ready to Join IEEE BIT Mesra?</h2>
+          <p className="text-white/70 mb-8 max-w-2xl mx-auto">
+            Become a part of our vibrant community and unlock a world of opportunities in technology and innovation
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg" className="bg-blue-500 hover:bg-blue-600">
+              <Link href="/signup">
+                Join Now
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="border-white/20 hover:bg-white/10">
+              <Link href="/contact">
+                Contact Us
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </motion.div>
 
       <Footer />
       <Meteors number={20} />
     </div>
   );
 }
+
+
+const hackathonWinners = [
+  {
+    rank: 1,
+    teamName: "CodeCrafters",
+    projectName: "MedConnect",
+    description: "An AI-powered healthcare platform connecting patients with doctors and providing real-time health monitoring through wearable integration.",
+    members: ["Rahul Sharma", "Priya Patel", "Amit Kumar"],
+    image: "/winners/project1.jpg",
+    techStack: ["React", "Node.js", "TensorFlow", "MongoDB"],
+    demoLink: "https://medconnect-demo.vercel.app"
+  },
+  {
+    rank: 2,
+    teamName: "ByteBusters",
+    projectName: "EcoTrack",
+    description: "A sustainability platform that helps users track and reduce their carbon footprint through gamification and community challenges.",
+    members: ["Vikram Singh", "Neha Gupta", "Rohan Joshi"],
+    image: "/winners/project2.jpg",
+    techStack: ["Flutter", "Firebase", "Python", "Google Maps API"],
+    demoLink: "https://ecotrack-demo.vercel.app"
+  },
+  {
+    rank: 3,
+    teamName: "TechTitans",
+    projectName: "StudyBuddy",
+    description: "An adaptive learning platform that personalizes study materials based on individual learning patterns and preferences.",
+    members: ["Ananya Desai", "Karan Mehta", "Sanya Khanna"],
+    image: "/winners/project3.jpg",
+    techStack: ["Vue.js", "Django", "PostgreSQL", "AWS"],
+    demoLink: "https://studybuddy-demo.vercel.app"
+  }
+];
