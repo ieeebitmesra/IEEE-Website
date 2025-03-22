@@ -966,3 +966,5 @@ export default function LeaderboardPage() {
     </div>
   );
 }
+
+// Update the handleFormSubmit function

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, AlertCircle, Lock } from "lucide-react";
+import { X, AlertCircle, Lock, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createUser } from "@/actions/createUser";
 import { useAuth } from "@/contexts/AuthContext";
+import { getUser } from "@/actions/getUser";
 
 interface LeaderboardFormProps {
   onClose: () => void;
@@ -23,15 +24,44 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Auto-fill email from logged in user
+  // Auto-fill email from logged in user and check if user already exists
   useEffect(() => {
-    if (user && user.email) {
-      setFormData(prev => ({
-        ...prev,
-        email: user.email
-      }));
+    async function fetchUserData() {
+      if (user && user.email) {
+        setFormData(prev => ({
+          ...prev,
+          email: user.email
+        }));
+        
+        try {
+          setIsLoading(true);
+          // Get all users to check if current user exists
+          const users = await getUser();
+          const existingUser = users.find(u => u.email === user.email);
+          
+          if (existingUser) {
+            // User exists, pre-fill form with existing data
+            setIsUpdate(true);
+            setFormData({
+              name: existingUser.name || "",
+              leetcodeHandle: existingUser.leetcodeHandle !== "none" ? existingUser.leetcodeHandle : "",
+              codeforcesHandle: existingUser.codeforcesHandle !== "none" ? existingUser.codeforcesHandle : "",
+              codechefHandle: existingUser.codechefHandle !== "none" ? existingUser.codechefHandle : "",
+              email: user.email
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
     }
+    
+    fetchUserData();
   }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,8 +117,13 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        await onSubmit(formData);
+        const result = await onSubmit(formData);
         setSubmitSuccess(true);
+        
+        // Update isUpdate state based on the result
+        if (result && result.isUpdate !== undefined) {
+          setIsUpdate(result.isUpdate);
+        }
         
         // Reset form after successful submission
         setFormData({
@@ -112,6 +147,21 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-xl p-6 w-full max-w-md relative flex items-center justify-center"
+        >
+          <RefreshCw className="h-8 w-8 text-blue-400 animate-spin" />
+          <p className="ml-3 text-white">Loading your profile...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <motion.div 
@@ -126,7 +176,9 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           <X className="h-5 w-5" />
         </button>
         
-        <h2 className="text-2xl font-bold text-white mb-4">Join the Leaderboard</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">
+          {isUpdate ? "Update Your Profiles" : "Join the Leaderboard"}
+        </h2>
         
         {/* Important notice for users */}
         <div className="bg-blue-500/20 border border-blue-500/40 rounded-lg p-4 mb-6">
@@ -138,6 +190,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                 <li>Please enter <span className="text-blue-300 font-medium">all your platform usernames</span> at once to avoid any errors.</li>
                 <li>Your email is automatically filled with your registered account email.</li>
                 <li>Your profile will be updated with your competitive programming stats.</li>
+                {isUpdate && <li>You can update your platform usernames anytime.</li>}
               </ul>
             </div>
           </div>
@@ -217,7 +270,9 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           
           {submitSuccess ? (
             <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 text-center mt-6">
-              <p className="text-green-400 font-medium">Successfully joined the leaderboard!</p>
+              <p className="text-green-400 font-medium">
+                {isUpdate ? "Successfully updated your profiles!" : "Successfully joined the leaderboard!"}
+              </p>
               <p className="text-white/70 text-sm mt-1">Your profile will be updated shortly.</p>
             </div>
           ) : (
@@ -235,7 +290,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                 disabled={isSubmitting}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                {isSubmitting ? "Submitting..." : "Join Leaderboard"}
+                {isSubmitting ? "Submitting..." : isUpdate ? "Update Profiles" : "Join Leaderboard"}
               </Button>
             </div>
           )}

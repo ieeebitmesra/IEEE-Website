@@ -27,19 +27,43 @@ export async function createUser(formData: {
       totalScore: 0,
     };
 
-    // Create the user in the database
-    const user = await prisma.user.create({
-      data: userData,
+    // Check if user already exists
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email: formData.email,
+      },
     });
 
-    // Fetch ratings for the new user
+    let user;
+    
+    if (existingUser) {
+      // Update existing user
+      user = await prisma.user.update({
+        where: {
+          id: existingUser.id,
+        },
+        data: {
+          name: userData.name,
+          leetcodeHandle: userData.leetcodeHandle,
+          codeforcesHandle: userData.codeforcesHandle,
+          codechefHandle: userData.codechefHandle,
+        },
+      });
+    } else {
+      // Create new user
+      user = await prisma.user.create({
+        data: userData,
+      });
+    }
+
+    // Fetch ratings for the user
     if (user) {
       await updateThisUserRating({ userId: user.id });
     }
 
-    return { success: true, user };
+    return { success: true, user, isUpdate: !!existingUser };
   } catch (error) {
-    console.error("Error creating user:", error);
-    return { success: false, error: "Failed to create user" };
+    console.error("Error creating/updating user:", error);
+    return { success: false, error: "Failed to create/update user" };
   }
 }
