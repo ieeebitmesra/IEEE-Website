@@ -64,8 +64,17 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
       newErrors.email = "Email is invalid";
     }
     
-    if (!formData.leetcodeHandle.trim() && !formData.codeforcesHandle.trim() && !formData.codechefHandle.trim()) {
-      newErrors.platforms = "At least one platform username is required";
+    // Make all platform handles required
+    if (!formData.leetcodeHandle.trim()) {
+      newErrors.leetcodeHandle = "LeetCode username is required";
+    }
+    
+    if (!formData.codeforcesHandle.trim()) {
+      newErrors.codeforcesHandle = "CodeForces username is required";
+    }
+    
+    if (!formData.codechefHandle.trim()) {
+      newErrors.codechefHandle = "CodeChef username is required";
     }
     
     setErrors(newErrors);
@@ -171,9 +180,10 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               name="leetcodeHandle"
               value={formData.leetcodeHandle}
               onChange={handleChange}
-              className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full p-2 bg-white/5 border ${errors.leetcodeHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               placeholder="Your LeetCode username"
             />
+            {errors.leetcodeHandle && <p className="text-red-500 text-sm mt-1">{errors.leetcodeHandle}</p>}
           </div>
           
           <div>
@@ -183,9 +193,10 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               name="codeforcesHandle"
               value={formData.codeforcesHandle}
               onChange={handleChange}
-              className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full p-2 bg-white/5 border ${errors.codeforcesHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               placeholder="Your CodeForces username"
             />
+            {errors.codeforcesHandle && <p className="text-red-500 text-sm mt-1">{errors.codeforcesHandle}</p>}
           </div>
           
           <div>
@@ -195,12 +206,13 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
               name="codechefHandle"
               value={formData.codechefHandle}
               onChange={handleChange}
-              className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`w-full p-2 bg-white/5 border ${errors.codechefHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
               placeholder="Your CodeChef username"
             />
+            {errors.codechefHandle && <p className="text-red-500 text-sm mt-1">{errors.codechefHandle}</p>}
           </div>
           
-          {errors.platforms && <p className="text-red-500 text-sm">{errors.platforms}</p>}
+          {/* Remove the platforms error since we now have individual errors */}
           {errors.submit && <p className="text-red-500 text-sm">{errors.submit}</p>}
           
           {submitSuccess ? (
