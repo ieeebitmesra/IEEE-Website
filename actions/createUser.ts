@@ -17,7 +17,7 @@ export async function createUser(formData: {
       email: formData.email,
       leetcodeHandle: formData.leetcodeHandle || "none",
       codeforcesHandle: formData.codeforcesHandle || "none",
-      codechefHandle: formData.codechefHandle || "none",
+      codechefHandle: formData.codechefHandle || "none", // This will be "none" if empty
       leetcodeRating: 0,
       leetcodeProblemsSolved: 0,
       codeforcesRating: 0,

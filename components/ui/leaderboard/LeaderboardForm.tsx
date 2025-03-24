@@ -94,7 +94,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
       newErrors.email = "Email is invalid";
     }
     
-    // Make all platform handles required
+    // Make LeetCode and CodeForces handles required, but CodeChef optional
     if (!formData.leetcodeHandle.trim()) {
       newErrors.leetcodeHandle = "LeetCode username is required";
     }
@@ -103,9 +103,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
       newErrors.codeforcesHandle = "CodeForces username is required";
     }
     
-    if (!formData.codechefHandle.trim()) {
-      newErrors.codechefHandle = "CodeChef username is required";
-    }
+    // CodeChef is now optional, so no validation needed
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -187,7 +185,8 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
             <div>
               <p className="text-blue-300 font-medium">Important Information</p>
               <ul className="text-white/80 text-sm mt-1 list-disc pl-4 space-y-1">
-                <li>Please enter <span className="text-blue-300 font-medium">all your platform usernames</span> at once to avoid any errors.</li>
+                <li>Please enter <span className="text-blue-300 font-medium">LeetCode and CodeForces usernames</span> to join the leaderboard.</li>
+                <li>CodeChef username is optional.</li>
                 <li>Your email is automatically filled with your registered account email.</li>
                 <li>Your profile will be updated with your competitive programming stats.</li>
                 {isUpdate && <li>You can update your platform usernames anytime.</li>}
@@ -253,14 +252,14 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           </div>
           
           <div>
-            <label className="block text-white/80 mb-1">CodeChef Username</label>
+            <label className="block text-white/80 mb-1">CodeChef Username <span className="text-white/50 text-xs">(Optional)</span></label>
             <input
               type="text"
               name="codechefHandle"
               value={formData.codechefHandle}
               onChange={handleChange}
               className={`w-full p-2 bg-white/5 border ${errors.codechefHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Your CodeChef username"
+              placeholder="Enter your CodeChef username (optional)"
             />
             {errors.codechefHandle && <p className="text-red-500 text-sm mt-1">{errors.codechefHandle}</p>}
           </div>
