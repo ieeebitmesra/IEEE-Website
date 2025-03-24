@@ -206,8 +206,6 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                 <ul className="text-white/80 text-xs sm:text-sm mt-1 list-disc pl-4 space-y-1">
                   <li>Please enter <span className="text-blue-300 font-medium">LeetCode and CodeForces usernames</span> to join the leaderboard.</li>
                   <li>CodeChef username is optional.</li>
-                  <li>Your email is automatically filled with your registered account email.</li>
-                  <li>Your profile will be updated with your competitive programming stats.</li>
                   {isUpdate && <li>You can update your platform usernames anytime.</li>}
                 </ul>
               </div>
