@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, AlertCircle, Lock, RefreshCw } from "lucide-react";
+import { X, AlertCircle, Lock, RefreshCw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { createUser } from "@/actions/createUser";
 import { useAuth } from "@/contexts/AuthContext";
 import { getUser } from "@/actions/getUser";
+import { RemoveFromLeaderboard } from "./RemoveFromLeaderboard";
+import { toast } from "sonner";
 
 interface LeaderboardFormProps {
   onClose: () => void;
@@ -26,6 +27,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
 
   // Auto-fill email from logged in user and check if user already exists
   useEffect(() => {
@@ -160,141 +162,176 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     );
   }
 
+  // Add this function to handle the "Remove from Leaderboard" button click
+  const handleRemoveClick = () => {
+    setShowRemoveDialog(true);
+  };
+
+  // Add this function to handle successful removal
+  const handleRemoveSuccess = () => {
+    setShowRemoveDialog(false);
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-xl p-6 w-full max-w-md relative"
-      >
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 text-white/60 hover:text-white"
+      {showRemoveDialog ? (
+        <RemoveFromLeaderboard 
+          onClose={() => setShowRemoveDialog(false)} 
+          onSuccess={handleRemoveSuccess} 
+        />
+      ) : (
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-xl p-6 w-full max-w-md relative"
         >
-          <X className="h-5 w-5" />
-        </button>
-        
-        <h2 className="text-2xl font-bold text-white mb-4">
-          {isUpdate ? "Update Your Profiles" : "Join the Leaderboard"}
-        </h2>
-        
-        {/* Important notice for users */}
-        <div className="bg-blue-500/20 border border-blue-500/40 rounded-lg p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
+          <button 
+            onClick={onClose}
+            className="absolute top-4 right-4 text-white/60 hover:text-white"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          
+          <h2 className="text-2xl font-bold text-white mb-4">
+            {isUpdate ? "Update Your Profiles" : "Join the Leaderboard"}
+          </h2>
+          
+          {/* Important notice for users */}
+          <div className="bg-blue-500/20 border border-blue-500/40 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-blue-300 font-medium">Important Information</p>
+                <ul className="text-white/80 text-sm mt-1 list-disc pl-4 space-y-1">
+                  <li>Please enter <span className="text-blue-300 font-medium">LeetCode and CodeForces usernames</span> to join the leaderboard.</li>
+                  <li>CodeChef username is optional.</li>
+                  <li>Your email is automatically filled with your registered account email.</li>
+                  <li>Your profile will be updated with your competitive programming stats.</li>
+                  {isUpdate && <li>You can update your platform usernames anytime.</li>}
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          {/* Form content */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <p className="text-blue-300 font-medium">Important Information</p>
-              <ul className="text-white/80 text-sm mt-1 list-disc pl-4 space-y-1">
-                <li>Please enter <span className="text-blue-300 font-medium">LeetCode and CodeForces usernames</span> to join the leaderboard.</li>
-                <li>CodeChef username is optional.</li>
-                <li>Your email is automatically filled with your registered account email.</li>
-                <li>Your profile will be updated with your competitive programming stats.</li>
-                {isUpdate && <li>You can update your platform usernames anytime.</li>}
-              </ul>
-            </div>
-          </div>
-        </div>
-        
-        {/* Form content */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-white/80 mb-1">Your Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={`w-full p-2 bg-white/5 border ${errors.name ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter your name"
-            />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-          </div>
-
-          <div>
-            <label className="block text-white/80 mb-1">Email</label>
-            <div className="relative">
+              <label className="block text-white/80 mb-1">Your Name</label>
               <input
-                type="email"
-                name="email"
-                value={formData.email}
-                readOnly
-                className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white/70 focus:outline-none cursor-not-allowed pl-9"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={`w-full p-2 bg-white/5 border ${errors.name ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Enter your name"
               />
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/50" />
+              {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
             </div>
-            <p className="text-white/50 text-xs mt-1">Email is automatically set to your account email</p>
-          </div>
-          
-          <div>
-            <label className="block text-white/80 mb-1">LeetCode Username</label>
-            <input
-              type="text"
-              name="leetcodeHandle"
-              value={formData.leetcodeHandle}
-              onChange={handleChange}
-              className={`w-full p-2 bg-white/5 border ${errors.leetcodeHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Your LeetCode username"
-            />
-            {errors.leetcodeHandle && <p className="text-red-500 text-sm mt-1">{errors.leetcodeHandle}</p>}
-          </div>
-          
-          <div>
-            <label className="block text-white/80 mb-1">CodeForces Username</label>
-            <input
-              type="text"
-              name="codeforcesHandle"
-              value={formData.codeforcesHandle}
-              onChange={handleChange}
-              className={`w-full p-2 bg-white/5 border ${errors.codeforcesHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Your CodeForces username"
-            />
-            {errors.codeforcesHandle && <p className="text-red-500 text-sm mt-1">{errors.codeforcesHandle}</p>}
-          </div>
-          
-          <div>
-            <label className="block text-white/80 mb-1">CodeChef Username <span className="text-white/50 text-xs">(Optional)</span></label>
-            <input
-              type="text"
-              name="codechefHandle"
-              value={formData.codechefHandle}
-              onChange={handleChange}
-              className={`w-full p-2 bg-white/5 border ${errors.codechefHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              placeholder="Enter your CodeChef username (optional)"
-            />
-            {errors.codechefHandle && <p className="text-red-500 text-sm mt-1">{errors.codechefHandle}</p>}
-          </div>
-          
-          {/* Remove the platforms error since we now have individual errors */}
-          {errors.submit && <p className="text-red-500 text-sm">{errors.submit}</p>}
-          
-          {submitSuccess ? (
-            <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 text-center mt-6">
-              <p className="text-green-400 font-medium">
-                {isUpdate ? "Successfully updated your profiles!" : "Successfully joined the leaderboard!"}
-              </p>
-              <p className="text-white/70 text-sm mt-1">Your profile will be updated shortly.</p>
+
+            <div>
+              <label className="block text-white/80 mb-1">Email</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  readOnly
+                  className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white/70 focus:outline-none cursor-not-allowed pl-9"
+                />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white/50" />
+              </div>
+              <p className="text-white/50 text-xs mt-1">Email is automatically set to your account email</p>
             </div>
-          ) : (
-            <div className="flex justify-end gap-3 mt-6">
-              <Button
-                type="button"
-                onClick={onClose}
-                variant="outline"
-                className="border-white/10 text-white hover:bg-white/10"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                {isSubmitting ? "Submitting..." : isUpdate ? "Update Profiles" : "Join Leaderboard"}
-              </Button>
+            
+            <div>
+              <label className="block text-white/80 mb-1">LeetCode Username</label>
+              <input
+                type="text"
+                name="leetcodeHandle"
+                value={formData.leetcodeHandle}
+                onChange={handleChange}
+                className={`w-full p-2 bg-white/5 border ${errors.leetcodeHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Your LeetCode username"
+              />
+              {errors.leetcodeHandle && <p className="text-red-500 text-sm mt-1">{errors.leetcodeHandle}</p>}
             </div>
-          )}
-        </form>
-      </motion.div>
+            
+            <div>
+              <label className="block text-white/80 mb-1">CodeForces Username</label>
+              <input
+                type="text"
+                name="codeforcesHandle"
+                value={formData.codeforcesHandle}
+                onChange={handleChange}
+                className={`w-full p-2 bg-white/5 border ${errors.codeforcesHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Your CodeForces username"
+              />
+              {errors.codeforcesHandle && <p className="text-red-500 text-sm mt-1">{errors.codeforcesHandle}</p>}
+            </div>
+            
+            <div>
+              <label className="block text-white/80 mb-1">CodeChef Username <span className="text-white/50 text-xs">(Optional)</span></label>
+              <input
+                type="text"
+                name="codechefHandle"
+                value={formData.codechefHandle}
+                onChange={handleChange}
+                className={`w-full p-2 bg-white/5 border ${errors.codechefHandle ? 'border-red-500' : 'border-white/10'} rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Enter your CodeChef username (optional)"
+              />
+              {errors.codechefHandle && <p className="text-red-500 text-sm mt-1">{errors.codechefHandle}</p>}
+            </div>
+            
+            {/* Remove the platforms error since we now have individual errors */}
+            {errors.submit && <p className="text-red-500 text-sm">{errors.submit}</p>}
+            
+            {submitSuccess ? (
+              <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 text-center mt-6">
+                <p className="text-green-400 font-medium">
+                  {isUpdate ? "Successfully updated your profiles!" : "Successfully joined the leaderboard!"}
+                </p>
+                <p className="text-white/70 text-sm mt-1">Your profile will be updated shortly.</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3 mt-6">
+                <div className="flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    onClick={onClose}
+                    variant="outline"
+                    className="border-white/10 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    {isSubmitting ? "Submitting..." : isUpdate ? "Update Profiles" : "Join Leaderboard"}
+                  </Button>
+                </div>
+                
+                {/* Add Remove from Leaderboard button for existing users */}
+                {isUpdate && (
+                  <div className="pt-4 border-t border-white/10 mt-2">
+                    <Button
+                      type="button"
+                      onClick={handleRemoveClick}
+                      variant="outline"
+                      className="w-full border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center justify-center gap-2"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Remove from Leaderboard
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </form>
+        </motion.div>
+      )}
     </div>
   );
 }
