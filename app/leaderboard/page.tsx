@@ -70,6 +70,8 @@ export default function LeaderboardPage() {
   const [showForm, setShowForm] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("overall");
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+  const [userInLeaderboard, setUserInLeaderboard] = useState(false);
 
   // Fetch participants data from Supabase
 
@@ -692,12 +694,25 @@ export default function LeaderboardPage() {
 
                 <div className="flex gap-2 w-full md:w-auto">
                   {user && (
-                    <Button
-                      onClick={() => setShowForm(true)}
-                      className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
-                    >
-                      Join Leaderboard
-                    </Button>
+                    <>
+                      <Button
+                        onClick={() => setShowForm(true)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto"
+                      >
+                        {userInLeaderboard ? "Update Profile" : "Join Leaderboard"}
+                      </Button>
+                      
+                      {userInLeaderboard && (
+                        <Button
+                          onClick={handleRemoveClick}
+                          variant="outline"
+                          className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center gap-2 w-full md:w-auto"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Remove Profile
+                        </Button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -1026,6 +1041,14 @@ export default function LeaderboardPage() {
         />
       )}
 
+      {/* Remove from Leaderboard Dialog */}
+      {showRemoveDialog && (
+        <RemoveFromLeaderboard
+          onClose={() => setShowRemoveDialog(false)}
+          onSuccess={handleRemoveSuccess}
+        />
+      )}
+
       {/* Meteors Effect */}
       <Meteors number={20} />
 
@@ -1045,14 +1068,14 @@ const handleFormSubmit = async (data: any) => {
   }
 };
 
-// Add this function to handle the remove button click
+// Function to handle the remove button click
 const handleRemoveClick = () => {
   setShowRemoveDialog(true);
 };
 
-// Add this function to handle successful removal
+// Function to handle successful removal
 const handleRemoveSuccess = () => {
   setShowRemoveDialog(false);
-  // Refresh the leaderboard after removal
-  fetchParticipants();
+  setUserInLeaderboard(false);
+  fetchParticipants(); // Refresh the leaderboard
 };
