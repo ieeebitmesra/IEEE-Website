@@ -31,6 +31,8 @@ import { User as userType } from "@prisma/client";
 import { prisma } from "@/lib";
 import { get } from "http";
 import { useAuth } from "@/contexts/AuthContext";
+import { Trash2 } from "lucide-react";
+import { RemoveFromLeaderboard } from "@/components/ui/leaderboard/RemoveFromLeaderboard";
 
 export interface Participant {
   id: string;
@@ -72,11 +74,77 @@ export default function LeaderboardPage() {
   // Fetch participants data from Supabase
 
 
+  // Move fetchParticipants outside of useEffect so it can be called from elsewhere
+  const fetchParticipants = async () => {
+    try {
+      setIsLoading(true);
+      const users = await getUser();
+
+      // Check if current user is in the leaderboard
+      if (user && user.email) {
+        const currentUserInLeaderboard = users.some(u => u.email === user.email);
+        setUserInLeaderboard(currentUserInLeaderboard);
+      }
+
+      // Map database users to Participant interface
+      const mappedUsers = users.map(user => {
+        // Calculate score only from platforms where the user has provided handles
+        const calculatedScore = 
+          (user.leetcodeHandle && user.leetcodeHandle !== "none" ? (user.leetcodeRating || 0) + (user.leetcodeProblemsSolved || 0) * 2 : 0) +
+          (user.codeforcesHandle && user.codeforcesHandle !== "none" ? (user.codeforcesRating || 0) + (user.codeforcesProblemsSolved || 0) * 2 : 0) +
+          (user.codechefHandle && user.codechefHandle !== "none" ? (user.codechefRating || 0) + (user.codechefProblemsSolved || 0) * 2 : 0);
+        
+        const totalScore = user.totalScore || calculatedScore;
+        
+        return {
+          id: user.id,
+          name: user.name,
+          leetcodeHandle: user.leetcodeHandle !== "none" ? user.leetcodeHandle : undefined,
+          codeforcesHandle: user.codeforcesHandle !== "none" ? user.codeforcesHandle : undefined,
+          codechefHandle: user.codechefHandle !== "none" ? user.codechefHandle : undefined,
+          leetcodeRating: user.leetcodeHandle !== "none" ? user.leetcodeRating : undefined,
+          leetcodeProblemsSolved: user.leetcodeHandle !== "none" ? user.leetcodeProblemsSolved : undefined,
+          codeforcesRating: user.codeforcesHandle !== "none" ? user.codeforcesRating : undefined,
+          codeforcesProblemsSolved: user.codeforcesHandle !== "none" ? user.codeforcesProblemsSolved : undefined,
+          codechefRating: user.codechefHandle !== "none" ? user.codechefRating : undefined,
+          codechefProblemsSolved: user.codechefHandle !== "none" ? user.codechefProblemsSolved : undefined,
+          totalScore: totalScore,
+          avatar: user.image,
+          lastUpdated: new Date().toISOString()
+        };
+      });
+
+      // Sort users by total score in descending order
+      const sortedUsers = [...mappedUsers].sort((a, b) => 
+        (b.totalScore || 0) - (a.totalScore || 0)
+      );
+
+      // Add rank to each user based on sorted position
+      const rankedUsers = sortedUsers.map((user, index) => ({
+        ...user,
+        rank: index + 1
+      }));
+
+      setParticipants(rankedUsers);
+    } catch (error) {
+      console.error('Failed to fetch participants:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Use fetchParticipants in useEffect
   useEffect(() => {
     async function fetchParticipants() {
       try {
         setIsLoading(true);
         const users = await getUser();
+
+        // Check if current user is in the leaderboard
+        if (user && user.email) {
+          const currentUserInLeaderboard = users.some(u => u.email === user.email);
+          setUserInLeaderboard(currentUserInLeaderboard);
+        }
 
         // Map database users to Participant interface
         const mappedUsers = users.map(user => {
@@ -125,9 +193,8 @@ export default function LeaderboardPage() {
       }
     }
 
-    // Always fetch participants regardless of auth state
     fetchParticipants();
-  }, []); // Fetch participants on component mount
+  }, [user]);
 
 
   // Function to handle sorting
@@ -967,4 +1034,25 @@ export default function LeaderboardPage() {
   );
 }
 
-// Update the handleFormSubmit function
+const handleFormSubmit = async (data: any) => {
+  try {
+    await onSubmit(data);
+    setShowForm(false);
+    // Refresh the leaderboard after form submission
+    fetchParticipants();
+  } catch (error) {
+    console.error("Error submitting form:", error);
+  }
+};
+
+// Add this function to handle the remove button click
+const handleRemoveClick = () => {
+  setShowRemoveDialog(true);
+};
+
+// Add this function to handle successful removal
+const handleRemoveSuccess = () => {
+  setShowRemoveDialog(false);
+  // Refresh the leaderboard after removal
+  fetchParticipants();
+};
