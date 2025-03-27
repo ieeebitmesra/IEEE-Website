@@ -243,7 +243,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                 <p className="text-blue-300 font-medium text-sm sm:text-base">Important Information</p>
                 <ul className="text-white/80 text-xs sm:text-sm mt-1 list-disc pl-4 space-y-1">
                   <li>Please enter <span className="text-blue-300 font-medium">LeetCode and CodeForces usernames</span> to join the leaderboard.</li>
-                  <li>CodeChef username is optional.</li>
+                  
                   {isUpdate && <li>You can update your platform usernames anytime.</li>}
                 </ul>
               </div>
@@ -319,7 +319,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                   value={formData.codechefHandle}
                   onChange={handleChange}
                   className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-                  placeholder="Your CodeChef username (optional)"
+                  placeholder="Your CodeChef username"
                 />
               </div>
               
