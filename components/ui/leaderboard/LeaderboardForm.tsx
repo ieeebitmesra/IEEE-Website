@@ -111,6 +111,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Update the handleSubmit function to set default value of "0" for empty codechefHandle
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -128,8 +129,8 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
         // Create a modified version of formData with properly handled codechefHandle
         const submissionData = {
           ...formData,
-          // Ensure empty codechefHandle is properly handled
-          codechefHandle: formData.codechefHandle.trim() || ""
+          // Set default value of "0" for empty codechefHandle
+          codechefHandle: formData.codechefHandle.trim() || "0"
         };
         
         const result = await onSubmit(submissionData);
@@ -319,7 +320,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                   value={formData.codechefHandle}
                   onChange={handleChange}
                   className="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
-                  placeholder="Your CodeChef username"
+                  placeholder="Your CodeChef username (or leave empty)"
                 />
               </div>
               
