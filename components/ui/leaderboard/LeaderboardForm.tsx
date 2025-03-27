@@ -116,30 +116,61 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
     
     if (validateForm()) {
       setIsSubmitting(true);
+      setErrors({});
+      
       try {
+        // Show a toast notification to inform the user that profile data is being fetched
+        toast.loading(
+          "Submitting your profile and fetching data from coding platforms. This may take a moment...",
+          { id: "profile-update" }
+        );
+        
         const result = await onSubmit(formData);
-        setSubmitSuccess(true);
         
-        // Update isUpdate state based on the result
-        if (result && result.isUpdate !== undefined) {
-          setIsUpdate(result.isUpdate);
+        // Dismiss the loading toast
+        toast.dismiss("profile-update");
+        
+        if (result.success) {
+          setSubmitSuccess(true);
+          
+          // Update isUpdate state based on the result
+          if (result.isUpdate !== undefined) {
+            setIsUpdate(result.isUpdate);
+          }
+          
+          // Show success toast
+          toast.success(
+            isUpdate 
+              ? "Your profile has been updated successfully!" 
+              : "You've successfully joined the leaderboard!"
+          );
+          
+          // Reset form after successful submission
+          setFormData({
+            name: "",
+            leetcodeHandle: "",
+            codeforcesHandle: "",
+            codechefHandle: "",
+            email: user?.email || "",
+          });
+          
+          // Close the form after a short delay to show success message
+          setTimeout(() => {
+            onClose();
+          }, 1500);
+        } else {
+          // Handle server-side validation errors
+          if (result.error) {
+            toast.error(result.error);
+            setErrors({ submit: result.error });
+          }
         }
-        
-        // Reset form after successful submission
-        setFormData({
-          name: "",
-          leetcodeHandle: "",
-          codeforcesHandle: "",
-          codechefHandle: "",
-          email: user?.email || "",
-        });
-        
-        // Close the form after a short delay to show success message
-        setTimeout(() => {
-          onClose();
-        }, 1500);
       } catch (error) {
+        // Dismiss the loading toast
+        toast.dismiss("profile-update");
+        
         console.error("Error submitting form:", error);
+        toast.error("Failed to submit your profile. Please try again.");
         setErrors({ submit: "Failed to submit. Please try again." });
       } finally {
         setIsSubmitting(false);
