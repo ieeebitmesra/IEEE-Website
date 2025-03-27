@@ -26,6 +26,7 @@ export const updateThisUserRating = async ({
         leetcodeRating: 0,
         leetcodeProblemsSolved: 0,
         codechefRating: 0,
+        codechefProblemsSolved: 0,
         totalScore: 0,
       };
 
@@ -110,7 +111,7 @@ export const updateThisUserRating = async ({
         }
       }
 
-      // Codechef update with retry logic
+      // Codechef update with retry logic - only if handle exists and is not "none"
       if (user.codechefHandle && user.codechefHandle !== "none") {
         try {
           const ccResponse = await fetchWithRetry(
@@ -120,17 +121,21 @@ export const updateThisUserRating = async ({
           
           if (ccResponse && ccResponse.data) {
             updates.codechefRating = ccResponse.data.currentRating || 0;
+            // If the API provides problems solved count, update it here
+            updates.codechefProblemsSolved = ccResponse.data.problemsSolved || 0;
           }
         } catch (error) {
           console.error(`Error fetching CodeChef data for ${user.name}:`, error);
+          // Don't fail the entire update if CodeChef fails
         }
       }
 
       // Calculate total score - only count platforms that successfully returned data
+      // and only include CodeChef if it was provided
       updates.totalScore =
         updates.codeforcesRating +
         updates.leetcodeRating +
-        updates.codechefRating +
+        (user.codechefHandle && user.codechefHandle !== "none" ? updates.codechefRating : 0) +
         updates.codeforcesProblemsSolved * 2 +
         updates.leetcodeProblemsSolved * 2;
 
