@@ -125,7 +125,14 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
           { id: "profile-update" }
         );
         
-        const result = await onSubmit(formData);
+        // Create a modified version of formData with properly handled codechefHandle
+        const submissionData = {
+          ...formData,
+          // Ensure empty codechefHandle is properly handled
+          codechefHandle: formData.codechefHandle.trim() || ""
+        };
+        
+        const result = await onSubmit(submissionData);
         
         // Dismiss the loading toast
         toast.dismiss("profile-update");
