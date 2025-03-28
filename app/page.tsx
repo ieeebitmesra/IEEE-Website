@@ -446,51 +446,6 @@ export default function Home() {
       {/* Gallery Section with improved design */}
       <Gallery />
       
-      
-      
-     
-    
-      {/* Hackathon Winners Section */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        className="container mx-auto px-4 py-20"
-      >
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-blue-600/20 blur-3xl opacity-30 -z-10 rounded-full"></div>
-          <h2 className="text-4xl font-bold text-center mb-4">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Hackathon Champions</span>
-          </h2>
-          <p className="text-white/70 text-center max-w-2xl mx-auto mb-12">
-            Celebrating the innovative projects and brilliant minds from our recent hackathons
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {hackathonWinners.map((winner, index) => (
-              <HackathonWinnerCard 
-                key={index}
-                rank={winner.rank}
-                teamName={winner.teamName}
-                projectName={winner.projectName}
-                description={winner.description}
-                members={winner.members}
-                image={winner.image}
-                techStack={winner.techStack}
-                demoLink={winner.demoLink}
-              />
-            ))}
-          </div>
-          
-          <div className="mt-12 text-center">
-            <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
-              <Link href="/events" className="flex items-center gap-2">
-                View All Hackathon Projects <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </motion.div>
-
       {/* Newsletter Section with improved design */}
       <motion.div 
         initial={{ opacity: 0 }}
@@ -572,36 +527,4 @@ export default function Home() {
   );
 }
 
-
-const hackathonWinners = [
-  {
-    rank: 1,
-    teamName: "CodeCrafters",
-    projectName: "MedConnect",
-    description: "An AI-powered healthcare platform connecting patients with doctors and providing real-time health monitoring through wearable integration.",
-    members: ["Rahul Sharma", "Priya Patel", "Amit Kumar"],
-    image: "/winners/project1.jpg",
-    techStack: ["React", "Node.js", "TensorFlow", "MongoDB"],
-    demoLink: "https://medconnect-demo.vercel.app"
-  },
-  {
-    rank: 2,
-    teamName: "ByteBusters",
-    projectName: "EcoTrack",
-    description: "A sustainability platform that helps users track and reduce their carbon footprint through gamification and community challenges.",
-    members: ["Vikram Singh", "Neha Gupta", "Rohan Joshi"],
-    image: "/winners/project2.jpg",
-    techStack: ["Flutter", "Firebase", "Python", "Google Maps API"],
-    demoLink: "https://ecotrack-demo.vercel.app"
-  },
-  {
-    rank: 3,
-    teamName: "TechTitans",
-    projectName: "StudyBuddy",
-    description: "An adaptive learning platform that personalizes study materials based on individual learning patterns and preferences.",
-    members: ["Ananya Desai", "Karan Mehta", "Sanya Khanna"],
-    image: "/winners/project3.jpg",
-    techStack: ["Vue.js", "Django", "PostgreSQL", "AWS"],
-    demoLink: "https://studybuddy-demo.vercel.app"
-  }
-];
+// Remove the hackathonWinners array that was here

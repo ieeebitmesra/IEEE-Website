@@ -79,7 +79,7 @@ export default function TeamPage() {
       role: "General Secretary",
       image: "/team/shouryaman.jpg",
       linkedin: "https://www.linkedin.com/in/shouryaman?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
+      github: "https://github.com/Retr0991",
       instagram: "https://instagram.com",
       department: "Management",
       
@@ -120,7 +120,7 @@ export default function TeamPage() {
       role: "Joint Secretary",
       image: "/team/sukham.jpg",
       linkedin: "https://www.linkedin.com/in/sukham-singh?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
+      github: "https://github.com/sukham23062004",
       instagram: "https://instagram.com",
       department: "Management",
       
@@ -283,7 +283,7 @@ export default function TeamPage() {
       role: "Developer",
       image: "/team/saquib.jpg",
       linkedin: "https://www.linkedin.com/in/mdsaquibjawed/",
-      github: "https://github.com",
+      github: "https://github.com/saquibjawedbit",
       instagram: "https://instagram.com",
       department: "Technical",
       
@@ -294,7 +294,7 @@ export default function TeamPage() {
       role: "Developer",
       image: "/team/subhayu.jpg",
       linkedin: "https://www.linkedin.com/in/subhayu-das/",
-      github: "https://github.com",
+      github: "https://github.com/subhayudas",
       instagram: "https://instagram.com",
       department: "Technical",
       
@@ -417,7 +417,7 @@ export default function TeamPage() {
       role: "Senior Executive Member",
       image: "/team/raj.jpg",
       linkedin: "https://www.linkedin.com/in/thatrajaryan/",
-      github: "https://github.com",
+      github: "https://github.com/rajaryan18",
       instagram: "https://instagram.com",
       department: "Executive",
       

@@ -51,7 +51,7 @@ export default function EventsPage() {
       venue: "Main Auditorium"
     },
     {
-      title: "L.E.A.D - Leadership in Engineering",
+      title: "L.E.A.D - Learn Explore And Develop",
       date: "Friday, February 16",
       status: "UPCOMING",
       description: "Technical leadership workshop with industry experts",
