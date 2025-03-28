@@ -41,8 +41,8 @@ function Header1() {
   const navigationItems = [
     { title: "Events", href: "/events" },
     { title: "Our Team", href: "/team" },
-    { title: "Workshop", href: "/workshop" },
     { title: "Leaderboard", href: "/leaderboard" }, 
+    { title: "Workshop", href: "/workshop" },
     { title: "About Us", href: "/about-us" },
     { title: "Alumni", href: "/alumni" },
     { title: "Contact Us", href: "/contact" },

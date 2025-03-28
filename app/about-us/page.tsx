@@ -45,6 +45,22 @@ export default function AboutUsPage() {
         className="container mx-auto px-4 pt-24"
       >
         <div className="relative">
+          {/* IEEE Logo */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="flex justify-center mb-8"
+          >
+            <Image
+              src="/logo.png"
+              alt="IEEE BIT Mesra Logo"
+              width={120}
+              height={120}
+              className="rounded-lg"
+            />
+          </motion.div>
+          
           <motion.h1 
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -63,26 +79,13 @@ export default function AboutUsPage() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-16">
-          <motion.div 
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            className="relative rounded-2xl overflow-hidden group"
-          >
-            <Image
-              src="/team-photo.jpg"
-              alt="IEEE Team"
-              width={600}
-              height={400}
-              className="object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-          </motion.div>
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-12 items-center mt-16">
+          {/* Team photo section removed */}
 
           <motion.div 
-            initial={{ x: 50, opacity: 0 }}
+            initial={{ x: 0, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="space-y-6"
+            className="space-y-6 max-w-3xl mx-auto"
           >
             <h2 className="text-4xl text-blue-400 font-bold">Who are we?</h2>
             <h3 className="text-2xl text-white font-semibold">
@@ -192,4 +195,4 @@ export default function AboutUsPage() {
       <Footer />
     </div>
   );
-} 
+}
