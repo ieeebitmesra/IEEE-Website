@@ -16,6 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ElegantShape } from "@/components/ui/shape-landing-hero";
+import { LeaderboardCTA } from "@/components/ui/landing/LeaderboardCTA";
 
 // Create a client component that uses useSearchParams
 function AccountDeletedCheck() {
@@ -327,6 +328,11 @@ export default function Home() {
         <AccountDeletedCheck />
       </Suspense>
       <Hero />
+
+      {/* LeaderboardCTA Section - Moved below Hero */}
+      <div className="container mx-auto px-4 py-12">
+        <LeaderboardCTA />
+      </div>
 
       {/* Achievement Counters with improved design */}
       <motion.div 
