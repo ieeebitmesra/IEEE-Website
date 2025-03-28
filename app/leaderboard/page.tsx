@@ -32,6 +32,8 @@ import { prisma } from "@/lib";
 import { get } from "http";
 import { useAuth } from "@/contexts/AuthContext";
 
+import { AlertCircle } from "lucide-react";
+
 export interface Participant {
   id: string;
   name: string;
@@ -613,15 +615,7 @@ export default function LeaderboardPage() {
                     className="w-full pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                  className="border-white/10 text-white hover:bg-white/10"
-                >
-                  <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-                </Button>
+                
 
                 <div className="flex gap-2 w-full md:w-auto">
                   {user && (
@@ -635,6 +629,18 @@ export default function LeaderboardPage() {
                 </div>
               </div>
             </div>
+
+<div className="mb-6 bg-amber-500/20 border border-amber-500/40 rounded-lg p-4">
+  <div className="flex items-start gap-3">
+    <AlertCircle className="h-5 w-5 text-amber-400 mt-0.5 flex-shrink-0" />
+    <div>
+      <p className="text-amber-300 font-medium">Having trouble with your stats?</p>
+      <p className="text-white/80 text-sm mt-1">
+        If your coding platform data isn't showing up correctly, try removing yourself from the leaderboard and joining again with correct usernames.
+      </p>
+    </div>
+  </div>
+</div>
 
             {/* Leaderboard Table */}
             <div className="overflow-x-auto -mx-3 md:mx-0">

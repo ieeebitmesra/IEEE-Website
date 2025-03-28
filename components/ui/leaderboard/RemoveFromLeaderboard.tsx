@@ -83,7 +83,7 @@ export function RemoveFromLeaderboard({ onClose, onSuccess }: RemoveFromLeaderbo
             type="button"
             onClick={onClose}
             variant="outline"
-            className="border-white/10 text-white hover:bg-white/10"
+            className="border-white/10 text-black hover:bg-white/10"
             disabled={isRemoving}
           >
             Cancel

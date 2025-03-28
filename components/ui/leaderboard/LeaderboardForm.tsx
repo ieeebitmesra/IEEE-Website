@@ -356,7 +356,7 @@ export function LeaderboardForm({ onClose, onSubmit }: LeaderboardFormProps) {
                 type="button"
                 onClick={onClose}
                 variant="outline"
-                className="flex-1 sm:flex-none border-white/10 text-white hover:bg-white/10 text-sm"
+                className="flex-1 sm:flex-none border-white/10 text-black hover:bg-white/10 text-sm"
               >
                 Cancel
               </Button>
