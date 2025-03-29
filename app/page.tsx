@@ -240,28 +240,26 @@ export default function Home() {
     },
   ];
 
-  
-
   const timelineEvents = [
     {
-      date: "March 15-16, 2024",
-      title: "Hackathon 2024",
-      description: "48-hour coding challenge with amazing prizes"
+      date: "September 7, 2024",
+      title: "Git/Linux Workshop",
+      description: "Hands-on training in Git version control and Linux fundamentals"
     },
     {
-      date: "March 22, 2024",
-      title: "Tech Talk: AI Revolution",
-      description: "Guest lecture by industry experts on AI advancements"
+      date: "September 15, 2024",
+      title: "Cicada CTF",
+      description: "Cybersecurity competition testing skills in cryptography, forensics, and OSINT"
     },
     {
-      date: "April 1, 2024",
-      title: "Project Showcase",
-      description: "Exhibition of innovative student projects"
+      date: "October 26, 2024",
+      title: "LEAD Program",
+      description: "Leadership and career development program with industry insights"
     },
     {
-      date: "April 15, 2024",
-      title: "Workshop: Cloud Computing",
-      description: "Hands-on workshop on AWS and Azure"
+      date: "December 7, 2024",
+      title: "MegaProject",
+      description: "Showcase of innovative student projects and research"
     }
   ];
 
@@ -273,8 +271,8 @@ export default function Home() {
     },
     {
       icon: Users,
-      title: "Networking Events",
-      description: "Connect with industry professionals, alumni, and fellow students to build your network."
+      title: "Speaker Sessions",
+      description: "Connect with industry professionals through expert talks on emerging technologies."
     },
     {
       icon: BookOpen,
