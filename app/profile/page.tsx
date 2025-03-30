@@ -292,7 +292,7 @@ export default function ProfilePage() {
                 <div className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-white/10">
                   <h3 className="text-xl font-semibold text-white mb-4">Account Management</h3>
                   <p className="text-white/70 mb-6">
-                    Manage your account settings and preferences.
+                    Kyun karna he delete, mat karo yaar
                   </p>
                   <DeleteAccount />
                 </div>

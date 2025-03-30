@@ -468,7 +468,7 @@ export default function Home() {
             />
             <div className="relative z-10">
               <h2 className="text-3xl font-bold text-white mb-4">Stay Updated</h2>
-              <p className="text-white/70 mb-8">Subscribe to our newsletter for the latest events and updates</p>
+              <p className="text-white/70 mb-8">Subscribe to our newsletter for the latest events and updates, time pe khabar</p>
               <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                 <input 
                   type="email" 
