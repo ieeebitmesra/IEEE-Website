@@ -50,36 +50,39 @@ export default function SignInPage() {
           animate={{ opacity: 1 }}
           className="max-w-md mx-auto"
         >
-          <div className="relative bg-black/30 backdrop-blur-xl rounded-2xl border border-white/10 p-8 shadow-xl">
+          <div className="relative bg-black/30 backdrop-blur-xl rounded-2xl border border-white/10 p-8 shadow-xl overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
+            
             <motion.div 
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="text-center mb-8"
+              className="text-center mb-8 relative z-10"
             >
-              <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
-              <p className="text-white/60 mt-2">Sign in to your IEEE BIT Mesra account</p>
+              <h1 className="text-4xl font-bold text-white mb-2">Welcome Back</h1>
+              <p className="text-white/60">Sign in to your IEEE BIT Mesra account</p>
             </motion.div>
 
-         
             <motion.div 
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="flex flex-col gap-4 mb-6"
+              className="flex flex-col gap-5 mb-6 relative z-10"
             >
-              <div className="p-4 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg border border-white/10 mb-4">
-                <h3 className="text-white font-medium mb-2">Member Benefits</h3>
-                <ul className="text-white/70 text-sm space-y-2">
+              <div className="p-5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl border border-white/10 mb-5">
+                <h3 className="text-white font-medium mb-3">Member Benefits</h3>
+                <ul className="text-white/70 text-sm space-y-3">
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                     Access to exclusive IEEE resources and events
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                     Connect with industry professionals and peers
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                     Track your progress in coding competitions
                   </li>
                 </ul>
@@ -89,7 +92,7 @@ export default function SignInPage() {
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={socialLoading !== null}
-                className="w-full bg-white hover:bg-gray-100 text-gray-800 py-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-md hover:shadow-lg"
+                className="w-full bg-white hover:bg-gray-100 text-gray-800 py-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
               >
                 {socialLoading === 'google' ? (
                   <div className="w-5 h-5 border-2 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
@@ -105,7 +108,7 @@ export default function SignInPage() {
                 type="button"
                 onClick={handleGithubSignIn}
                 disabled={socialLoading !== null}
-                className="w-full bg-gray-800 hover:bg-gray-900 text-white py-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-md hover:shadow-lg"
+                className="w-full bg-gray-800 hover:bg-gray-900 text-white py-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
               >
                 {socialLoading === 'github' ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -122,40 +125,15 @@ export default function SignInPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="mt-8 text-center"
+              className="mt-8 text-center relative z-10"
             >
               <p className="text-white/60">
                 Don't have an account?{" "}
-                <Link href="/signup" className="text-blue-400 hover:text-blue-300 font-medium">
+                <Link href="/signup" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
                   Sign up
                 </Link>
               </p>
             </motion.div>
-
-            {/* Trust indicators */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="mt-8 pt-6 border-t border-white/10"
-            >
-              <p className="text-white/40 text-xs text-center mb-4">Trusted by IEEE members worldwide</p>
-              <div className="flex justify-center items-center gap-6">
-                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
-                  <Image src="/logo.png" alt="IEEE Logo" width={20} height={20} />
-                </div>
-                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
-                  <Image src="/google-icon.svg" alt="Google" width={16} height={16} />
-                </div>
-                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
-                  <Github className="w-4 h-4 text-white/70" />
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Decorative elements */}
-            <div className="absolute -top-10 -left-10 w-20 h-20 bg-blue-500/20 rounded-full blur-xl"></div>
-            <div className="absolute -bottom-10 -right-10 w-20 h-20 bg-purple-500/20 rounded-full blur-xl"></div>
           </div>
         </motion.div>
       </div>

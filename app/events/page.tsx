@@ -324,7 +324,7 @@ export default function EventsPage() {
           className="max-w-4xl mx-auto text-center mt-20 mb-12 bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/10"
         >
           <h2 className="text-3xl font-bold text-white mb-4">Want to Host an Event?</h2>
-          <p className="text-white/70 mb-8">Batao apna man ki bat</p>
+          <p className="text-white/70 mb-8">Have an idea for a technical event? Let's make it happen!</p>
           <motion.button
             onClick={() => setShowProposalForm(true)}
             whileHover={{ scale: 1.05 }}
