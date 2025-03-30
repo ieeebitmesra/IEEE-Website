@@ -18,7 +18,16 @@ export async function DELETE(request: Request) {
       );
     }
     
-    // First delete Supabase Auth user
+    // First try to delete the Prisma user record
+    try {
+      const deletedUser = await deleteUser(userId);
+      console.log('Successfully deleted Prisma user record:', deletedUser.id);
+    } catch (prismaError) {
+      console.error('Prisma user deletion error:', prismaError);
+      // Continue with auth deletion even if Prisma deletion fails
+    }
+    
+    // Then delete Supabase Auth user
     const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
     if (authError) {
@@ -29,17 +38,7 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // Then delete Prisma user record
-    try {
-      const deletedUser = await deleteUser(userId);
-      return NextResponse.json({ success: true, user: deletedUser });
-    } catch (prismaError) {
-      console.error('Prisma user deletion error:', prismaError);
-      return NextResponse.json(
-        { error: 'Failed to delete database user record' },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting user:', error);
     return NextResponse.json(

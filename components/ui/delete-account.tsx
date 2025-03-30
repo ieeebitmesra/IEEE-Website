@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
+import { removeUserFromLeaderboard } from "@/actions/removeUserFromLeaderboard";
 
 export function DeleteAccount() {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -25,12 +26,22 @@ export function DeleteAccount() {
 
       setIsDeleting(true);
       
-      if (!user?.id) {
-        toast.error("User ID not found. Please sign in again.");
+      if (!user?.id || !user?.email) {
+        toast.error("User information not found. Please sign in again.");
         return;
       }
       
-      // Call API route to delete both Supabase auth and Prisma user
+      // First try to remove from leaderboard if the user is there
+      try {
+        await removeUserFromLeaderboard(user.email);
+        // We don't need to check the result - if the user isn't on the leaderboard,
+        // the function will return { success: false } but we can continue
+      } catch (leaderboardError) {
+        console.error("Error removing from leaderboard:", leaderboardError);
+        // Continue with account deletion even if leaderboard removal fails
+      }
+      
+      // Then call API route to delete Supabase auth user
       const response = await fetch('/api/user', {
         method: 'DELETE',
         headers: {
@@ -53,16 +64,17 @@ export function DeleteAccount() {
       // Use a small timeout to ensure the toast is visible before redirecting
       setTimeout(async () => {
         try {
-          // Use the logout function from AuthContext instead of direct Supabase call
+          // Use the logout function from AuthContext
           await logout();
           
-          window.location.href = "/signin";
+          // Redirect to home page with a query parameter to show success message
+          window.location.href = "/?accountDeleted=true";
         } catch (logoutError) {
           console.error("Error logging out:", logoutError);
-          // Even if logout fails, redirect to signin page
-          window.location.href = "/signin";
+          // Even if logout fails, redirect to home page
+          window.location.href = "/?accountDeleted=true";
         }
-      }, 1000);
+      }, 1500);
       
     } catch (error) {
       console.error("Error deleting account:", error);
@@ -86,9 +98,19 @@ export function DeleteAccount() {
         </Button>
       ) : (
         <div className="bg-black/40 backdrop-blur-sm rounded-xl p-6 border border-red-500/30">
+          <div className="flex items-start gap-3 mb-4 bg-red-500/10 p-3 rounded-lg border border-red-500/20">
+            <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <h4 className="text-red-300 font-medium">Warning</h4>
+              <p className="text-white/70 text-sm mt-1">
+                This action will permanently delete your account and all associated data, including your leaderboard entries.
+              </p>
+            </div>
+          </div>
+          
           <h3 className="text-xl font-semibold text-white mb-4">Confirm Account Deletion</h3>
           <p className="text-white/70 mb-6">
-            Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.
+            Are you sure you want to delete your account? This action cannot be undone.
           </p>
           
           <div className="mb-6">
