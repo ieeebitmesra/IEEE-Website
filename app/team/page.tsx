@@ -220,7 +220,7 @@ export default function TeamPage() {
     {
       name: "Sakshi Sinha",
       role: "Design heads",
-      image: "/team/noimage.jpg",
+      image: "/team/Sakshi.jpg",
       linkedin: "https://www.linkedin.com/in/sakshi-sinha-09a377270?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
