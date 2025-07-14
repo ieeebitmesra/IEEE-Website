@@ -238,54 +238,43 @@ export default function TeamPage() {
       
     },
     {
-      name: "Harshita Kedia",
+      name: "Md Zaid Alam",
       role: "Content head",
-      image: "/team/harshita.jpg",
-      linkedin: "https://www.linkedin.com/in/harshitakedia?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
+      image: "/team/zaid.jpeg",
+      linkedin: "http://linkedin.com/in/zaid-alam",
+      github: "https://github.com/iammdzaidalam",
+      instagram: "https://www.instagram.com/zaidddiebuoy",
       department: "Content",
       
     },
     {
-      name: "Akshay Gupta",
+      name: "Varun Gupta",
       role: "Event Head",
-      image: "/team/noimage.jpg",
-      linkedin: "https://www.linkedin.com/in/akshayguptanarsina?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      image: "/team/VarunGupta.jpg",
+      linkedin: "https://www.linkedin.com/in/varunn-guptaa/",
+      github: "https://github.com/VarunThisSide",
+      instagram: "https://www.instagram.com/varunnnguptaa/",
+      department: "Events",
+      
+    },
+    {
+      name: "Pratyasha Palit",
+      role: "Event Head",
+      image: "/team/Pratyasha.jpg",
+      linkedin: "https://www.linkedin.com/in/pratyasha-palit-b4873a317",
       github: "https://github.com",
       instagram: "https://instagram.com",
       department: "Events",
       
     },
     {
-      name: "Akshat Tambi",
+      name: "Sumit Pramanik",
       role: "Event Head",
-      image: "/team/akshat.jpg",
-      linkedin: "https://www.linkedin.com/in/1akshat-tambi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
+      image: "/team/SumitP.jpg",
+      linkedin: "https://www.linkedin.com/in/sumit-pramanik-43b16a24b/",
+      github: "https://github.com/supra41",
       instagram: "https://instagram.com",
       department: "Events",
-      
-    },
-    {
-      name: "Arman Sethi",
-      role: "Event Head",
-      image: "/team/arman.jpg",
-      linkedin: "https://www.linkedin.com/in/armansethi-tech?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Events",
-      
-    },
-    
-    {
-      name: "Saquib Jawed",
-      role: "Developer",
-      image: "/team/saquib.jpg",
-      linkedin: "https://www.linkedin.com/in/mdsaquibjawed/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Technical",
       
     },
 
@@ -294,26 +283,6 @@ export default function TeamPage() {
       role: "Developer",
       image: "/team/subhayu.jpg",
       linkedin: "https://www.linkedin.com/in/subhayu-das/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Technical",
-      
-    },
-    {
-      name: "Ankit Singh Sisodia",
-      role: "Developer",
-      image: "/team/ankit.jpg",
-      linkedin: "https://www.linkedin.com/in/ankit-sisodya/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Technical",
-      
-    },
-    {
-      name: "Akshat Gupta",
-      role: "Developer",
-      image: "/team/noimage.jpg",
-      linkedin: "https://www.linkedin.com/in/akshat-gupta-9b39992a7/",
       github: "https://github.com",
       instagram: "https://instagram.com",
       department: "Technical",
@@ -332,106 +301,75 @@ export default function TeamPage() {
     },
 
     {
-      name: "Suman Shekhar Bhardwaj",
-      role: "Senior Executive Member",
-      image: "/team/suman.jpg",
-      linkedin: "https://www.linkedin.com/in/suman-shekhar-bhardwaj-240513237/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-      
-    },
-    {
-      name: "Sumit Agarwal",
-      role: "Senior Executive Member",
-      image: "/team/sumit.jpg",
-      linkedin: "https://www.linkedin.com/in/sumit-agarwal2002/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-     
-    },
-
-    {
-      name: "Aayush Raturi",
-      role: "Senior Executive Member",
-      image: "/team/aayush.jpg",
-      linkedin: "https://www.linkedin.com/in/aayush-raturi-1816a6135/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-     
-    },
-    {
-      name: "Amrit Yashasvi Lal",
-      role: "Senior Executive Member",
-      image: "/team/amrit.jpg",
-      linkedin: "https://www.linkedin.com/in/amrit-yashasvi-lal-604672232/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-      
-    },
-    {
-      name: "Anish Kumar Singh",
-      role: "Senior Executive Member",
-      image: "/team/anish.jpg",
-      linkedin: "https://www.linkedin.com/in/anish-kumar-singh-155334222/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-      
-    },
-    {
-      name: "Ayush Kumar",
-      role: "Senior Executive Member",
-      image: "/team/ayush.jpg",
-      linkedin: "https://www.linkedin.com/in/ayushkumar3070/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-     
-    },
-    {
-      name: "Priyanshu Singhal",
-      role: "Senior Executive Member",
-      image: "/team/priyanshu.jpg",
-      linkedin: "https://www.linkedin.com/in/priyanshu-singhal1/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-      
-    },
-    {
-      name: "Rajat Singh",
+      name: "Naman Kumar Das", //done
       role: "Senior Executive Member",
       image: "/team/noimage.jpg",
-      linkedin: "https://linkedin.com",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Executive",
-     
-    },
-    {
-      name: "Raj Aryan",
-      role: "Senior Executive Member",
-      image: "/team/raj.jpg",
-      linkedin: "https://www.linkedin.com/in/thatrajaryan/",
+      linkedin: "https://www.linkedin.com/in/naman-kumar-das-884919260/",
       github: "https://github.com",
       instagram: "https://instagram.com",
       department: "Executive",
       
     },
     {
-      name: "Shivang Airan",
+      name: "Nayan Shenoy", // done
       role: "Senior Executive Member",
-      image: "/team/noimage.jpg",
-      linkedin: "https://www.linkedin.com/in/shivang007/",
+      image: "/team/nayan.jpg",
+      linkedin: "https://www.linkedin.com/in/nayan-shenoy-14704a24b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
-      department: "Executive",
+      department: "Content",
+      
+    },
+    {
+      name: "Nikhil Kumar Singh", //done
+      role: "Senior Executive Member",
+      image: "/team/nikhil.jpg",
+      linkedin: "https://www.linkedin.com/in/nikhil-singh-64a414160?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Technical",
+      
+    },
+    {
+      name: "Adarsh Narayan", //done
+      role: "Senior Executive Member",
+      image: "/team/adarsh.jpg",
+      linkedin: "https://www.linkedin.com/in/adarsh-narayan-711a24263?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "Sakshi Sinha", //done
+      role: "Senior Executive Member",
+      image: "/team/Sakshi.webp",
+      linkedin: "https://www.linkedin.com/in/sakshi-sinha-09a377270?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Design",
      
-    }
+    },
+    {
+      name: "Akshat Tambi", //done
+      role: "Senior Executive Member",
+      image: "/team/akshat.jpg",
+      linkedin: "https://www.linkedin.com/in/1akshat-tambi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Events",
+      
+    },
+    {
+      name: "Ataullah Ansari", //done
+      role: "Senior Executive Member",
+      image: "/team/noimage.jpg",
+      linkedin: "https://www.linkedin.com/in/attaullah-ansari-1304aa264?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
     
   ];
 
