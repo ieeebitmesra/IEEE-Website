@@ -22,6 +22,7 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import { prisma } from "@/lib";
+import { DeleteAccount } from "@/components/ui/delete-account";
 
 export default function ProfilePage() {
   const { user, isLoading, logout } = useAuth();
@@ -285,6 +286,15 @@ export default function ProfilePage() {
                       </Button>
                     </Link>
                   </div>
+                </div>
+                
+                {/* Add the Delete Account section */}
+                <div className="bg-black/30 backdrop-blur-sm rounded-xl p-6 border border-white/10">
+                  <h3 className="text-xl font-semibold text-white mb-4">Account Management</h3>
+                  <p className="text-white/70 mb-6">
+                    Kyun karna he delete, mat karo yaar
+                  </p>
+                  <DeleteAccount />
                 </div>
               </motion.div>
             </div>

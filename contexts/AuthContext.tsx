@@ -15,13 +15,16 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
-  logout: async () => {},
+  logout: async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) console.error('Logout error:', error);
+},
   isAuthenticated: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -32,9 +35,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const currentUser = await getCurrentUser();
         setUser(currentUser || null);
+        
+        // Store user ID in localStorage for later use
+        if (currentUser?.id) {
+          localStorage.setItem("userId", currentUser.id);
+        } else {
+          localStorage.removeItem("userId");
+        }
       } catch (error) {
         console.error('Error fetching user:', error);
         setUser(null);
+        localStorage.removeItem("userId");
       } finally {
         setIsLoading(false);
       }
@@ -65,6 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await signOut();
       setUser(null);
+      localStorage.removeItem("userId");
       router.push('/');
     } catch (error) {
       console.error('Error signing out:', error);

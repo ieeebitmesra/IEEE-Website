@@ -51,7 +51,7 @@ export default function EventsPage() {
       venue: "Main Auditorium"
     },
     {
-      title: "L.E.A.D - Leadership in Engineering",
+      title: "L.E.A.D - Learn Explore And Develop",
       date: "Friday, February 16",
       status: "UPCOMING",
       description: "Technical leadership workshop with industry experts",
@@ -156,6 +156,22 @@ export default function EventsPage() {
           >
             Join our technical events and showcase your skills
           </motion.p>
+        </motion.div>
+
+        {/* Update notification banner */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4 mb-12 max-w-4xl mx-auto text-center"
+        >
+          <div className="flex items-center justify-center gap-2 text-blue-400">
+            <Timer className="w-5 h-5" />
+            <span className="font-medium">Attention!</span>
+          </div>
+          <p className="text-white mt-2">
+            Our events calendar is currently being updated. Check back soon for the latest events and workshops!
+          </p>
         </motion.div>
 
         {/* Stats Section */}

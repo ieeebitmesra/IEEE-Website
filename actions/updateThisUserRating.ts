@@ -18,8 +18,7 @@ export const updateThisUserRating = async ({
       console.error("User not found");
       return;
     }
-    // Process users sequentially
-
+    
     try {
       let updates = {
         codeforcesRating: 0,
@@ -27,69 +26,116 @@ export const updateThisUserRating = async ({
         leetcodeRating: 0,
         leetcodeProblemsSolved: 0,
         codechefRating: 0,
+        codechefProblemsSolved: 0,
         totalScore: 0,
       };
 
-      // Codeforces update
-      if (user.codeforcesHandle) {
-        const [statusRes, ratingRes] = await Promise.all([
-          axios.get(
-            `https://codeforces.com/api/user.status?handle=${user.codeforcesHandle}`
-          ),
-          axios.get(
-            `https://codeforces.com/api/user.rating?handle=${user.codeforcesHandle}`
-          ),
-        ]);
+      // Codeforces update with retry logic
+      if (user.codeforcesHandle && user.codeforcesHandle !== "none") {
+        try {
+          const [statusRes, ratingRes] = await Promise.allSettled([
+            fetchWithRetry(`https://codeforces.com/api/user.status?handle=${user.codeforcesHandle}`, 3),
+            fetchWithRetry(`https://codeforces.com/api/user.rating?handle=${user.codeforcesHandle}`, 3),
+          ]);
 
-        const solvedProblemSet = new Set();
-        statusRes.data.result.forEach((submission: any) => {
-          if (submission.verdict === "OK") {
-            solvedProblemSet.add(
-              `${submission.problem.contestId}-${submission.problem.index}`
+          if (statusRes.status === 'fulfilled' && statusRes.value) {
+            const solvedProblemSet = new Set();
+            statusRes.value.data.result.forEach((submission: any) => {
+              if (submission.verdict === "OK") {
+                solvedProblemSet.add(
+                  `${submission.problem.contestId}-${submission.problem.index}`
+                );
+              }
+            });
+            updates.codeforcesProblemsSolved = solvedProblemSet.size;
+          }
+
+          if (ratingRes.status === 'fulfilled' && ratingRes.value && 
+              ratingRes.value.data?.status === "OK" && 
+              ratingRes.value.data.result.length > 0) {
+            updates.codeforcesRating =
+              ratingRes.value.data.result[ratingRes.value.data.result.length - 1].newRating;
+          }
+        } catch (error) {
+          console.error(`Error fetching Codeforces data for ${user.name}:`, error);
+        }
+      }
+
+      // Leetcode update with retry logic and alternative endpoints
+      if (user.leetcodeHandle && user.leetcodeHandle !== "none") {
+        try {
+          // Try primary endpoint first
+          const [ratingRes, solvedRes] = await Promise.allSettled([
+            fetchWithRetry(`https://alfa-leetcode-api-x0kj.onrender.com/userContestRankingInfo/${user.leetcodeHandle}`, 2),
+            fetchWithRetry(`https://alfa-leetcode-api-x0kj.onrender.com/${user.leetcodeHandle}/solved`, 2),
+          ]);
+
+          // Process rating data if available
+          if (ratingRes.status === 'fulfilled' && ratingRes.value && ratingRes.value.data?.data?.userContestRanking) {
+            updates.leetcodeRating = Math.round(
+              ratingRes.value.data.data.userContestRanking.rating || 0
             );
           }
-        });
 
-        if (
-          ratingRes.data?.status === "OK" &&
-          ratingRes.data.result.length > 0
-        ) {
-          updates.codeforcesRating =
-            ratingRes.data.result[ratingRes.data.result.length - 1].newRating;
+          // Process solved problems data if available
+          if (solvedRes.status === 'fulfilled' && solvedRes.value) {
+            updates.leetcodeProblemsSolved = solvedRes.value.data.solvedProblem || 0;
+          }
+
+          // If either failed, try alternative endpoint
+          if (ratingRes.status === 'rejected' || solvedRes.status === 'rejected') {
+            try {
+              // Fallback to alternative API (you may need to implement or find one)
+              const fallbackData = await fetchWithRetry(
+                `https://leetcode-stats-api.herokuapp.com/${user.leetcodeHandle}`, 
+                2
+              );
+              
+              if (fallbackData && fallbackData.data) {
+                // If primary rating failed but fallback succeeded
+                if (ratingRes.status === 'rejected' && fallbackData.data.ranking) {
+                  updates.leetcodeRating = fallbackData.data.ranking;
+                }
+                
+                // If primary solved count failed but fallback succeeded
+                if (solvedRes.status === 'rejected' && fallbackData.data.totalSolved) {
+                  updates.leetcodeProblemsSolved = fallbackData.data.totalSolved;
+                }
+              }
+            } catch (fallbackError) {
+              console.error(`Fallback LeetCode API also failed for ${user.name}:`, fallbackError);
+            }
+          }
+        } catch (error) {
+          console.error(`Error fetching LeetCode data for ${user.name}:`, error);
         }
-        updates.codeforcesProblemsSolved = solvedProblemSet.size;
       }
 
-      // Leetcode update
-      if (user.leetcodeHandle) {
-        const [ratingRes, solvedRes] = await Promise.all([
-          axios.get(
-            `https://alfa-leetcode-api-x0kj.onrender.com/userContestRankingInfo/${user.leetcodeHandle}`
-          ),
-          axios.get(
-            `https://alfa-leetcode-api-x0kj.onrender.com/${user.leetcodeHandle}/solved`
-          ),
-        ]);
-
-        updates.leetcodeRating = Math.round(
-          ratingRes.data.data.userContestRanking?.rating || 0
-        );
-        updates.leetcodeProblemsSolved = solvedRes.data.solvedProblem || 0;
+      // Codechef update with retry logic - only if handle exists and is not "none"
+      if (user.codechefHandle && user.codechefHandle !== "none") {
+        try {
+          const ccResponse = await fetchWithRetry(
+            `https://codechef-api.vercel.app/handle/${user.codechefHandle}`,
+            3
+          );
+          
+          if (ccResponse && ccResponse.data) {
+            updates.codechefRating = ccResponse.data.currentRating || 0;
+            // If the API provides problems solved count, update it here
+            updates.codechefProblemsSolved = ccResponse.data.problemsSolved || 0;
+          }
+        } catch (error) {
+          console.error(`Error fetching CodeChef data for ${user.name}:`, error);
+          // Don't fail the entire update if CodeChef fails
+        }
       }
 
-      // Codechef update
-      if (user.codechefHandle) {
-        const ccResponse = await axios.get(
-          `https://codechef-api.vercel.app/handle/${user.codechefHandle}`
-        );
-        updates.codechefRating = ccResponse.data.currentRating || 0;
-      }
-
-      // Calculate total score
+      // Calculate total score - only count platforms that successfully returned data
+      // and only include CodeChef if it was provided
       updates.totalScore =
         updates.codeforcesRating +
         updates.leetcodeRating +
-        updates.codechefRating +
+        (user.codechefHandle && user.codechefHandle !== "none" ? updates.codechefRating : 0) +
         updates.codeforcesProblemsSolved * 2 +
         updates.leetcodeProblemsSolved * 2;
 
@@ -111,3 +157,25 @@ export const updateThisUserRating = async ({
     return false;
   }
 };
+
+// Helper function to retry failed requests
+async function fetchWithRetry(url: string, maxRetries: number = 3, delay: number = 1000) {
+  let lastError;
+  
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const response = await axios.get(url, { timeout: 5000 });
+      return response;
+    } catch (error) {
+      console.warn(`Attempt ${attempt + 1}/${maxRetries} failed for ${url}:`, error);
+      lastError = error;
+      
+      // Wait before retrying
+      if (attempt < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay * (attempt + 1)));
+      }
+    }
+  }
+  
+  throw lastError;
+}
