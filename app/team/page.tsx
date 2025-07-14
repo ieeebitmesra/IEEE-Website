@@ -34,206 +34,206 @@ export default function TeamPage() {
 
   const teamMembers: TeamMember[] = [
     {
-      name: "Prateek Krishna",
+      name: "Shouryaman Singh ",         //done
       role: "President",
-      image: "/team/prateek.jpg",
-      linkedin: "https://www.linkedin.com/in/prateekkrishna?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-      
-     
-    },
-    {
-      name: "Gajendra Agarwal",
-      role: "Vice President",
-      image: "/team/gajendra.jpg",
-      linkedin: "https://www.linkedin.com/in/gajendra-agarwal-a51aa9228/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-      
-    },
-    {
-      name: "Vaishali Jain",
-      role: "Vice President",
-      image: "/team/vaishali.jpg",
-      linkedin: "https://www.linkedin.com/in/vaishali-jain-571361229/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-      
-    },
-    {
-      name: "Divjot Singh",
-      role: "Director",
-      image: "/team/divjot.jpg",
-      linkedin: "https://www.linkedin.com/in/divjot-singh-4185b8280/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-     
-    },
-    {
-      name: "Shouryaman Singh",
-      role: "General Secretary",
       image: "/team/shouryaman.jpg",
       linkedin: "https://www.linkedin.com/in/shouryaman?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
+      github: "https://github.com/Retr0991",
+      instagram: "https://www.instagram.com/shouryamansingh/",
       department: "Management",
       
+     
     },
     {
-      name: "Hritabhash Ray",
-      role: "General Secretary",
-      image: "/team/Hritabhash.jpg",
-      linkedin: "https://www.linkedin.com/in/hritabhash-ray-53563922b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-      
-    },
-    {
-      name: "Akash Kumar Tiwary",
-      role: "Joint Secretary",
+      name: "Akash Kumar Tiwary",          //done
+      role: "Vice President",
       image: "/team/Akash Kumar Tiwary .jpg",
       linkedin: "https://www.linkedin.com/in/akashkt10172?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
+      github: "https://github.com/AkashKT10172",
+      instagram: "https://www.instagram.com/akashdidwhat/",
       department: "Management",
       
     },
     {
-      name: "keshav agarwal",
-      role: "Joint Secretary",
-      image: "/team/keshav.jpg",
-      linkedin: "https://www.linkedin.com/in/keshavagarwal0927?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
+      name: "Hritabhash Ray",         //done
+      role: "Vice President",
+      image: "/team/Hritabhash.jpg",
+      linkedin: "https://www.linkedin.com/in/hritabhash-ray-53563922b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com/Hritabhash1",
+      instagram: "https://www.instagram.com/hritabhashray/",
       department: "Management",
       
     },
-    
-    {
-      name: "Sukham Singh",
-      role: "Joint Secretary",
-      image: "/team/sukham.jpg",
-      linkedin: "https://www.linkedin.com/in/sukham-singh?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-      
-    },
-    {
-      name: "Adarsh Narayan",
-      role: "Co-Director",
-      image: "/team/adarsh.jpg",
-      linkedin: "https://www.linkedin.com/in/adarsh-narayan-711a24263?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-      
-    },
-    {
-      name: "Ataullah Ansari",
-      role: "Co-Director",
-      image: "/team/noimage.jpg",
-      linkedin: "https://www.linkedin.com/in/attaullah-ansari-1304aa264?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Management",
-      
-    },
-    {
-      name: "MD. Gufran",
-      role: "Treasurer",
+    { 
+      name: "MD Gufran",         //done
+      role: "Director",
       image: "/team/gufran.jpg",
       linkedin: "https://www.linkedin.com/in/mdgufrann?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
       github: "https://github.com",
       instagram: "https://instagram.com",
       department: "Management",
-      
+     
+    },
+    {
+      name: "MD Faique Ibrahimi",      //done
+      role: "General Secretary",
+      image: "/team/faique.jpeg",
+      linkedin: "https://www.linkedin.com/in/md-faique-ibrahimi-623541300/",
+      github: "https://github.com/FaiqueIbrahimi",
+      instagram: "https://www.instagram.com/its_me_faique/",
+      department: "Management",
       
     },
     {
-      name: "Rishabh Raj",
-      role: "Joint Treasurer",
-      image: "/team/noimage.jpg",
-      linkedin: "https://www.linkedin.com/in/rishabh-raj-60060b25a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
+      name: "Achintya Kumar",
+      role: "General Secretary",
+      image: "/team/Achintya.jpg",
+      linkedin: "https://www.linkedin.com/in/achintya-kumar/",
+      github: "https://github.com/Achintya512",
+      instagram: "https://www.instagram.com/achintya.kr",
+      department: "Management",
+      
+    },
+    {
+      name: "Nischal Singh",           //done
+      role: "Joint Secretary",
+      image: "/team/Nischal Singh.jpg",
+      linkedin: "https://www.linkedin.com/in/nischal-singh-b22b3a299/",
+      github: "https://github.com/Nischal07bot",
       instagram: "https://instagram.com",
+      department: "Management",
+      
+    },
+    {
+      name: "Akshat Gupta",         //done
+      role: "Joint Secretary",
+      image: "/team/akshatk23.jpg",
+      linkedin: "https://www.linkedin.com/in/akshat-gupta-9b39992a7/",
+      github: "https://github.com/axhatggg",
+      instagram: "https://www.instagram.com/axhat.g/",
+      department: "Management",
+      
+    },
+    
+    {
+      name: "Ankit Singh Sisodia",
+      role: "Joint Secretary",
+      image: "/team/ankit.jpg",
+      linkedin: "https://www.linkedin.com/in/ankit-sisodya/",
+      github: "https://github.com/Ankitsinghsisodya",
+      instagram: "https://www.instagram.com/ankitsinghsisodya/",
+      department: "Management",
+      
+    },
+    {
+      name: "Saquib Jawed",              //done
+      role: "Co-Director",
+      image: "/team/saquib.jpg",
+      linkedin: "https://www.linkedin.com/in/mdsaquibjawed/",
+      github: "https://github.com/saquibjawedbit",
+      instagram: "https://www.instagram.com/saquibsj123/",
+      department: "Management",
+      
+    },
+    {                  
+      name: "Kunal Kashyap",              //done
+      role: "Co-Director",
+      image: "/team/kunal.jpeg",
+      linkedin: "https://www.linkedin.com/me?trk=p_mwlite_feed-secondary_nav",
+      github: "https://github.com/Kunal1522",
+      instagram: "https://www.instagram.com/kunal_kashyap_1522?igsh=MTNiNGF1NDdhYjFmeA==",
+      department: "Management",
+      
+    },
+    {
+      name: "Satvik Vansh",
+      role: "Treasurer",
+      image: "/team/satvik.jpg",
+      linkedin: "https://www.linkedin.com/in/satvik-vansh-3b4386311?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com",
+      instagram: "https://www.instagram.com/satvikxvansh",
       department: "Management",
       
       
     },
     {
-      name: "Nikhil Kumar Singh",
+      name: "Arnav Kumar",
+      role: "Joint Treasurer",
+      image: "/team/arnav.jpg",
+      linkedin: "https://www.linkedin.com/in/arnav-kumar-9691a61b4",
+      github: "https://github.com",
+      instagram: "https://www.instagram.com/satvikxvansh",
+      department: "Management",
+      
+      
+    },
+    {
+      name: "Sachin Kumar",
       role: "Web Master ",
-      image: "/team/nikhil.jpg",
-      linkedin: "https://www.linkedin.com/in/nikhil-singh-64a414160?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
+      image: "/team/sachin.jpg",
+      linkedin: "https://www.linkedin.com/in/sachin-kumar-90884117a/",
+      github: "https://github.com/SKSingh0703",
+      instagram: "https://www.instagram.com/sachin_kumar_0703/",
       department: "Technical",
       
     },
     {
-      name: "Garvit Raj",
+      name: "Aariya Kumari",
       role: "Tech Head",
       image: "/team/noimage.jpg",
-      linkedin: "https://www.linkedin.com/in/garvitrajbitmesra?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      linkedin: "https://www.linkedin.com",
       github: "https://github.com",
       instagram: "https://instagram.com",
       department: "Technical",
       
     },
     {
-      name: "Abhiraj Sinha",
+      name: "Arijit Dubey",
       role: "Tech Head",
-      image: "/team/abhiraj.jpg",
-      linkedin: "https://www.linkedin.com/in/abhiraj-sinha-240269249?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
+      image: "/team/arijit.webp",
+      linkedin: "https://www.linkedin.com/in/arijit-dubey-85471028a/",
+      github: "https://github.com/Cicada1107",
+      instagram: "https://www.instagram.com/omniman1107/",
       department: "Technical",
       
     },
     {
-      name: "Soumojjal Sen",
+      name: "Shreyansh Jugran",
       role: "Tech Head",
-      image: "/team/noimage.jpg",
-      linkedin: "https://www.linkedin.com/in/soumojjal-sen-7b8490256?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
+      image: "/team/shreyansh.jpg",
+      linkedin: "https://www.linkedin.com/in/shreyansh-jugran-754b98280",
+      github: "https://github.com/SageSaiyan",
+      instagram: "https://www.instagram.com/shreyanshjugran",
       department: "Technical",
       
     },
     {
-      name: "shailesh kumar",
+      name: "Aman Kumar Sah",
       role: "Design heads",
-      image: "/team/noimage.jpg",
-      linkedin: "https://linkedin.com",
+      image: "/team/amansah.jpg",
+      linkedin: "https://www.linkedin.com/in/aman-kumar-sah-12a370238?",
       github: "https://github.com",
       instagram: "https://instagram.com",
       department: "Design",
       
     },
     {
-      name: "Sakshi Sinha",
+      name: "Priyanshu Ranjan",
       role: "Design heads",
-      image: "/team/noimage.jpg",
-      linkedin: "https://www.linkedin.com/in/sakshi-sinha-09a377270?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      image: "/team/priyanshuk23.jpeg",
+      linkedin: "https://www.linkedin.com/in/priyanshu-ranjan-a83718286/",
       github: "https://github.com",
-      instagram: "https://instagram.com",
+      instagram: "https://www.instagram.com/_priyanshu3011/",
       department: "Design",
      
     },
     {
-      name: "Nayan Shenoy",
+      name: "Abhigyaan Srivastava",
       role: "Content head",
-      image: "/team/nayan.jpg",
-      linkedin: "https://www.linkedin.com/in/nayan-shenoy-14704a24b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
+      image: "/team/abhigyaan.webp",
+      linkedin: "https://www.linkedin.com/in/abhigyan-srivastava-19609827b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github: "https://github.com/abhi-14gyan",
+      instagram: "https://www.instagram.com/abhi_14gyan?igsh=MXZyYXpkaGd6cDJwYg==",
       department: "Content",
       
     },
