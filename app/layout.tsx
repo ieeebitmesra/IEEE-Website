@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ieee.bitmesra.ac.in'),
   title: "IEEE - Student Branch BIT Mesra",
   description: "IEEE Student Branch BIT Mesra - Advancing Technology for Humanity through innovation, education, and collaboration. Join our community of tech enthusiasts.",
   keywords: "IEEE, BIT Mesra, Student Branch, Technology, Engineering, Innovation, Workshops, Events, Hackathons",

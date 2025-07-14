@@ -118,6 +118,7 @@ export default function TeamPage() {
     {
       name: "Ankit Singh Sisodia",
       role: "Joint Secretary",
+
       image: "/team/ankit.jpg",
       linkedin: "https://www.linkedin.com/in/ankit-sisodya/",
       github: "https://github.com/Ankitsinghsisodya",
@@ -283,7 +284,7 @@ export default function TeamPage() {
       role: "Developer",
       image: "/team/saquib.jpg",
       linkedin: "https://www.linkedin.com/in/mdsaquibjawed/",
-      github: "https://github.com",
+      github: "https://github.com/saquibjawedbit",
       instagram: "https://instagram.com",
       department: "Technical",
       
@@ -294,7 +295,7 @@ export default function TeamPage() {
       role: "Developer",
       image: "/team/subhayu.jpg",
       linkedin: "https://www.linkedin.com/in/subhayu-das/",
-      github: "https://github.com",
+      github: "https://github.com/subhayudas",
       instagram: "https://instagram.com",
       department: "Technical",
       
@@ -320,17 +321,7 @@ export default function TeamPage() {
       
     },
 
-    {
-      name: "Shaswat Raj",
-      role: "Developer",
-      image: "/team/shaswat.jpg",
-      linkedin: "https://www.linkedin.com/in/sh20raj/",
-      github: "https://github.com",
-      instagram: "https://instagram.com",
-      department: "Technical",
-      
-    },
-
+    
     {
       name: "Suman Shekhar Bhardwaj",
       role: "Senior Executive Member",
@@ -417,7 +408,7 @@ export default function TeamPage() {
       role: "Senior Executive Member",
       image: "/team/raj.jpg",
       linkedin: "https://www.linkedin.com/in/thatrajaryan/",
-      github: "https://github.com",
+      github: "https://github.com/rajaryan18",
       instagram: "https://instagram.com",
       department: "Executive",
       
