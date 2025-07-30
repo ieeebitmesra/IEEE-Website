@@ -8,7 +8,8 @@ import { motion } from "framer-motion";
 import { 
   Facebook, 
   Instagram, 
-  Linkedin, 
+  Linkedin,
+  Github, 
   Link2, 
   Twitter, 
   Mail, 
@@ -19,7 +20,6 @@ import {
   MessageCircle 
 } from "lucide-react";
 import { useState } from "react";
-import { supabase } from '@/lib/supabase';
 
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
@@ -35,20 +35,20 @@ export default function ContactPage() {
     setFormStatus('sending');
     
     try {
-      // Insert form data into Supabase
-      const { error } = await supabase
-        .from('contact_submissions')
-        .insert([
-          { 
-            name: formData.name,
-            email: formData.email,
-            subject: formData.subject,
-            message: formData.message,
-            created_at: new Date()
-          }
-        ]);
-        
-      if (error) throw error;
+      // Send form data to our API route
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
       
       setFormStatus('sent');
       // Clear form data
@@ -71,13 +71,13 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+91 1234567890", "+91 9876543210"],
+      details: ["+91 9123388359", "+91 9876543210"],
       color: "text-green-400"
     },
     {
       icon: Mail,
       title: "Email",
-      details: ["ieee@bitmesra.ac.in", "contact@ieeebitmesra.com"],
+      details: ["ieee@bitmesra.ac.in"],
       color: "text-blue-400"
     },
     {
@@ -86,23 +86,17 @@ export default function ContactPage() {
       details: ["BIT Mesra, Ranchi", "Jharkhand, India - 835215"],
       color: "text-red-400"
     },
-    
   ];
 
-  const faqs = [
-    {
-      question: "How can I join IEEE BIT Mesra?",
-      answer: "You can join by filling out the membership form on our website and passing the coding test."
-    },
-    {
-      question: "What are the benefits of joining?",
-      answer: "Members get access to exclusive workshops, events, networking opportunities, and IEEE resources."
-    },
-    {
-      question: "Do you offer internship opportunities?",
-      answer: "Yes, we regularly collaborate with industry partners to provide internship opportunities to our members."
-    }
+  // Add social media links
+  const socialLinks = [
+    { icon: Instagram, name: "Instagram", href: "https://www.instagram.com/ieee.bitm/", color: "bg-gradient-to-r from-purple-500 to-pink-500" },
+    { icon: Facebook, name: "Facebook", href: "https://www.facebook.com/ieeebitmesra/", color: "bg-blue-600" },
+    { icon: Linkedin, name: "LinkedIn", href: "https://www.linkedin.com/company/ieee-student-branch-bit-mesra/", color: "bg-blue-700" },
+    { icon: Github, name: "GitHub", href: "https://github.com/ieeebitmesra", color: "bg-gray-800" },
   ];
+
+  // Remove the faqs constant and its data
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-[#030303] to-rose-900 relative">
@@ -157,7 +151,7 @@ export default function ContactPage() {
           })}
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-1 gap-12 max-w-6xl mx-auto mb-20">
           {/* Contact Form */}
           <motion.div 
             initial={{ x: -50, opacity: 0 }}
@@ -177,6 +171,7 @@ export default function ContactPage() {
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  required
                 />
               </motion.div>
               <motion.div whileHover={{ y: -2 }}>
@@ -186,6 +181,7 @@ export default function ContactPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  required
                 />
               </motion.div>
               <motion.div whileHover={{ y: -2 }}>
@@ -195,6 +191,7 @@ export default function ContactPage() {
                   value={formData.subject}
                   onChange={(e) => setFormData({...formData, subject: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  required
                 />
               </motion.div>
               <motion.div whileHover={{ y: -2 }}>
@@ -204,6 +201,7 @@ export default function ContactPage() {
                   value={formData.message}
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
                   className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  required
                 />
               </motion.div>
               <motion.button
@@ -213,11 +211,14 @@ export default function ContactPage() {
                   formStatus === 'sending' ? 'opacity-70 cursor-wait' : ''
                 }`}
                 disabled={formStatus === 'sending'}
+                type="submit"
               >
                 {formStatus === 'sending' ? (
                   'Sending...'
                 ) : formStatus === 'sent' ? (
                   'Message Sent!'
+                ) : formStatus === 'error' ? (
+                  'Error! Try Again'
                 ) : (
                   <>
                     Send Message
@@ -228,44 +229,35 @@ export default function ContactPage() {
             </form>
           </motion.div>
 
-          {/* FAQ Section */}
-          <motion.div 
+          {/* Connect With Us Section */}
+          <motion.div
             initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="space-y-6"
+            className="bg-[#0A0A2C]/80 backdrop-blur-sm border border-white/10 rounded-lg p-8"
           >
-            <div className="bg-[#0A0A2C]/80 backdrop-blur-sm border border-white/10 rounded-lg p-8">
-              <h2 className="text-2xl text-blue-400 mb-6">Frequently Asked Questions</h2>
-              <div className="space-y-6">
-                {faqs.map((faq, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="space-y-2"
-                  >
-                    <h3 className="text-white font-semibold">{faq.question}</h3>
-                    <p className="text-white/60">{faq.answer}</p>
-                  </motion.div>
-                ))}
-              </div>
+            <div className="flex items-center gap-3 mb-8">
+              <Link2 className="text-blue-400 w-6 h-6" />
+              <h2 className="text-blue-400 text-2xl">Connect with us</h2>
             </div>
-
-            <div className="bg-[#0A0A2C]/80 backdrop-blur-sm border border-white/10 rounded-lg p-8">
-              <h2 className="text-2xl text-blue-400 mb-6">Connect With Us</h2>
-              <div className="flex gap-6">
-                {[Instagram, Twitter, Facebook, Linkedin, Link2].map((Icon, index) => (
-                  <motion.a
-                    key={index}
-                    href="#"
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    className="text-white/60 hover:text-white transition-colors"
-                  >
-                    <Icon className="w-6 h-6" />
-                  </motion.a>
-                ))}
-              </div>
+            
+            <p className="text-white/70 mb-6">
+              Follow us on social media to stay updated with our latest events, workshops, and announcements.
+            </p>
+            
+            <div className="space-y-4">
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -5 }}
+                  className={`flex items-center gap-3 p-4 rounded-lg ${social.color} text-white transition-all`}
+                >
+                  <social.icon className="w-5 h-5" />
+                  <span>{social.name}</span>
+                </motion.a>
+              ))}
             </div>
           </motion.div>
         </div>
